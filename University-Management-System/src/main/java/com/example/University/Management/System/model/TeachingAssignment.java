@@ -53,5 +53,6 @@ public class TeachingAssignment {
                 ", StaffID='" + StaffID + '\'' +
                 ", managing=" + managing +
                 '}';
+
     }
 }
