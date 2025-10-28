@@ -7,34 +7,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class University {
-    private String id;
-    private String name;
+    private String universityID;
+    private String universityName;
     private String city;
     private List<Department> departments;
     private List<Room> rooms;
 
     public University(String id, String name, String city) {
-        this.id = id;
-        this.name = name;
+        this.universityID = id;
+        this.universityName = name;
         this.city = city;
         this.departments = new ArrayList<>();
         this.rooms = new ArrayList<>();
     }
 
     public String getId() {
-        return id;
+        return universityID;
     }
 
     public void setId(String id) {
-        this.id = id;
+        this.universityID = id;
     }
 
     public String getName() {
-        return name;
+        return universityName;
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.universityName = name;
     }
 
     public String getCity() {
@@ -64,8 +64,8 @@ public class University {
     @Override
     public String toString() {
         return "University{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
+                "id='" + universityID + '\'' +
+                ", name='" + universityName + '\'' +
                 ", city='" + city + '\'' +
                 ", departments=" + departments +
                 ", rooms=" + rooms +
