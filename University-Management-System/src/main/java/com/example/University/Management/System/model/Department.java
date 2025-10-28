@@ -4,14 +4,14 @@ import java.util.List;
 
 public class Department {
     private String departmentID;
-    private String departamentName;
+    private String departmentName;
     private List<Course> courses;
     private List<Teacher> teachers;
     private String phoneNumber;
 
     public Department(String departmentID, String departamentName, List<Course> courses, List<Teacher> teachers, String phoneNumber) {
         this.departmentID = departmentID;
-        this.departamentName = departamentName;
+        this.departmentName = departamentName;
         this.courses = courses;
         this.teachers = teachers;
         this.phoneNumber = phoneNumber;
@@ -26,11 +26,11 @@ public class Department {
     }
 
     public String getDepartamentName() {
-        return departamentName;
+        return departmentName;
     }
 
     public void setDepartamentName(String departamentName) {
-        this.departamentName = departamentName;
+        this.departmentName = departamentName;
     }
 
     public List<Course> getCourses() {
@@ -61,7 +61,7 @@ public class Department {
     public String toString() {
         return "Department{" +
                 "departmentID='" + departmentID + '\'' +
-                ", departamentName='" + departamentName + '\'' +
+                ", departamentName='" + departmentName + '\'' +
                 ", courses=" + courses +
                 ", teachers=" + teachers +
                 ", phoneNumber='" + phoneNumber + '\'' +
