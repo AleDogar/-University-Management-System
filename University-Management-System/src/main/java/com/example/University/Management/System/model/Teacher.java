@@ -1,15 +1,17 @@
 package com.example.University.Management.System.model;
 
-public class Teacher {
+import java.util.List;
+
+public class Teacher extends Staff {
     private String title;
     private String departmentID;
-    private String teacherName;
     private String email;
 
-    public Teacher(String title, String departmentID, String teacherName, String email) {
+    public Teacher(String title, String departmentID, String email,
+                   String staffName, String staffID, List<TeachingAssignment> assignments) {
+        super(assignments, staffName, staffID);
         this.title = title;
         this.departmentID = departmentID;
-        this.teacherName = teacherName;
         this.email = email;
     }
 
@@ -29,14 +31,6 @@ public class Teacher {
         this.departmentID = departmentID;
     }
 
-    public String getTeacherName() {
-        return teacherName;
-    }
-
-    public void setTeacherName(String teacherName) {
-        this.teacherName = teacherName;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -50,8 +44,9 @@ public class Teacher {
         return "Teacher{" +
                 "title='" + title + '\'' +
                 ", departmentID='" + departmentID + '\'' +
-                ", teacherName='" + teacherName + '\'' +
                 ", email='" + email + '\'' +
+                ", staffName='" + getStaffName() + '\'' +
+                ", staffID='" + getStaffID() + '\'' +
                 '}';
     }
 }

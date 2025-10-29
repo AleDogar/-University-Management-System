@@ -6,13 +6,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class UniversityRepository extends InMemoryRepository<University> {
 
-    @Override
-    protected String getId(University university) {
-        return university.getId();
-    }
-
-    @Override
-    protected void setId(University university, String id) {
-        university.setId(id);
-    }
 }

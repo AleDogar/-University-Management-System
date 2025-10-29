@@ -1,16 +1,20 @@
 package com.example.University.Management.System.repository;
 
 import org.springframework.stereotype.Repository;
+
 import java.util.*;
 
 @Repository
-public abstract class InMemoryRepository<T> implements AbstractRepository<T> {
+public class InMemoryRepository<T> implements AbstractRepository<T> {
 
     private final Map<String, T> storage = new HashMap<>();
+    protected String getId(T entity) {
+        return Integer.toString(entity.hashCode());
+    }
 
-
-    protected abstract String getId(T entity);
-    protected abstract void setId(T entity, String id);
+    protected void setId(T entity, String id) {
+        // implicit nu face nimic; repo-urile specifice pot suprascrie
+    }
 
     @Override
     public void save(T entity) {

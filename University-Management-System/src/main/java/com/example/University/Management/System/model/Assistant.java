@@ -1,12 +1,13 @@
 package com.example.University.Management.System.model;
 
-public class Assistant {
-    private ClassRole role;
-    private String staffID;
+import java.util.List;
 
-    public Assistant(ClassRole role, String staffID) {
+public class Assistant extends Staff {
+    private ClassRole role;
+
+    public Assistant(ClassRole role, String staffName, String staffID, List<TeachingAssignment> assignments) {
+        super(assignments, staffName, staffID);
         this.role = role;
-        this.staffID = staffID;
     }
 
     public ClassRole getRole() {
@@ -17,19 +18,12 @@ public class Assistant {
         this.role = role;
     }
 
-    public String getStaffID() {
-        return staffID;
-    }
-
-    public void setStaffID(String staffID) {
-        this.staffID = staffID;
-    }
-
     @Override
     public String toString() {
         return "Assistant{" +
                 "role=" + role +
-                ", staffID='" + staffID + '\'' +
+                ", staffName='" + getStaffName() + '\'' +
+                ", staffID='" + getStaffID() + '\'' +
                 '}';
     }
 }
