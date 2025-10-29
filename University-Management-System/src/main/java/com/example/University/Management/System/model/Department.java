@@ -9,9 +9,9 @@ public class Department {
     private List<Teacher> teachers;
     private String phoneNumber;
 
-    public Department(String departmentID, String departamentName, List<Course> courses, List<Teacher> teachers, String phoneNumber) {
+    public Department(String departmentID, String departmentName, List<Course> courses, List<Teacher> teachers, String phoneNumber) {
         this.departmentID = departmentID;
-        this.departmentName = departamentName;
+        this.departmentName = departmentName;
         this.courses = courses;
         this.teachers = teachers;
         this.phoneNumber = phoneNumber;
@@ -25,12 +25,12 @@ public class Department {
         this.departmentID = departmentID;
     }
 
-    public String getDepartamentName() {
+    public String getDepartmentName() {
         return departmentName;
     }
 
-    public void setDepartamentName(String departamentName) {
-        this.departmentName = departamentName;
+    public void setDepartmentName(String departmentName) {
+        this.departmentName = departmentName;
     }
 
     public List<Course> getCourses() {
