@@ -8,29 +8,9 @@ import java.util.List;
 
 @Service
 public class DepartmentService {
-
-    private final DepartmentRepository departmentRepository;
-
-    public DepartmentService(DepartmentRepository departmentRepository) {
-        this.departmentRepository = departmentRepository;
-    }
-
-    public void addDepartment(Department department) {
-        departmentRepository.save(department);
-    }
-
-    public void removeDepartment(String departmentId) {
-        Department department = departmentRepository.findById(departmentId);
-        if (department != null) {
-            departmentRepository.delete(department);
-        }
-    }
-
-    public Department getDepartmentById(String id) {
-        return departmentRepository.findById(id);
-    }
-
-    public List<Department> getAllDepartments() {
-        return departmentRepository.findAll();
-    }
+    private final DepartmentRepository repo;
+    public DepartmentService(DepartmentRepository repo) { this.repo = repo; }
+    public List<Department> getAllDepartments() { return repo.findAll(); }
+    public Department addDepartment(Department d) { return repo.save(d); }
+    public void removeDepartment(String id) { repo.deleteById(id); }
 }

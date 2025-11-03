@@ -8,29 +8,9 @@ import java.util.List;
 
 @Service
 public class StudentService {
-
-    private final StudentRepository studentRepository;
-
-    public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
-    }
-
-    public void addStudent(Student student) {
-        studentRepository.save(student);
-    }
-
-    public void removeStudent(String studentId) {
-        Student student = studentRepository.findById(studentId);
-        if (student != null) {
-            studentRepository.delete(student);
-        }
-    }
-
-    public Student getStudentById(String id) {
-        return studentRepository.findById(id);
-    }
-
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
-    }
+    private final StudentRepository repo;
+    public StudentService(StudentRepository repo) { this.repo = repo; }
+    public List<Student> getAllStudents() { return repo.findAll(); }
+    public Student addStudent(Student s) { return repo.save(s); }
+    public void removeStudent(String id) { repo.deleteById(id); }
 }

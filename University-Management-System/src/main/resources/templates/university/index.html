@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Universities</title>
+</head>
+<body>
+<h1>Universities</h1>
+
+<a th:href="@{/universities/new}">Add University</a>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>City</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="u : ${universities}">
+        <td th:text="${u.id}">id</td>
+        <td th:text="${u.name}">name</td>
+        <td th:text="${u.city}">city</td>
+        <td>
+            <form th:action="@{'/universities/' + ${u.id} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

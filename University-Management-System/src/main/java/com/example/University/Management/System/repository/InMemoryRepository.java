@@ -1,43 +1,34 @@
 package com.example.University.Management.System.repository;
 
-import org.springframework.stereotype.Repository;
-
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
-@Repository
-public class InMemoryRepository<T> implements AbstractRepository<T> {
+public abstract class InMemoryRepository<T> {
+    private final Map<String, T> storage = new LinkedHashMap<>();
+    private final AtomicInteger idGen = new AtomicInteger(1);
 
-    private final Map<String, T> storage = new HashMap<>();
-    protected String getId(T entity) {
-        return Integer.toString(entity.hashCode());
+    protected abstract String getId(T entity);
+    protected abstract void setId(T entity, String id);
+
+    public List<T> findAll() {
+        return new ArrayList<>(storage.values());
     }
 
-    protected void setId(T entity, String id) {
-        // implicit nu face nimic; repo-urile specifice pot suprascrie
+    public Optional<T> findById(String id) {
+        return Optional.ofNullable(storage.get(id));
     }
 
-    @Override
-    public void save(T entity) {
+    public T save(T entity) {
         String id = getId(entity);
-        if (id == null || id.isEmpty()) {
-            id = UUID.randomUUID().toString();
+        if (id == null || id.isBlank()) {
+            id = String.valueOf(idGen.getAndIncrement());
             setId(entity, id);
         }
         storage.put(id, entity);
+        return entity;
     }
 
-    @Override
-    public void delete(T entity) {
-        storage.remove(getId(entity));
-    }
-
-    @Override
-    public T findById(String id) {
-        return storage.get(id);
-    }
-
-    @Override
-    public List<T> findAll() {
-        return new ArrayList<>(storage.values());
+    public void deleteById(String id) {
+        storage.remove(id);
     }
 }

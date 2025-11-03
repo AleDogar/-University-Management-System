@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>New University</title>
+</head>
+<body>
+<h1>New University</h1>
+
+<form th:action="@{/universities}" method="post" th:object="${university}">
+    <label>ID: <input th:field="*{id}" /></label><br/>
+    <label>Name: <input th:field="*{name}" /></label><br/>
+    <label>City: <input th:field="*{city}" /></label><br/>
+    <button type="submit">Save</button>
+</form>
+
+<a th:href="@{/universities}">Back</a>
+</body>
+</html>

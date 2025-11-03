@@ -8,29 +8,9 @@ import java.util.List;
 
 @Service
 public class UniversityService {
-
-    private final UniversityRepository universityRepository;
-
-    public UniversityService(UniversityRepository universityRepository) {
-        this.universityRepository = universityRepository;
-    }
-
-    public void addUniversity(University university) {
-        universityRepository.save(university);
-    }
-
-    public void removeUniversity(String universityId) {
-        University university = universityRepository.findById(universityId);
-        if (university != null) {
-            universityRepository.delete(university);
-        }
-    }
-
-    public University getUniversityById(String id) {
-        return universityRepository.findById(id);
-    }
-
-    public List<University> getAllUniversities() {
-        return universityRepository.findAll();
-    }
+    private final UniversityRepository repo;
+    public UniversityService(UniversityRepository repo) { this.repo = repo; }
+    public List<University> getAllUniversities() { return repo.findAll(); }
+    public University addUniversity(University u) { return repo.save(u); }
+    public void removeUniversity(String id) { repo.deleteById(id); }
 }

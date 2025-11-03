@@ -8,29 +8,9 @@ import java.util.List;
 
 @Service
 public class TeachingAssignmentService {
-
-    private final TeachingAssignmentRepository teachingAssignmentRepository;
-
-    public TeachingAssignmentService(TeachingAssignmentRepository teachingAssignmentRepository) {
-        this.teachingAssignmentRepository = teachingAssignmentRepository;
-    }
-
-    public void addTeachingAssignment(TeachingAssignment teachingAssignment) {
-        teachingAssignmentRepository.save(teachingAssignment);
-    }
-
-    public void removeTeachingAssignment(String assignmentId) {
-        TeachingAssignment teachingAssignment = teachingAssignmentRepository.findById(assignmentId);
-        if (teachingAssignment != null) {
-            teachingAssignmentRepository.delete(teachingAssignment);
-        }
-    }
-
-    public TeachingAssignment getTeachingAssignmentById(String id) {
-        return teachingAssignmentRepository.findById(id);
-    }
-
-    public List<TeachingAssignment> getAllTeachingAssignments() {
-        return teachingAssignmentRepository.findAll();
-    }
+    private final TeachingAssignmentRepository repo;
+    public TeachingAssignmentService(TeachingAssignmentRepository repo) { this.repo = repo; }
+    public List<TeachingAssignment> getAllTeachingAssignments() { return repo.findAll(); }
+    public TeachingAssignment addTeachingAssignment(TeachingAssignment t) { return repo.save(t); }
+    public void removeTeachingAssignment(String id) { repo.deleteById(id); }
 }
