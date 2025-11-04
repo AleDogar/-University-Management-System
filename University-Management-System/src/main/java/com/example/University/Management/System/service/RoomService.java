@@ -15,15 +15,15 @@ public class RoomService {
         this.roomRepository = roomRepository;
     }
 
-    public List<Room> findAll() {
+    public List<Room> getAllRooms() {
         return roomRepository.findAll();
     }
 
-    public Room save(Room room) {
+    public Room addRoom(Room room) {
         return roomRepository.save(room);
     }
 
-    public void deleteById(String id) {
+    public void removeRoom(String id) {
         roomRepository.deleteById(id);
     }
 }
