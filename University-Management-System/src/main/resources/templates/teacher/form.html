@@ -1,10 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>New Teacher</title></head>
 <body>
-
+<h1>New Teacher</h1>
+<form th:action="@{/teachers}" method="post" th:object="${teacher}">
+    <label>ID: <input th:field="*{staffID}" /></label><br/>
+    <label>Name: <input th:field="*{staffName}" /></label><br/>
+    <label>Title: <input th:field="*{title}" /></label><br/>
+    <label>DepartmentID: <input th:field="*{departmentID}" /></label><br/>
+    <label>Email: <input th:field="*{email}" /></label><br/>
+    <button type="submit">Save</button>
+</form>
+<a th:href="@{/teachers}">Back</a>
 </body>
 </html>

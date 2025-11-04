@@ -3,12 +3,12 @@ package com.example.University.Management.System.model;
 import java.util.List;
 
 public class Teacher extends Staff {
+
     private String title;
     private String departmentID;
     private String email;
 
-    public Teacher(String title, String departmentID, String email,
-                   String staffName, String staffID, List<TeachingAssignment> assignments) {
+    public Teacher(List<TeachingAssignment> assignments, String staffName, String staffID) {
         super(assignments, staffName, staffID);
         this.title = title;
         this.departmentID = departmentID;
@@ -45,8 +45,9 @@ public class Teacher extends Staff {
                 "title='" + title + '\'' +
                 ", departmentID='" + departmentID + '\'' +
                 ", email='" + email + '\'' +
-                ", staffName='" + getStaffName() + '\'' +
                 ", staffID='" + getStaffID() + '\'' +
+                ", staffName='" + getStaffName() + '\'' +
+                ", assignments=" + getAssignments() +
                 '}';
     }
 }

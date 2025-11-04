@@ -1,10 +1,38 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <meta charset="UTF-8"/>
+    <title>Rooms</title>
 </head>
 <body>
+<h1>Rooms</h1>
+
+<!-- link pentru a adăuga o cameră nouă -->
+<a th:href="@{/rooms/new}">Add Room</a>
+
+<!-- tabel cu toate camerele -->
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Number</th>
+        <th>Capacity</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="r : ${rooms}">
+        <td th:text="${r.roomID}">ID</td>
+        <td th:text="${r.number}">Number</td>
+        <td th:text="${r.capacity}">Capacity</td>
+        <td>
+            <form th:action="@{'/rooms/' + ${r.roomID} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

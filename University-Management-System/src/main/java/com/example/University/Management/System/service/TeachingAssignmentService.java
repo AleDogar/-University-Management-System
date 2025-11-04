@@ -8,9 +8,22 @@ import java.util.List;
 
 @Service
 public class TeachingAssignmentService {
-    private final TeachingAssignmentRepository repo;
-    public TeachingAssignmentService(TeachingAssignmentRepository repo) { this.repo = repo; }
-    public List<TeachingAssignment> getAllTeachingAssignments() { return repo.findAll(); }
-    public TeachingAssignment addTeachingAssignment(TeachingAssignment t) { return repo.save(t); }
-    public void removeTeachingAssignment(String id) { repo.deleteById(id); }
+
+    private final TeachingAssignmentRepository teachingAssignmentRepository;
+
+    public TeachingAssignmentService(TeachingAssignmentRepository teachingAssignmentRepository) {
+        this.teachingAssignmentRepository = teachingAssignmentRepository;
+    }
+
+    public List<TeachingAssignment> getAllTeachingAssignments() {
+        return teachingAssignmentRepository.findAll();
+    }
+
+    public TeachingAssignment addTeachingAssignment(TeachingAssignment teachingAssignment) {
+        return teachingAssignmentRepository.save(teachingAssignment);
+    }
+
+    public void removeTeachingAssignment(String id) {
+        teachingAssignmentRepository.deleteById(id);
+    }
 }

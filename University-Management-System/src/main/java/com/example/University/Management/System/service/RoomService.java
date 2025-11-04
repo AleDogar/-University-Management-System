@@ -8,9 +8,22 @@ import java.util.List;
 
 @Service
 public class RoomService {
-    private final RoomRepository repo;
-    public RoomService(RoomRepository repo) { this.repo = repo; }
-    public List<Room> getAllRooms() { return repo.findAll(); }
-    public Room addRoom(Room r) { return repo.save(r); }
-    public void removeRoom(String id) { repo.deleteById(id); }
+
+    private final RoomRepository roomRepository;
+
+    public RoomService(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
+    }
+
+    public List<Room> getAllRooms() {
+        return roomRepository.findAll();
+    }
+
+    public Room addRoom(Room room) {
+        return roomRepository.save(room);
+    }
+
+    public void removeRoom(String id) {
+        roomRepository.deleteById(id);
+    }
 }
