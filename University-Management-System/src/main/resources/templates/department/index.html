@@ -1,10 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Departments</title></head>
 <body>
-
+<h1>Departments</h1>
+<a th:href="@{/departments/new}">Add Department</a>
+<table border="1">
+    <thead><tr><th>ID</th><th>Name</th><th>Phone</th><th>Actions</th></tr></thead>
+    <tbody>
+    <tr th:each="d : ${departments}">
+        <td th:text="${d.departmentID}">id</td>
+        <td th:text="${d.departmentName}">name</td>
+        <td th:text="${d.phoneNumber}">phone</td>
+        <td>
+            <form th:action="@{'/departments/' + ${d.departmentID} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>
