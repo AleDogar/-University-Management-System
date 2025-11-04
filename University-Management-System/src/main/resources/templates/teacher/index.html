@@ -1,10 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>Teachers</title></head>
 <body>
-
+<h1>Teachers</h1>
+<a th:href="@{/teachers/new}">Add Teacher</a>
+<table border="1">
+    <thead><tr><th>ID</th><th>Name</th><th>Title</th><th>Dept</th><th>Email</th><th>Actions</th></tr></thead>
+    <tbody>
+    <tr th:each="t : ${teachers}">
+        <td th:text="${t.staffID}">id</td>
+        <td th:text="${t.staffName}">name</td>
+        <td th:text="${t.title}">title</td>
+        <td th:text="${t.departmentID}">dept</td>
+        <td th:text="${t.email}">email</td>
+        <td>
+            <form th:action="@{'/teachers/' + ${t.staffID} + '/delete'}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
 </body>
 </html>

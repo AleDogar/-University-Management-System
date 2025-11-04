@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/universities")
 public class UniversityController {
     private final UniversityService service;
-    public UniversityController(UniversityService service) { this.service = service; }
+    public UniversityController(UniversityService service) {
+        this.service = service; }
 
     @GetMapping
     public String getAll(Model model) {
