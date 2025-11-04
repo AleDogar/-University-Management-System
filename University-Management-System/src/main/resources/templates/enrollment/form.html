@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>New Enrollment</title></head>
 <body>
-
+<h1>New Enrollment</h1>
+<form th:action="@{/enrollments}" method="post" th:object="${enrollment}">
+    <label>Id: <input th:field="*{enrollmentID}" /></label><br/>
+    <label>CourseID: <input th:field="*{courseID}" /></label><br/>
+    <label>Grade:
+        <select th:field="*{grade}">
+            <option th:each="g : ${grades}" th:value="${g}" th:text="${g}"></option>
+        </select>
+    </label><br/>
+    <button type="submit">Save</button>
+</form>
+<a th:href="@{/enrollments}">Back</a>
 </body>
 </html>
