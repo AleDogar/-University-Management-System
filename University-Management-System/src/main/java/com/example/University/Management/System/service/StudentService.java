@@ -5,6 +5,7 @@ import com.example.University.Management.System.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class StudentService {
@@ -20,6 +21,9 @@ public class StudentService {
     }
 
     public Student addStudent(Student student) {
+        if (student.getStudentID() == null || student.getStudentID().isEmpty()) {
+            student.setStudentID(UUID.randomUUID().toString());
+        }
         return studentRepository.save(student);
     }
 
