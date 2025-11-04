@@ -8,9 +8,22 @@ import java.util.List;
 
 @Service
 public class AssistantService {
-    private final AssistantRepository repo;
-    public AssistantService(AssistantRepository repo) { this.repo = repo; }
-    public List<Assistant> getAllAssistants() { return repo.findAll(); }
-    public Assistant addAssistant(Assistant a) { return repo.save(a); }
-    public void removeAssistant(String id) { repo.deleteById(id); }
+
+    private final AssistantRepository assistantRepository;
+
+    public AssistantService(AssistantRepository assistantRepository) {
+        this.assistantRepository = assistantRepository;
+    }
+
+    public List<Assistant> getAllAssistants() {
+        return assistantRepository.findAll();
+    }
+
+    public Assistant addAssistant(Assistant assistant) {
+        return assistantRepository.save(assistant);
+    }
+
+    public void removeAssistant(String id) {
+        assistantRepository.deleteById(id);
+    }
 }

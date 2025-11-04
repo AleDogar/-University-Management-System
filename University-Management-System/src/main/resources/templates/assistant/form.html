@@ -1,10 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"/><title>New Assistant</title></head>
 <body>
-
+<h1>New Assistant</h1>
+<form th:action="@{/assistants}" method="post" th:object="${assistant}">
+    <label>Id: <input th:field="*{staffID}" /></label><br/>
+    <label>Name: <input th:field="*{staffName}" /></label><br/>
+    <label>Role:
+        <select th:field="*{role}">
+            <option th:each="r : ${roles}" th:value="${r}" th:text="${r}"></option>
+        </select>
+    </label><br/>
+    <button type="submit">Save</button>
+</form>
+<a th:href="@{/assistants}">Back</a>
 </body>
 </html>
