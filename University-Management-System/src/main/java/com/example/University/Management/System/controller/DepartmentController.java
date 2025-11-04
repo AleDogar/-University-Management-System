@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/departments")
-public class DepartamentController {
+public class DepartmentController {
     private final DepartmentService service;
-    public DepartamentController(DepartmentService service) { this.service = service; }
+    public DepartmentController(DepartmentService service) { this.service = service; }
 
     @GetMapping
     public String getAll(Model model) {
