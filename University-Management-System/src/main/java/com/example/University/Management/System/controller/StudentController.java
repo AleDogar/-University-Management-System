@@ -12,7 +12,8 @@ public class StudentController {
     private final StudentService service;
 
     public StudentController(StudentService service) {
-        this.service = service; }
+        this.service = service;
+    }
 
     @GetMapping
     public String getAll(Model model) {
@@ -22,7 +23,7 @@ public class StudentController {
 
     @GetMapping("/new")
     public String showAddForm(Model model) {
-        model.addAttribute("student", new Student(null, "", null, "", 0));
+        model.addAttribute("student", new Student(null, "", "", ""));
         return "student/form";
     }
 

@@ -1,24 +1,36 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"/><title>Students</title></head>
+<head>
+    <meta charset="UTF-8">
+    <title>Students</title>
+</head>
 <body>
-<h1>Students</h1>
-<a th:href="@{/students/new}">Add Student</a>
-<table border="1">
-    <thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Note</th><th>Actions</th></tr></thead>
+<h1>Students List</h1>
+
+<a th:href="@{/students/new}">Add New Student</a>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
     <tbody>
-    <tr th:each="s : ${students}">
-        <td th:text="${s.studentID}">id</td>
-        <td th:text="${s.studentName}">name</td>
-        <td th:text="${s.email}">email</td>
-        <td th:text="${s.note}">note</td>
+    <tr th:each="student : ${students}">
+        <td th:text="${student.studentID}"></td>
+        <td th:text="${student.studentName}"></td>
+        <td th:text="${student.email}"></td>
         <td>
-            <form th:action="@{'/students/' + ${s.studentID} + '/delete'}" method="post">
+            <form th:action="@{'/students/' + ${student.studentID} + '/delete'}" method="post">
                 <button type="submit">Delete</button>
             </form>
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

@@ -7,14 +7,12 @@ public class Student {
     private String studentName;
     private List<Enrollment> enrollments;
     private String email;
-    private int note;
 
-    public Student(List<Enrollment> enrollments, String studentName, String studentID, String email, int note) {
+    public Student(List<Enrollment> enrollments, String studentName, String studentID, String email) {
         this.enrollments = enrollments;
         this.studentName = studentName;
         this.studentID = studentID;
         this.email = email;
-        this.note = note;
     }
 
     public String getStudentID() {
@@ -41,14 +39,6 @@ public class Student {
         this.enrollments = enrollments;
     }
 
-    public int getNote() {
-        return note;
-    }
-
-    public void setNote(int note) {
-        this.note = note;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -64,7 +54,6 @@ public class Student {
                 ", studentName='" + studentName + '\'' +
                 ", enrollments=" + enrollments +
                 ", email='" + email + '\'' +
-                ", note=" + note +
                 '}';
     }
 }
