@@ -11,19 +11,27 @@ public class AssistantService {
 
     private final AssistantRepository assistantRepository;
 
-    public AssistantService(AssistantRepository assistantRepository) {
+    public AssistantService(AssistantRepository assistantRepository)
+    {
+
         this.assistantRepository = assistantRepository;
     }
 
-    public List<Assistant> getAllAssistants() {
+    public List<Assistant> getAllAssistants()
+    {
+
         return assistantRepository.findAll();
     }
 
-    public Assistant addAssistant(Assistant assistant) {
+    public Assistant addAssistant(Assistant assistant)
+    {
+
         return assistantRepository.save(assistant);
     }
 
-    public void removeAssistant(String id) {
+    public void removeAssistant(String id)
+    {
+
         assistantRepository.deleteById(id);
     }
 }
