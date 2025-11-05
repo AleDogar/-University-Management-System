@@ -12,18 +12,22 @@ public class CourseService {
     private final CourseRepository courseRepository;
 
     public CourseService(CourseRepository courseRepository) {
+
         this.courseRepository = courseRepository;
     }
 
     public List<Course> getAllCourses() {
+
         return courseRepository.findAll();
     }
 
     public Course addCourse(Course course) {
+
         return courseRepository.save(course);
     }
 
     public void removeCourse(String id) {
+
         courseRepository.deleteById(id);
     }
 }
