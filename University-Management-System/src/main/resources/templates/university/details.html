@@ -14,8 +14,8 @@
         <h5 class="card-title" th:text="${university.universityName}"></h5>
         <p class="card-text"><strong>ID:</strong> <span th:text="${university.universityID}"></span></p>
         <p class="card-text"><strong>City:</strong> <span th:text="${university.city}"></span></p>
-        <p class="card-text"><strong>Departments:</strong> <span th:text="${university.departments.size()}"></span></p>
-        <p class="card-text"><strong>Rooms:</strong> <span th:text="${university.rooms.size()}"></span></p>
+        <p class="card-text"><strong>Departments:</strong> <span th:text="${#lists.size(university.departments)}"></span></p>
+        <p class="card-text"><strong>Rooms:</strong> <span th:text="${#lists.size(university.rooms)}"></span></p>
     </div>
 </div>
 

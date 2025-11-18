@@ -1,0 +1,26 @@
+[
+  {
+    "staffID": "1",
+    "staffName": "John Doe",
+    "role": "Lab",
+    "email": "john.doe@example.com",
+    "departmentID": "CS101",
+    "assignments": []
+  },
+  {
+    "staffID": "2",
+    "staffName": "Jane Smith",
+    "role": "TA",
+    "email": "jane.smith@example.com",
+    "departmentID": "CS102",
+    "assignments": []
+  },
+  {
+    "staffID": "3",
+    "staffName": "Mike Johnson",
+    "role": "Grader",
+    "email": "mike.johnson@example.com",
+    "departmentID": "CS103",
+    "assignments": []
+  }
+]

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-4">
+
+<h1>Teacher Details</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title" th:text="${teacher.staffName}"></h5>
+        <p class="card-text"><strong>ID:</strong> <span th:text="${teacher.staffID}"></span></p>
+        <p class="card-text"><strong>Title:</strong> <span th:text="${teacher.title}"></span></p>
+        <p class="card-text"><strong>Department ID:</strong> <span th:text="${teacher.departmentID}"></span></p>
+        <p class="card-text"><strong>Email:</strong> <span th:text="${teacher.email}"></span></p>
+        <p class="card-text"><strong>Assignments:</strong> <span th:text="${#lists.size(teacher.assignments)}"></span></p>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a th:href="@{'/teachers/' + ${teacher.staffID} + '/edit'}" class="btn btn-warning">Edit</a>
+    <a th:href="@{/teachers}" class="btn btn-secondary">Back to List</a>
+</div>
+
+</body>
+</html>
