@@ -1,8 +1,5 @@
 package com.example.University.Management.System.model;
 
-import com.example.University.Management.System.model.Department;
-import com.example.University.Management.System.model.Room;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,28 +10,33 @@ public class University {
     private List<Department> departments;
     private List<Room> rooms;
 
-    public University(String id, String name, String city) {
-        this.universityID = id;
-        this.universityName = name;
+    public University() {
+        this.departments = new ArrayList<>();
+        this.rooms = new ArrayList<>();
+    }
+
+    public University(String universityID, String universityName, String city) {
+        this.universityID = universityID;
+        this.universityName = universityName;
         this.city = city;
         this.departments = new ArrayList<>();
         this.rooms = new ArrayList<>();
     }
 
-    public String getId() {
+    public String getUniversityID() {
         return universityID;
     }
 
-    public void setId(String id) {
-        this.universityID = id;
+    public void setUniversityID(String universityID) {
+        this.universityID = universityID;
     }
 
-    public String getName() {
+    public String getUniversityName() {
         return universityName;
     }
 
-    public void setName(String name) {
-        this.universityName = name;
+    public void setUniversityName(String universityName) {
+        this.universityName = universityName;
     }
 
     public String getCity() {
@@ -59,16 +61,5 @@ public class University {
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
-    }
-
-    @Override
-    public String toString() {
-        return "University{" +
-                "id='" + universityID + '\'' +
-                ", name='" + universityName + '\'' +
-                ", city='" + city + '\'' +
-                ", departments=" + departments +
-                ", rooms=" + rooms +
-                '}';
     }
 }

@@ -9,31 +9,54 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/universities")
 public class UniversityController {
+
     private final UniversityService service;
+
     public UniversityController(UniversityService service) {
-        this.service = service; }
+        this.service = service;
+    }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String listUniversities(Model model) {
         model.addAttribute("universities", service.getAllUniversities());
         return "university/index";
     }
 
     @GetMapping("/new")
     public String showAddForm(Model model) {
-        model.addAttribute("university", new University(null, "", ""));
+        model.addAttribute("university", new University());
         return "university/form";
     }
 
-    @PostMapping
-    public String add(@ModelAttribute University u) {
-        service.addUniversity(u);
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        University university = service.getUniversityById(id);
+        if (university != null) {
+            model.addAttribute("university", university);
+            return "university/form";
+        }
+        return "redirect:/universities";
+    }
+
+    @PostMapping("/save")
+    public String saveUniversity(@ModelAttribute University university) {
+        service.saveUniversity(university);
         return "redirect:/universities";
     }
 
     @PostMapping("/{id}/delete")
-    public String delete(@PathVariable String id) {
-        service.removeUniversity(id);
+    public String deleteUniversity(@PathVariable String id) {
+        service.deleteUniversity(id);
+        return "redirect:/universities";
+    }
+
+    @GetMapping("/{id}")
+    public String viewDetails(@PathVariable String id, Model model) {
+        University university = service.getUniversityById(id);
+        if (university != null) {
+            model.addAttribute("university", university);
+            return "university/details";
+        }
         return "redirect:/universities";
     }
 }

@@ -19,11 +19,15 @@ public class TeacherService {
         return teacherRepository.findAll();
     }
 
-    public Teacher addTeacher(Teacher teacher) {
-        return teacherRepository.save(teacher);
+    public void addTeacher(Teacher teacher) {
+        teacherRepository.save(teacher);
     }
 
     public void removeTeacher(String id) {
-        teacherRepository.deleteById(id);
+        Teacher teacher = teacherRepository.findById(id);
+        if (teacher != null) {
+            teacherRepository.delete(teacher);
+        }
     }
+
 }

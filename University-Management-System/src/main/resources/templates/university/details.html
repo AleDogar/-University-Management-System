@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>University Details</title>
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+</head>
+<body class="container mt-4">
+
+<h1>University Details</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title" th:text="${university.universityName}"></h5>
+        <p class="card-text"><strong>ID:</strong> <span th:text="${university.universityID}"></span></p>
+        <p class="card-text"><strong>City:</strong> <span th:text="${university.city}"></span></p>
+        <p class="card-text"><strong>Departments:</strong> <span th:text="${university.departments.size()}"></span></p>
+        <p class="card-text"><strong>Rooms:</strong> <span th:text="${university.rooms.size()}"></span></p>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a th:href="@{'/universities/' + ${university.universityID} + '/edit'}" class="btn btn-warning">Edit</a>
+    <form th:action="@{'/universities/' + ${university.universityID} + '/delete'}" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete</button>
+    </form>
+    <a th:href="@{/universities}" class="btn btn-secondary">Back to List</a>
+</div>
+
+</body>
+</html>

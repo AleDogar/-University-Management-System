@@ -25,7 +25,6 @@ public class AssistantService {
 
     public Assistant addAssistant(Assistant assistant)
     {
-
         return assistantRepository.save(assistant);
     }
 
