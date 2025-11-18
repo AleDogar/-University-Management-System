@@ -5,25 +5,34 @@ import com.example.University.Management.System.repository.TeachingAssignmentRep
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TeachingAssignmentService {
 
-    private final TeachingAssignmentRepository teachingAssignmentRepository;
+    private final TeachingAssignmentRepository repository;
 
-    public TeachingAssignmentService(TeachingAssignmentRepository teachingAssignmentRepository) {
-        this.teachingAssignmentRepository = teachingAssignmentRepository;
+    public TeachingAssignmentService(TeachingAssignmentRepository repository) {
+        this.repository = repository;
     }
 
     public List<TeachingAssignment> getAllTeachingAssignments() {
-        return teachingAssignmentRepository.findAll();
+        return repository.findAll();
     }
 
-    public TeachingAssignment addTeachingAssignment(TeachingAssignment teachingAssignment) {
-        return teachingAssignmentRepository.save(teachingAssignment);
+    public TeachingAssignment getTeachingAssignmentById(String id) {
+        return repository.findById(id);
     }
 
-    public void removeTeachingAssignment(String id) {
-        teachingAssignmentRepository.deleteById(id);
+    public TeachingAssignment saveTeachingAssignment(TeachingAssignment ta) {
+        if (ta.getId() == null || ta.getId().isEmpty()) {
+            ta.setId(UUID.randomUUID().toString());
+        }
+        repository.save(ta);
+        return ta;
+    }
+
+    public void deleteTeachingAssignment(String id) {
+        repository.deleteById(id);
     }
 }

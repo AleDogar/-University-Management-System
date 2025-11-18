@@ -10,11 +10,15 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/assistants")
 public class AssistantController {
+
     private final AssistantService service;
-    public AssistantController(AssistantService service) { this.service = service; }
+
+    public AssistantController(AssistantService service) {
+        this.service = service;
+    }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String listAll(Model model) {
         model.addAttribute("assistants", service.getAllAssistants());
         model.addAttribute("roles", ClassRole.values());
         return "assistant/index";
@@ -22,20 +26,41 @@ public class AssistantController {
 
     @GetMapping("/new")
     public String showAddForm(Model model) {
-        model.addAttribute("assistant", new Assistant(ClassRole.Lab, "", "", null));
+        model.addAttribute("assistant", new Assistant());
         model.addAttribute("roles", ClassRole.values());
         return "assistant/form";
     }
 
-    @PostMapping
-    public String add(@ModelAttribute Assistant a) {
-        service.addAssistant(a);
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        Assistant a = service.getAssistantById(id);
+        if (a != null) {
+            model.addAttribute("assistant", a);
+            model.addAttribute("roles", ClassRole.values());
+            return "assistant/form";
+        }
+        return "redirect:/assistants";
+    }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute Assistant assistant) {
+        service.saveAssistant(assistant);
         return "redirect:/assistants";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
-        service.removeAssistant(id);
+        service.deleteAssistant(id);
+        return "redirect:/assistants";
+    }
+
+    @GetMapping("/{id}")
+    public String viewDetails(@PathVariable String id, Model model) {
+        Assistant a = service.getAssistantById(id);
+        if (a != null) {
+            model.addAttribute("assistant", a);
+            return "assistant/details"; // vei crea view-ul details similar cu University/Teacher
+        }
         return "redirect:/assistants";
     }
 }

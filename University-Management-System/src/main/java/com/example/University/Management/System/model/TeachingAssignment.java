@@ -1,58 +1,59 @@
 package com.example.University.Management.System.model;
 
 public class TeachingAssignment {
-    private String teachingassignmentID;
-    private String courseID;
-    private String StaffID;
-    private ClassType managing;
+    private String id;
+    private String courseId;
+    private String staffId;
+    private ClassType classType;
 
-    public TeachingAssignment(String teachingassignmentID, ClassType managing, String courseID, String staffID) {
-        this.teachingassignmentID = teachingassignmentID;
-        this.managing = managing;
-        this.courseID = courseID;
-        this.StaffID = staffID;
+    public TeachingAssignment() {}
+
+    public TeachingAssignment(String id, ClassType classType, String courseId, String staffId) {
+        this.id = id;
+        this.classType = classType;
+        this.courseId = courseId;
+        this.staffId = staffId;
     }
 
-    public String getTeachingassignmentID() {
-        return teachingassignmentID;
+    public String getId() {
+        return id;
     }
 
-    public void setTeachingassignmentID(String teachingassignmentID) {
-        this.teachingassignmentID = teachingassignmentID;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getCourseID() {
-        return courseID;
+    public String getCourseId() {
+        return courseId;
     }
 
-    public void setCourseID(String courseID) {
-        this.courseID = courseID;
+    public void setCourseId(String courseId) {
+        this.courseId = courseId;
     }
 
-    public String getStaffID() {
-        return StaffID;
+    public String getStaffId() {
+        return staffId;
     }
 
-    public void setStaffID(String staffID) {
-        StaffID = staffID;
+    public void setStaffId(String staffId) {
+        this.staffId = staffId;
     }
 
-    public ClassType getManaging() {
-        return managing;
+    public ClassType getClassType() {
+        return classType;
     }
 
-    public void setManaging(ClassType managing) {
-        this.managing = managing;
+    public void setClassType(ClassType classType) {
+        this.classType = classType;
     }
 
     @Override
     public String toString() {
         return "TeachingAssignment{" +
-                "teachingassignmentID='" + teachingassignmentID + '\'' +
-                ", courseID='" + courseID + '\'' +
-                ", StaffID='" + StaffID + '\'' +
-                ", managing=" + managing +
+                "id='" + id + '\'' +
+                ", courseId='" + courseId + '\'' +
+                ", staffId='" + staffId + '\'' +
+                ", classType=" + classType +
                 '}';
-
     }
 }

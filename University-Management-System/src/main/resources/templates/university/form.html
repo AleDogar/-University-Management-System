@@ -2,9 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
-    <title th:text="${university.universityID != null ? 'Edit University' : 'New University'}">
-        University Form
-    </title>
+    <title th:text="${university.universityID != null ? 'Edit University' : 'New University'}">University Form</title>
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 </head>
 <body class="container mt-4">
@@ -14,8 +12,7 @@
 <form th:action="@{/universities/save}" method="post" th:object="${university}">
     <div class="mb-3">
         <label for="id" class="form-label">ID:</label>
-        <input type="text" id="id" class="form-control" th:field="*{universityID}"
-               th:readonly="${university.universityID != null}"/>
+        <input type="text" id="id" class="form-control" th:field="*{universityID}" th:readonly="${university.universityID != null}"/>
     </div>
 
     <div class="mb-3">

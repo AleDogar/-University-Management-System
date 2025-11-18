@@ -5,6 +5,7 @@ import com.example.University.Management.System.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TeacherService {
@@ -19,15 +20,19 @@ public class TeacherService {
         return teacherRepository.findAll();
     }
 
-    public void addTeacher(Teacher teacher) {
-        teacherRepository.save(teacher);
+    public Teacher getTeacherById(String id) {
+        return teacherRepository.findById(id);
     }
 
-    public void removeTeacher(String id) {
-        Teacher teacher = teacherRepository.findById(id);
-        if (teacher != null) {
-            teacherRepository.delete(teacher);
+    public Teacher saveTeacher(Teacher teacher) {
+        if (teacher.getStaffID() == null || teacher.getStaffID().isEmpty()) {
+            teacher.setStaffID(UUID.randomUUID().toString());
         }
+        teacherRepository.save(teacher);
+        return teacher;
     }
 
+    public void deleteTeacher(String id) {
+        teacherRepository.deleteById(id);
+    }
 }
