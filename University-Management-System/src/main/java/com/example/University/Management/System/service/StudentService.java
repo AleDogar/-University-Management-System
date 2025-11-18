@@ -10,24 +10,29 @@ import java.util.UUID;
 @Service
 public class StudentService {
 
-    private final StudentRepository studentRepository;
+    private final StudentRepository repository;
 
-    public StudentService(StudentRepository studentRepository) {
-        this.studentRepository = studentRepository;
+    public StudentService(StudentRepository repository) {
+        this.repository = repository;
     }
 
     public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+        return repository.findAll();
     }
 
-    public Student addStudent(Student student) {
-        if (student.getStudentID() == null || student.getStudentID().isEmpty()) {
-            student.setStudentID(UUID.randomUUID().toString());
+    public Student getStudentById(String id) {
+        return repository.findById(id);
+    }
+
+    public Student saveStudent(Student student) {
+        if (student.getId() == null || student.getId().isEmpty()) {
+            student.setId(UUID.randomUUID().toString());
         }
-        return studentRepository.save(student);
+        repository.save(student);
+        return student;
     }
 
     public void removeStudent(String id) {
-        studentRepository.deleteById(id);
+        repository.deleteById(id);
     }
 }
