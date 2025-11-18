@@ -1,42 +1,32 @@
 package com.example.University.Management.System.model;
 
-import java.util.List;
-
 public class Student {
-    private String studentID;
-    private String studentName;
-    private List<Enrollment> enrollments;
+    private String id;
+    private String name;
     private String email;
 
-    public Student(List<Enrollment> enrollments, String studentName, String studentID, String email) {
-        this.enrollments = enrollments;
-        this.studentName = studentName;
-        this.studentID = studentID;
+    public Student() {}
+
+    public Student(String id, String name, String email) {
+        this.id = id;
+        this.name = name;
         this.email = email;
     }
 
-    public String getStudentID() {
-        return studentID;
+    public String getId() {
+        return id;
     }
 
-    public void setStudentID(String studentID) {
-        this.studentID = studentID;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getStudentName() {
-        return studentName;
+    public String getName() {
+        return name;
     }
 
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
-    }
-
-    public List<Enrollment> getEnrollments() {
-        return enrollments;
-    }
-
-    public void setEnrollments(List<Enrollment> enrollments) {
-        this.enrollments = enrollments;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -50,9 +40,8 @@ public class Student {
     @Override
     public String toString() {
         return "Student{" +
-                "studentID='" + studentID + '\'' +
-                ", studentName='" + studentName + '\'' +
-                ", enrollments=" + enrollments +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 '}';
     }

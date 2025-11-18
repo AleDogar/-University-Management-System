@@ -9,33 +9,65 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("/students")
 public class StudentController {
+
     private final StudentService service;
 
     public StudentController(StudentService service) {
         this.service = service;
     }
 
+    // List all students
     @GetMapping
-    public String getAll(Model model) {
+    public String listAll(Model model) {
         model.addAttribute("students", service.getAllStudents());
         return "student/index";
     }
 
+    // Show form for adding a new student
     @GetMapping("/new")
     public String showAddForm(Model model) {
-        model.addAttribute("student", new Student(null, "", "", ""));
+        // Folosim constructorul fără parametri și setăm câmpurile goale
+        Student student = new Student();
+        student.setId(null);
+        student.setName("");
+        student.setEmail("");
+        model.addAttribute("student", student);
         return "student/form";
     }
 
-    @PostMapping
-    public String add(@ModelAttribute Student s) {
-        service.addStudent(s);
+    // Show form for editing an existing student
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        Student student = service.getStudentById(id);
+        if (student != null) {
+            model.addAttribute("student", student);
+            return "student/form";
+        }
         return "redirect:/students";
     }
 
+    // Save a new or edited student
+    @PostMapping("/save")
+    public String save(@ModelAttribute Student student) {
+        service.saveStudent(student);
+        return "redirect:/students";
+    }
+
+    // Delete a student
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
         service.removeStudent(id);
+        return "redirect:/students";
+    }
+
+    // View student details
+    @GetMapping("/{id}")
+    public String viewDetails(@PathVariable String id, Model model) {
+        Student student = service.getStudentById(id);
+        if (student != null) {
+            model.addAttribute("student", student);
+            return "student/details";
+        }
         return "redirect:/students";
     }
 }
