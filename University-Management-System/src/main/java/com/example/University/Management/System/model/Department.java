@@ -3,13 +3,18 @@ package com.example.University.Management.System.model;
 import java.util.List;
 
 public class Department {
+
     private String departmentID;
     private String departmentName;
     private List<Course> courses;
     private List<Teacher> teachers;
     private String phoneNumber;
 
-    public Department(String departmentID, String departmentName, List<Course> courses, List<Teacher> teachers, String phoneNumber) {
+    public Department() {}
+
+    public Department(String departmentID, String departmentName,
+                      List<Course> courses, List<Teacher> teachers,
+                      String phoneNumber) {
         this.departmentID = departmentID;
         this.departmentName = departmentName;
         this.courses = courses;
@@ -61,11 +66,10 @@ public class Department {
     public String toString() {
         return "Department{" +
                 "departmentID='" + departmentID + '\'' +
-                ", departamentName='" + departmentName + '\'' +
+                ", departmentName='" + departmentName + '\'' +
                 ", courses=" + courses +
                 ", teachers=" + teachers +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 }
-
