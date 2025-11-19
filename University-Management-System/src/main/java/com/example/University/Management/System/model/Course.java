@@ -3,6 +3,7 @@ package com.example.University.Management.System.model;
 import java.util.List;
 
 public class Course {
+
     private String courseID;
     private String title;
     private int credits;
@@ -10,6 +11,22 @@ public class Course {
     private String roomID;
     private List<Enrollment> enrollments;
     private List<TeachingAssignment> assignments;
+
+    public Course() {}
+
+    public Course(String courseID, String title, int credits,
+                  String departmentID, String roomID,
+                  List<Enrollment> enrollments,
+                  List<TeachingAssignment> assignments) {
+
+        this.courseID = courseID;
+        this.title = title;
+        this.credits = credits;
+        this.departmentID = departmentID;
+        this.roomID = roomID;
+        this.enrollments = enrollments;
+        this.assignments = assignments;
+    }
 
     public String getCourseID() {
         return courseID;
@@ -65,18 +82,6 @@ public class Course {
 
     public void setAssignments(List<TeachingAssignment> assignments) {
         this.assignments = assignments;
-    }
-
-    public Course(String courseID, String title, int credits, String departmentID, String roomID, List<Enrollment> enrollments, List<TeachingAssignment> assignments) {
-        this.courseID = courseID;
-        this.title = title;
-        this.credits = credits;
-        this.departmentID = departmentID;
-        this.roomID = roomID;
-        this.enrollments = enrollments;
-        this.assignments = assignments;
-
-
     }
 
     @Override
