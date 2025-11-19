@@ -5,29 +5,34 @@ import com.example.University.Management.System.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CourseService {
 
-    private final CourseRepository courseRepository;
+    private final CourseRepository repository;
 
-    public CourseService(CourseRepository courseRepository) {
-
-        this.courseRepository = courseRepository;
+    public CourseService(CourseRepository repository) {
+        this.repository = repository;
     }
 
     public List<Course> getAllCourses() {
-
-        return courseRepository.findAll();
+        return repository.findAll();
     }
 
-    public Course addCourse(Course course) {
-
-        return courseRepository.save(course);
+    public Course getCourseById(String id) {
+        return repository.findById(id);
     }
 
-    public void removeCourse(String id) {
+    public Course saveCourse(Course course) {
+        if (course.getCourseID() == null || course.getCourseID().isEmpty()) {
+            course.setCourseID(UUID.randomUUID().toString());
+        }
+        repository.save(course);
+        return course;
+    }
 
-        courseRepository.deleteById(id);
+    public void deleteCourse(String id) {
+        repository.deleteById(id);
     }
 }
