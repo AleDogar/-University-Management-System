@@ -5,6 +5,7 @@ import com.example.University.Management.System.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class RoomService {
@@ -19,8 +20,16 @@ public class RoomService {
         return roomRepository.findAll();
     }
 
-    public Room addRoom(Room room) {
-        return roomRepository.save(room);
+    public Room getRoomById(String id) {
+        return roomRepository.findById(id);
+    }
+
+    public Room saveRoom(Room room) {
+        if (room.getRoomID() == null || room.getRoomID().isEmpty()) {
+            room.setRoomID(UUID.randomUUID().toString());
+        }
+        roomRepository.save(room);
+        return room;
     }
 
     public void removeRoom(String id) {
