@@ -1,1 +1,73 @@
-[{"universityID":"U1","universityName":"University of Bucharest","city":"Bucharest","departments":[],"rooms":[]},{"universityID":"U2","universityName":"Babes-Bolyai University","city":"Cluj-Napoca","departments":[],"rooms":[]},{"universityID":"U3","universityName":"Alexandru Ioan Cuza University","city":"Iasi","departments":[],"rooms":[]},{"universityID":"U4","universityName":"West University of Timisoara","city":"Timisoara","departments":[],"rooms":[]}]
+[
+  {
+    "universityID": "U1",
+    "universityName": "Universitatea din București",
+    "city": "București",
+    "departments": [],
+    "rooms": []
+  },
+  {
+    "universityID": "U2",
+    "universityName": "Universitatea Babeș-Bolyai",
+    "city": "Cluj-Napoca",
+    "departments": [],
+    "rooms": []
+  },
+  {
+    "universityID": "U3",
+    "universityName": "Universitatea Alexandru Ioan Cuza",
+    "city": "Iași",
+    "departments": [],
+    "rooms": []
+  },
+  {
+    "universityID": "U4",
+    "universityName": "Universitatea de Vest din Timișoara",
+    "city": "Timișoara",
+    "departments": [],
+    "rooms": []
+  },
+
+  {
+    "universityID": "U5",
+    "universityName": "Universitatea Politehnica din București",
+    "city": "București",
+    "departments": [],
+    "rooms": []
+  },
+  {
+    "universityID": "U6",
+    "universityName": "Universitatea Tehnică din Cluj-Napoca",
+    "city": "Cluj-Napoca",
+    "departments": [],
+    "rooms": []
+  },
+  {
+    "universityID": "U7",
+    "universityName": "Universitatea Transilvania din Brașov",
+    "city": "Brașov",
+    "departments": [],
+    "rooms": []
+  },
+  {
+    "universityID": "U8",
+    "universityName": "Universitatea Dunărea de Jos din Galați",
+    "city": "Galați",
+    "departments": [],
+    "rooms": []
+  },
+  {
+    "universityID": "U9",
+    "universityName": "Universitatea Ovidius din Constanța",
+    "city": "Constanța",
+    "departments": [],
+    "rooms": []
+  },
+  {
+    "universityID": "U10",
+    "universityName": "Universitatea Lucian Blaga din Sibiu",
+    "city": "Sibiu",
+    "departments": [],
+    "rooms": []
+  }
+]

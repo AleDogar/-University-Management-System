@@ -1,1 +1,13 @@
-[{"departmentID":"D002","departmentName":"Mathematics","courses":null,"teachers":null,"phoneNumber":"021-2345678"},{"departmentID":"D001","departmentName":"Computer Science","courses":[],"teachers":[],"phoneNumber":"021-1234567"},{"departmentID":"D005","departmentName":"Biology","courses":[],"teachers":[],"phoneNumber":"021-5678901"},{"departmentID":"D004","departmentName":"Chemistry","courses":[],"teachers":[],"phoneNumber":"021-4567890"}]
+[
+  {"departmentID":"D002","departmentName":"Matematica","courses":null,"teachers":null,"phoneNumber":"0756871234"},
+  {"departmentID":"D001","departmentName":"Computer Science","courses":null,"teachers":null,"phoneNumber":"0745321976"},
+  {"departmentID":"D005","departmentName":"Istorie","courses":null,"teachers":null,"phoneNumber":"0767123619"},
+  {"departmentID":"D004","departmentName":"Filosofie","courses":null,"teachers":null,"phoneNumber":"0756871234"},
+
+  {"departmentID":"D006","departmentName":"Biologie","courses":null,"teachers":null,"phoneNumber":"0723456789"},
+  {"departmentID":"D007","departmentName":"Chimie","courses":null,"teachers":null,"phoneNumber":"0734567890"},
+  {"departmentID":"D008","departmentName":"Fizica","courses":null,"teachers":null,"phoneNumber":"0789123456"},
+  {"departmentID":"D009","departmentName":"Geografie","courses":null,"teachers":null,"phoneNumber":"0798234567"},
+  {"departmentID":"D010","departmentName":"Literatura","courses":null,"teachers":null,"phoneNumber":"0712345678"},
+  {"departmentID":"D011","departmentName":"Economie","courses":null,"teachers":null,"phoneNumber":"0765432198"}
+]

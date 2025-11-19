@@ -1,1 +1,13 @@
-[{"courseID":"CS103","title":"Algorithm","credits":4,"departmentID":"D001","roomID":"R103","enrollments":null,"assignments":null},{"courseID":"CS104","title":"Operating Systems","credits":6,"departmentID":"D002","roomID":"R201","enrollments":[],"assignments":[]},{"courseID":"CS101","title":"Introduction to Programming","credits":5,"departmentID":"D001","roomID":"R101","enrollments":[],"assignments":[]},{"courseID":"CS102","title":"Data Structures","credits":4,"departmentID":"D001","roomID":"R102","enrollments":[],"assignments":[]}]
+[
+  {"courseID":"CS103","title":"Algoritmi","credits":4,"departmentID":"D001","roomID":"R103","enrollments":null,"assignments":null},
+  {"courseID":"CS104","title":"Sisteme de Operare","credits":6,"departmentID":"D002","roomID":"R201","enrollments":[],"assignments":[]},
+  {"courseID":"CS101","title":"Introducere în Programare","credits":5,"departmentID":"D001","roomID":"R101","enrollments":[],"assignments":[]},
+  {"courseID":"CS102","title":"Structuri de Date","credits":4,"departmentID":"D001","roomID":"R102","enrollments":[],"assignments":[]},
+
+  {"courseID":"CS105","title":"Baze de Date","credits":5,"departmentID":"D001","roomID":"R104","enrollments":[],"assignments":[]},
+  {"courseID":"CS106","title":"Rețele de Calculatoare","credits":6,"departmentID":"D001","roomID":"R105","enrollments":[],"assignments":[]},
+  {"courseID":"CS107","title":"Programare Web","credits":4,"departmentID":"D001","roomID":"R106","enrollments":[],"assignments":[]},
+  {"courseID":"CS108","title":"Inteligență Artificială","credits":5,"departmentID":"D001","roomID":"R107","enrollments":[],"assignments":[]},
+  {"courseID":"CS109","title":"Arhitectura Calculatoarelor","credits":5,"departmentID":"D001","roomID":"R108","enrollments":[],"assignments":[]},
+  {"courseID":"CS110","title":"Ingineria Software","credits":6,"departmentID":"D001","roomID":"R109","enrollments":[],"assignments":[]}
+]

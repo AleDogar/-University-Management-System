@@ -1,1 +1,12 @@
-[{"id":"2","courseId":"CS102","staffId":"S002","classType":"Lab"},{"id":"3","courseId":"CS103","staffId":"S003","classType":"Lab"},{"id":"4","courseId":"CS104","staffId":"S004","classType":"Course"},{"id":"5","courseId":"CS105","staffId":"S005","classType":"Lab"}]
+[
+  {"id": "2", "courseId": "CS102", "staffId": "S002", "classType": "Lab"},
+  {"id": "3", "courseId": "CS103", "staffId": "S003", "classType": "Lab"},
+  {"id": "4", "courseId": "CS104", "staffId": "S004", "classType": "Course"},
+  {"id": "5", "courseId": "CS105", "staffId": "S005", "classType": "Lab"},
+  {"id": "6", "courseId": "CS101", "staffId": "S006", "classType": "Course"},
+  {"id": "7", "courseId": "CS106", "staffId": "S007", "classType": "Lab"},
+  {"id": "8", "courseId": "CS107", "staffId": "S008", "classType": "Course"},
+  {"id": "9", "courseId": "CS108", "staffId": "S009", "classType": "Lab"},
+  {"id": "10", "courseId": "CS109", "staffId": "S010", "classType": "Course"},
+  {"id": "11", "courseId": "CS110", "staffId": "S011", "classType": "Lab"}
+]

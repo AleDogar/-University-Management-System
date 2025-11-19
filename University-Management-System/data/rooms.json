@@ -1,1 +1,13 @@
-[{"roomID":"2","number":"B202","capacity":25.0,"courses":[]},{"roomID":"3","number":"C303","capacity":50.0,"courses":[]},{"roomID":"4","number":"D404","capacity":40.0,"courses":[]},{"roomID":"5","number":"E505","capacity":35.0,"courses":[]}]
+[
+  {"roomID": "2", "number": "B202", "capacity": 25.0, "courses": []},
+  {"roomID": "3", "number": "C303", "capacity": 50.0, "courses": []},
+  {"roomID": "4", "number": "D404", "capacity": 40.0, "courses": []},
+  {"roomID": "5", "number": "E505", "capacity": 35.0, "courses": []},
+
+  {"roomID": "6", "number": "F606", "capacity": 30.0, "courses": []},
+  {"roomID": "7", "number": "G707", "capacity": 20.0, "courses": []},
+  {"roomID": "8", "number": "H808", "capacity": 60.0, "courses": []},
+  {"roomID": "9", "number": "I909", "capacity": 45.0, "courses": []},
+  {"roomID": "10", "number": "J010", "capacity": 55.0, "courses": []},
+  {"roomID": "11", "number": "K111", "capacity": 28.0, "courses": []}
+]

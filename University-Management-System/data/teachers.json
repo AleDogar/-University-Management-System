@@ -1,1 +1,83 @@
-[{"staffID":"T1","staffName":"John Smith","assignments":[],"title":"Professor","departmentID":"D2","email":"john.smith@university.edu"},{"staffID":"T2","staffName":"Alice Johnson","assignments":[],"title":"Associate Professor","departmentID":"D2","email":"alice.johnson@university.edu"},{"staffID":"T3","staffName":"Robert Brown","assignments":[],"title":"Lecturer","departmentID":"D2","email":"robert.brown@university.edu"}]
+[
+  {
+    "staffID": "T1",
+    "staffName": "John Smith",
+    "assignments": [],
+    "title": "Profesor",
+    "departmentID": "D2",
+    "email": "john.smith@university.edu"
+  },
+  {
+    "staffID": "T2",
+    "staffName": "Alice Johnson",
+    "assignments": [],
+    "title": "Profesor Asociat",
+    "departmentID": "D2",
+    "email": "alice.johnson@university.edu"
+  },
+  {
+    "staffID": "T3",
+    "staffName": "Robert Brown",
+    "assignments": [],
+    "title": "Lector",
+    "departmentID": "D2",
+    "email": "robert.brown@university.edu"
+  },
+
+  {
+    "staffID": "T4",
+    "staffName": "Andrei Popescu",
+    "assignments": [],
+    "title": "Profesor",
+    "departmentID": "D1",
+    "email": "andrei.popescu@university.edu"
+  },
+  {
+    "staffID": "T5",
+    "staffName": "Maria Ionescu",
+    "assignments": [],
+    "title": "Conferențiar",
+    "departmentID": "D3",
+    "email": "maria.ionescu@university.edu"
+  },
+  {
+    "staffID": "T6",
+    "staffName": "Vlad Georgescu",
+    "assignments": [],
+    "title": "Lector",
+    "departmentID": "D4",
+    "email": "vlad.georgescu@university.edu"
+  },
+  {
+    "staffID": "T7",
+    "staffName": "Elena Dobre",
+    "assignments": [],
+    "title": "Asistent Universitar",
+    "departmentID": "D1",
+    "email": "elena.dobre@university.edu"
+  },
+  {
+    "staffID": "T8",
+    "staffName": "Cristian Marinescu",
+    "assignments": [],
+    "title": "Profesor",
+    "departmentID": "D5",
+    "email": "cristian.marinescu@university.edu"
+  },
+  {
+    "staffID": "T9",
+    "staffName": "Ioana Pavel",
+    "assignments": [],
+    "title": "Lector",
+    "departmentID": "D3",
+    "email": "ioana.pavel@university.edu"
+  },
+  {
+    "staffID": "T10",
+    "staffName": "Mihai Stan",
+    "assignments": [],
+    "title": "Asistent Universitar",
+    "departmentID": "D4",
+    "email": "mihai.stan@university.edu"
+  }
+]

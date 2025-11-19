@@ -10,5 +10,5 @@ public class UniversityManagementSystemApplication {
         SpringApplication.run(UniversityManagementSystemApplication.class, args);
     }
 
-    // Nu mai avem CommandLineRunner - datele vor fi încărcate din JSON files
+
 }

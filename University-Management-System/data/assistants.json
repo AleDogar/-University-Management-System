@@ -22,5 +22,61 @@
     "email": "mike.johnson@example.com",
     "departmentID": "CS103",
     "assignments": []
+  },
+  {
+    "staffID": "4",
+    "staffName": "Ana Popescu",
+    "role": "TA",
+    "email": "ana.popescu@example.com",
+    "departmentID": "CS104",
+    "assignments": []
+  },
+  {
+    "staffID": "5",
+    "staffName": "Andrei Ionescu",
+    "role": "Lab",
+    "email": "andrei.ionescu@example.com",
+    "departmentID": "CS105",
+    "assignments": []
+  },
+  {
+    "staffID": "6",
+    "staffName": "Maria Georgescu",
+    "role": "Grader",
+    "email": "maria.georgescu@example.com",
+    "departmentID": "CS106",
+    "assignments": []
+  },
+  {
+    "staffID": "7",
+    "staffName": "Robert Stan",
+    "role": "TA",
+    "email": "robert.stan@example.com",
+    "departmentID": "CS107",
+    "assignments": []
+  },
+  {
+    "staffID": "8",
+    "staffName": "Elena Dobre",
+    "role": "Lab",
+    "email": "elena.dobre@example.com",
+    "departmentID": "CS108",
+    "assignments": []
+  },
+  {
+    "staffID": "9",
+    "staffName": "Cristian Marinescu",
+    "role": "Grader",
+    "email": "cristian.marinescu@example.com",
+    "departmentID": "CS109",
+    "assignments": []
+  },
+  {
+    "staffID": "10",
+    "staffName": "Ioana Radu",
+    "role": "TA",
+    "email": "ioana.radu@example.com",
+    "departmentID": "CS110",
+    "assignments": []
   }
 ]
