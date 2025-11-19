@@ -5,25 +5,34 @@ import com.example.University.Management.System.repository.DepartmentRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class DepartmentService {
 
-    private final DepartmentRepository departmentRepository;
+    private final DepartmentRepository repository;
 
-    public DepartmentService(DepartmentRepository departmentRepository) {
-        this.departmentRepository = departmentRepository;
+    public DepartmentService(DepartmentRepository repository) {
+        this.repository = repository;
     }
 
     public List<Department> getAllDepartments() {
-        return departmentRepository.findAll();
+        return repository.findAll();
     }
 
-    public Department addDepartment(Department department) {
-        return departmentRepository.save(department);
+    public Department getDepartmentById(String id) {
+        return repository.findById(id);
     }
 
-    public void removeDepartment(String id) {
-        departmentRepository.deleteById(id);
+    public Department saveDepartment(Department department) {
+        if (department.getDepartmentID() == null || department.getDepartmentID().isEmpty()) {
+            department.setDepartmentID(UUID.randomUUID().toString());
+        }
+        repository.save(department);
+        return department;
+    }
+
+    public void deleteDepartment(String id) {
+        repository.deleteById(id);
     }
 }
