@@ -19,7 +19,7 @@ public class StudentController {
     // List all students
     @GetMapping
     public String listAll(Model model) {
-        model.addAttribute("students", service.getAllStudents());
+        model.addAttribute("students", service.findAll());
         return "student/index";
     }
 
@@ -38,7 +38,7 @@ public class StudentController {
     // Show form for editing an existing student
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
-        Student student = service.getStudentById(id);
+        Student student = service.findById(id);
         if (student != null) {
             model.addAttribute("student", student);
             return "student/form";
@@ -49,21 +49,21 @@ public class StudentController {
     // Save a new or edited student
     @PostMapping("/save")
     public String save(@ModelAttribute Student student) {
-        service.saveStudent(student);
+        service.create(student);
         return "redirect:/students";
     }
 
     // Delete a student
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
-        service.removeStudent(id);
+        service.delete(id);
         return "redirect:/students";
     }
 
     // View student details
     @GetMapping("/{id}")
     public String viewDetails(@PathVariable String id, Model model) {
-        Student student = service.getStudentById(id);
+        Student student = service.findById(id);
         if (student != null) {
             model.addAttribute("student", student);
             return "student/details";

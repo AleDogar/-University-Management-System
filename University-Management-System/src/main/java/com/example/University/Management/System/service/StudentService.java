@@ -2,37 +2,41 @@ package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.Student;
 import com.example.University.Management.System.repository.StudentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class StudentService {
 
-    private final StudentRepository repository;
 
+    private StudentRepository repository;
+
+    @Autowired
     public StudentService(StudentRepository repository) {
         this.repository = repository;
     }
 
-    public List<Student> getAllStudents() {
+    public boolean create(Student bus) {
+        return repository.create(bus);
+    }
+
+    public Map<String, Student> findAll() {
         return repository.findAll();
     }
 
-    public Student getStudentById(String id) {
+    public Student findById(String id) {
         return repository.findById(id);
     }
 
-    public Student saveStudent(Student student) {
-        if (student.getId() == null || student.getId().isEmpty()) {
-            student.setId(UUID.randomUUID().toString());
-        }
-        repository.save(student);
-        return student;
+    public boolean update(String id, Student bus) {
+        return repository.update(id, bus);
     }
 
-    public void removeStudent(String id) {
-        repository.deleteById(id);
+    public boolean delete(String id) {
+        return repository.delete(id);
     }
 }
