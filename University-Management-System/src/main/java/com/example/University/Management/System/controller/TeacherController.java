@@ -2,6 +2,7 @@ package com.example.University.Management.System.controller;
 
 import com.example.University.Management.System.model.Teacher;
 import com.example.University.Management.System.service.TeacherService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,14 @@ public class TeacherController {
 
     private final TeacherService service;
 
+    @Autowired
     public TeacherController(TeacherService service) {
         this.service = service;
     }
 
     @GetMapping
     public String listAll(Model model) {
-        model.addAttribute("teachers", service.getAllTeachers());
+        model.addAttribute("teachers", service.findAll());
         return "teacher/index";
     }
 
@@ -30,7 +32,7 @@ public class TeacherController {
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
-        Teacher teacher = service.getTeacherById(id);
+        Teacher teacher = service.findById(id);
         if (teacher != null) {
             model.addAttribute("teacher", teacher);
             return "teacher/form";
@@ -38,21 +40,21 @@ public class TeacherController {
         return "redirect:/teachers";
     }
 
-    @PostMapping("/save")
-    public String save(@ModelAttribute Teacher teacher) {
-        service.saveTeacher(teacher);
+    @PostMapping("/create")
+    public String create(@ModelAttribute Teacher teacher) {
+        service.create(teacher);
         return "redirect:/teachers";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
-        service.deleteTeacher(id);
+        service.delete(id);
         return "redirect:/teachers";
     }
 
     @GetMapping("/{id}")
     public String viewDetails(@PathVariable String id, Model model) {
-        Teacher teacher = service.getTeacherById(id);
+        Teacher teacher = service.findById(id);
         if (teacher != null) {
             model.addAttribute("teacher", teacher);
             return "teacher/details";

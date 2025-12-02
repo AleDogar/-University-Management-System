@@ -1,45 +1,47 @@
 package com.example.University.Management.System.model;
 
+import jakarta.persistence.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "teachers")
 public class Teacher extends Staff {
 
-    private String staffID;
-    private String staffName;
-    private String title;
-    private String departmentID;
-    private String email;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "teacher_id")
     private List<TeachingAssignment> assignments;
+    private String title;
+    private String email;
+    private String departmentID;
 
-    // Constructor gol necesar pentru Jackson/Thymeleaf
     public Teacher() {
-        this.assignments = new ArrayList<>();
+
+        assignments = new ArrayList<>();
     }
 
-    // Constructor cu parametri
-    public Teacher(String staffID, String staffName, String title, String departmentID, String email) {
-        this.staffID = staffID;
-        this.staffName = staffName;
+    public Teacher(String id, String name, String title, String departmentID, String email) {
+        super(id, name);     // folosim datele din Staff
         this.title = title;
         this.departmentID = departmentID;
         this.email = email;
         this.assignments = new ArrayList<>();
     }
 
-    // Getter & Setter
+    @Override
     public String getStaffID() {
         return staffID;
     }
-
+    @Override
     public void setStaffID(String staffID) {
         this.staffID = staffID;
     }
-
+    @Override
     public String getStaffName() {
         return staffName;
     }
-
+    @Override
     public void setStaffName(String staffName) {
         this.staffName = staffName;
     }
@@ -74,17 +76,5 @@ public class Teacher extends Staff {
 
     public void setAssignments(List<TeachingAssignment> assignments) {
         this.assignments = assignments;
-    }
-
-    @Override
-    public String toString() {
-        return "Teacher{" +
-                "staffID='" + staffID + '\'' +
-                ", staffName='" + staffName + '\'' +
-                ", title='" + title + '\'' +
-                ", departmentID='" + departmentID + '\'' +
-                ", email='" + email + '\'' +
-                ", assignments=" + assignments +
-                '}';
     }
 }

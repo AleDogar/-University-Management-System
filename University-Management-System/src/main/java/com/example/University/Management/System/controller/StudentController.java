@@ -47,8 +47,8 @@ public class StudentController {
     }
 
     // Save a new or edited student
-    @PostMapping("/save")
-    public String save(@ModelAttribute Student student) {
+    @PostMapping("/create")
+    public String create(@ModelAttribute Student student) {
         service.create(student);
         return "redirect:/students";
     }
