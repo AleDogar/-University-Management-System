@@ -2,38 +2,41 @@ package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.Assistant;
 import com.example.University.Management.System.repository.AssistantRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class AssistantService {
 
-    private final AssistantRepository assistantRepository;
 
-    public AssistantService(AssistantRepository assistantRepository) {
-        this.assistantRepository = assistantRepository;
+    private AssistantRepository repository;
+
+    @Autowired
+    public AssistantService(AssistantRepository repository) {
+        this.repository = repository;
     }
 
-    public List<Assistant> getAllAssistants() {
-        return assistantRepository.findAll();
+    public boolean create(Assistant assistant) {
+        return repository.create(assistant);
     }
 
-    public Assistant getAssistantById(String id) {
-        return assistantRepository.findById(id);
+    public Map<String, Assistant> findAll() {
+        return repository.findAll();
     }
 
-    public Assistant saveAssistant(Assistant assistant) {
-        // generează ID dacă nu există
-        if (assistant.getStaffID() == null || assistant.getStaffID().isEmpty()) {
-            assistant.setStaffID(UUID.randomUUID().toString());
-        }
-        assistantRepository.save(assistant);
-        return assistant;
+    public Assistant findById(String id) {
+        return repository.findById(id);
     }
 
-    public void deleteAssistant(String id) {
-        assistantRepository.deleteById(id);
+    public boolean update(String id, Assistant student) {
+        return repository.update(id, student);
+    }
+
+    public boolean delete(String id) {
+        return repository.delete(id);
     }
 }

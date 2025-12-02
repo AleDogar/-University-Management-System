@@ -3,6 +3,7 @@ package com.example.University.Management.System.controller;
 import com.example.University.Management.System.model.Assistant;
 import com.example.University.Management.System.model.ClassRole;
 import com.example.University.Management.System.service.AssistantService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,14 @@ public class AssistantController {
 
     private final AssistantService service;
 
+    @Autowired
     public AssistantController(AssistantService service) {
         this.service = service;
     }
 
     @GetMapping
     public String listAll(Model model) {
-        model.addAttribute("assistants", service.getAllAssistants());
+        model.addAttribute("assistants", service.findAll());
         model.addAttribute("roles", ClassRole.values());
         return "assistant/index";
     }
@@ -33,7 +35,7 @@ public class AssistantController {
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
-        Assistant a = service.getAssistantById(id);
+        Assistant a = service.findById(id);
         if (a != null) {
             model.addAttribute("assistant", a);
             model.addAttribute("roles", ClassRole.values());
@@ -42,21 +44,21 @@ public class AssistantController {
         return "redirect:/assistants";
     }
 
-    @PostMapping("/save")
-    public String save(@ModelAttribute Assistant assistant) {
-        service.saveAssistant(assistant);
+    @PostMapping("/create")
+    public String create(@ModelAttribute Assistant assistant) {
+        service.create(assistant);
         return "redirect:/assistants";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
-        service.deleteAssistant(id);
+        service.delete(id);
         return "redirect:/assistants";
     }
 
     @GetMapping("/{id}")
     public String viewDetails(@PathVariable String id, Model model) {
-        Assistant a = service.getAssistantById(id);
+        Assistant a = service.findById(id);
         if (a != null) {
             model.addAttribute("assistant", a);
             return "assistant/details"; // vei crea view-ul details similar cu University/Teacher

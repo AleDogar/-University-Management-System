@@ -1,29 +1,42 @@
 package com.example.University.Management.System.model;
 
-import java.util.List;
+import jakarta.persistence.*;
 
+@Entity
+@Table(name = "assistants")
 public class Assistant extends Staff {
-    private ClassRole role;
-    private String email;
-    private String departmentID;
 
-    // Constructor cu parametri
-    public Assistant(ClassRole role, String staffName, String staffID, List<TeachingAssignment> assignments) {
-        super(staffName, staffID, assignments);
+    @Enumerated(EnumType.STRING)
+    private ClassRole role;
+
+    private String email;
+
+    public Assistant() {
+        super();
+    }
+
+    public Assistant(String id, String name, ClassRole role, String email) {
+        super(id, name);
+        this.role = role;
+        this.email = email;
+    }
+
+    // Getters & Setters
+    public ClassRole getRole() {
+        return role;
+    }
+
+    public void setRole(ClassRole role) {
         this.role = role;
     }
 
-    // Constructor fără parametri
-    public Assistant() {}
+    public String getEmail() {
+        return email;
+    }
 
-    public ClassRole getRole() { return role; }
-    public void setRole(ClassRole role) { this.role = role; }
-
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
-
-    public String getDepartmentID() { return departmentID; }
-    public void setDepartmentID(String departmentID) { this.departmentID = departmentID; }
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     @Override
     public String toString() {
@@ -32,7 +45,6 @@ public class Assistant extends Staff {
                 ", staffName='" + getStaffName() + '\'' +
                 ", staffID='" + getStaffID() + '\'' +
                 ", email='" + email + '\'' +
-                ", departmentID='" + departmentID + '\'' +
                 '}';
     }
 }
