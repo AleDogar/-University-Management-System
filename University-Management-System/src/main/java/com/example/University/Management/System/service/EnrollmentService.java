@@ -32,8 +32,8 @@ public class EnrollmentService {
         return repository.findById(id);
     }
 
-    public boolean update(String id, Enrollment student) {
-        return repository.update(id, student);
+    public boolean update(String id, Enrollment enrollment) {
+        return repository.update(id, enrollment);
     }
 
     public boolean delete(String id) {

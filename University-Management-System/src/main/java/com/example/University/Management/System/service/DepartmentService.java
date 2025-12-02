@@ -20,8 +20,8 @@ public class DepartmentService {
         this.repository = repository;
     }
 
-    public boolean create(Department assignment) {
-        return repository.create(assignment);
+    public boolean create(Department department) {
+        return repository.create(department);
     }
 
     public Map<String, Department> findAll() {

@@ -32,8 +32,8 @@ public class CourseService {
         return repository.findById(id);
     }
 
-    public boolean update(String id, Course student) {
-        return repository.update(id, student);
+    public boolean update(String id, Course course) {
+        return repository.update(id, course);
     }
 
     public boolean delete(String id) {

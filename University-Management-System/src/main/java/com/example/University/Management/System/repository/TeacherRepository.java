@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@Profile("infile")
+//@Profile("infile")
 public class TeacherRepository extends DatabaseRepository<Teacher> {
 
     protected TeacherRepository(JpaRepository<Teacher,String> jpaRepository) {

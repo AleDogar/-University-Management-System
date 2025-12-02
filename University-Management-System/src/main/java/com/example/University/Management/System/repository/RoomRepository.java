@@ -1,27 +1,20 @@
 package com.example.University.Management.System.repository;
 
 import com.example.University.Management.System.model.Room;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.beans.factory.annotation.Value;
+import com.example.University.Management.System.repository.interfaces.RoomJpaRepository;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
+//@Profile("infile")
 @Repository
-@Profile("infile")
-public class RoomRepository extends InFileRepository<Room> {
 
-    public RoomRepository(ObjectMapper mapper,
-                          @Value("${app.data-folder}") String folder) {
-        super(mapper, folder, "rooms.json");
+public class RoomRepository extends DatabaseRepository<Room> {
+    protected RoomRepository(RoomJpaRepository jpaRepository) {
+        super(jpaRepository);
     }
 
     @Override
-    protected String getId(Room entity) {
+    protected String getIdFromEntity(Room entity) {
         return entity.getRoomID();
-    }
-
-    @Override
-    protected void setId(Room entity, String id) {
-        entity.setRoomID(id);
     }
 }

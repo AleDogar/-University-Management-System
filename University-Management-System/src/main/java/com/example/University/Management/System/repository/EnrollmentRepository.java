@@ -5,7 +5,7 @@ import com.example.University.Management.System.repository.interfaces.Enrollment
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-@Profile("infile")
+//@Profile("infile")
 @Repository
 
 public class EnrollmentRepository extends DatabaseRepository<Enrollment> {

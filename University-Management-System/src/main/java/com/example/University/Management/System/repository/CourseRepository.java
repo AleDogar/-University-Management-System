@@ -5,7 +5,7 @@ import com.example.University.Management.System.repository.interfaces.CourseJpaR
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 
-@Profile("infile")
+//@Profile("infile")
 @Repository
 
 public class CourseRepository extends DatabaseRepository<Course> {
