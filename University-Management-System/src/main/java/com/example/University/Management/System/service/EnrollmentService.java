@@ -2,37 +2,41 @@ package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.Enrollment;
 import com.example.University.Management.System.repository.EnrollmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class EnrollmentService {
 
-    private final EnrollmentRepository repository;
 
+    private EnrollmentRepository repository;
+
+    @Autowired
     public EnrollmentService(EnrollmentRepository repository) {
         this.repository = repository;
     }
 
-    public List<Enrollment> getAllEnrollments() {
+    public boolean create(Enrollment assignment) {
+        return repository.create(assignment);
+    }
+
+    public Map<String, Enrollment> findAll() {
         return repository.findAll();
     }
 
-    public Enrollment getEnrollmentById(String id) {
+    public Enrollment findById(String id) {
         return repository.findById(id);
     }
 
-    public Enrollment saveEnrollment(Enrollment e) {
-        if (e.getEnrollmentID() == null || e.getEnrollmentID().isEmpty()) {
-            e.setEnrollmentID(UUID.randomUUID().toString());
-        }
-        repository.save(e);
-        return e;
+    public boolean update(String id, Enrollment student) {
+        return repository.update(id, student);
     }
 
-    public void removeEnrollment(String id) {
-        repository.deleteById(id);
+    public boolean delete(String id) {
+        return repository.delete(id);
     }
 }

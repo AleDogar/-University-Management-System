@@ -18,7 +18,7 @@ public class CourseController {
 
     @GetMapping
     public String listAll(Model model) {
-        model.addAttribute("courses", service.getAllCourses());
+        model.addAttribute("courses", service.findAll());
         return "course/index";
     }
 
@@ -30,7 +30,7 @@ public class CourseController {
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
-        Course course = service.getCourseById(id);
+        Course course = service.findById(id);
         if (course != null) {
             model.addAttribute("course", course);
             return "course/form";
@@ -38,21 +38,21 @@ public class CourseController {
         return "redirect:/courses";
     }
 
-    @PostMapping("/save")
-    public String save(@ModelAttribute Course course) {
-        service.saveCourse(course);
+    @PostMapping("/create")
+    public String create(@ModelAttribute Course course) {
+        service.create(course);
         return "redirect:/courses";
     }
 
     @PostMapping("/{id}/delete")
     public String deleteCourse(@PathVariable String id) {
-        service.deleteCourse(id);
+        service.delete(id);
         return "redirect:/courses";
     }
 
     @GetMapping("/{id}")
     public String viewDetails(@PathVariable String id, Model model) {
-        Course course = service.getCourseById(id);
+        Course course = service.findById(id);
         if (course != null) {
             model.addAttribute("course", course);
             return "course/details";

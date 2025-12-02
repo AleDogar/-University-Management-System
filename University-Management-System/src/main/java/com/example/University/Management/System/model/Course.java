@@ -16,12 +16,10 @@ public class Course {
     private String departmentID;
     private String roomID;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "course_id") // foreign key în Enrollment
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<Enrollment> enrollments = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "course_id") // foreign key în TeachingAssignment
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
     private List<TeachingAssignment> assignments = new ArrayList<>();
 
     public Course() {}
