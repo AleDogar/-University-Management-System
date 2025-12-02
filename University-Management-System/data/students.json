@@ -1,13 +1,1 @@
-[
-  {"id": "1", "name": "Alice Johnson", "email": "alice.johnson@example.com"},
-  {"id": "3", "name": "Charlie Brown", "email": "charlie.brown@example.com"},
-  {"id": "4", "name": "Diana Prince", "email": "diana.prince@example.com"},
-  {"id": "5", "name": "Ethan Hunt", "email": "ethan.hunt@example.com"},
-
-  {"id": "6", "name": "Andrei Popescu", "email": "andrei.popescu@example.com"},
-  {"id": "7", "name": "Maria Ionescu", "email": "maria.ionescu@example.com"},
-  {"id": "8", "name": "Victor Dobre", "email": "victor.dobre@example.com"},
-  {"id": "9", "name": "Ioana Marinescu", "email": "ioana.marinescu@example.com"},
-  {"id": "10", "name": "Cristina Radu", "email": "cristina.radu@example.com"},
-  {"id": "11", "name": "Mihai Stan", "email": "mihai.stan@example.com"}
-]
+[{"id":"11","name":"Mihai Stan","email":"mihai.stan@example.com"},{"id":"1","name":"Alice Johnson","email":"alice.johnson@example.com"},{"id":"4","name":"Diana Prince","email":"diana.prince@example.com"},{"id":"5","name":"Ethan Hunt","email":"ethan.hunt@example.com"},{"id":"6","name":"Andrei Popescu","email":"andrei.popescu@example.com"},{"id":"7","name":"Maria Ionescu","email":"maria.ionescu@example.com"},{"id":"8","name":"Victor Dobre","email":"victor.dobre@example.com"},{"id":"9","name":"Ioana Marinescu","email":"ioana.marinescu@example.com"},{"id":"10","name":"Cristina Radu","email":"cristina.radu@example.com"}]
