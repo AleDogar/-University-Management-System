@@ -1,37 +1,50 @@
 package com.example.University.Management.System.model;
 
+import jakarta.persistence.*;
 import java.util.List;
 
+@MappedSuperclass
 public abstract class Staff {
-    private String staffID;
-    private String staffName;
-    private List<TeachingAssignment> assignments;
 
-    // Constructor cu parametri
-    public Staff(String staffName, String staffID, List<TeachingAssignment> assignments) {
-        this.staffName = staffName;
-        this.staffID = staffID;
-        this.assignments = assignments;
-    }
+    @Id
+    @Column(name = "id")
+    protected String staffID;
 
-    // Constructor fără parametri (pentru JSON / Thymeleaf)
+    @Column(name = "name")
+    protected String staffName;
+
+
+    @Transient  // relatia se implementeaza in Teacher si Assistant
+    protected List<TeachingAssignment> assignments;
+
     public Staff() {}
 
-    public String getStaffID() { return staffID; }
-    public void setStaffID(String staffID) { this.staffID = staffID; }
+    public Staff(String staffID, String staffName) {
+        this.staffID = staffID;
+        this.staffName = staffName;
+    }
 
-    public String getStaffName() { return staffName; }
-    public void setStaffName(String staffName) { this.staffName = staffName; }
+    public String getStaffID() {
+        return staffID;
+    }
 
-    public List<TeachingAssignment> getAssignments() { return assignments; }
-    public void setAssignments(List<TeachingAssignment> assignments) { this.assignments = assignments; }
+    public void setStaffID(String staffID) {
+        this.staffID = staffID;
+    }
 
-    @Override
-    public String toString() {
-        return "Staff{" +
-                "staffID='" + staffID + '\'' +
-                ", staffName='" + staffName + '\'' +
-                ", assignments=" + assignments +
-                '}';
+    public String getStaffName() {
+        return staffName;
+    }
+
+    public void setStaffName(String staffName) {
+        this.staffName = staffName;
+    }
+
+    public List<TeachingAssignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<TeachingAssignment> assignments) {
+        this.assignments = assignments;
     }
 }

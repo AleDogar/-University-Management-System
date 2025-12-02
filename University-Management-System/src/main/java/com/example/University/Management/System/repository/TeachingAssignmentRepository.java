@@ -5,24 +5,19 @@ import com.example.University.Management.System.model.TeachingAssignment;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
 @Profile("infile")
-public class TeachingAssignmentRepository extends InFileRepository<TeachingAssignment> {
+@Repository
 
-    public TeachingAssignmentRepository(ObjectMapper mapper,
-                                        @Value("${app.data-folder}") String folder) {
-        super(mapper, folder, "teachingassignments.json");
+public class TeachingAssignmentRepository extends DatabaseRepository<TeachingAssignment> {
+    protected TeachingAssignmentRepository(JpaRepository<TeachingAssignment, String> jpaRepository) {
+        super(jpaRepository);
     }
 
     @Override
-    protected String getId(TeachingAssignment entity) {
+    protected String getIdFromEntity(TeachingAssignment entity) {
         return entity.getId();
-    }
-
-    @Override
-    protected void setId(TeachingAssignment entity, String id) {
-        entity.setId(id);
     }
 }

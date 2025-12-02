@@ -1,18 +1,27 @@
 package com.example.University.Management.System.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+
+@Entity
 public class TeachingAssignment {
+    @Id
     private String id;
     private String courseId;
     private String staffId;
+    @Enumerated(EnumType.STRING)
     private ClassType classType;
 
+    //Constructorul
     public TeachingAssignment() {}
 
     public TeachingAssignment(String id, ClassType classType, String courseId, String staffId) {
         this.id = id;
-        this.classType = classType;
         this.courseId = courseId;
         this.staffId = staffId;
+        this.classType = classType;
     }
 
     public String getId() {

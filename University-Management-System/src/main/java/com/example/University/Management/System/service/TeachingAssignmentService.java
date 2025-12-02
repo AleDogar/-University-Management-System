@@ -2,37 +2,41 @@ package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.TeachingAssignment;
 import com.example.University.Management.System.repository.TeachingAssignmentRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class TeachingAssignmentService {
 
-    private final TeachingAssignmentRepository repository;
 
+    private TeachingAssignmentRepository repository;
+
+    @Autowired
     public TeachingAssignmentService(TeachingAssignmentRepository repository) {
         this.repository = repository;
     }
 
-    public List<TeachingAssignment> getAllTeachingAssignments() {
+    public boolean create(TeachingAssignment assignment) {
+        return repository.create(assignment);
+    }
+
+    public Map<String, TeachingAssignment> findAll() {
         return repository.findAll();
     }
 
-    public TeachingAssignment getTeachingAssignmentById(String id) {
+    public TeachingAssignment findById(String id) {
         return repository.findById(id);
     }
 
-    public TeachingAssignment saveTeachingAssignment(TeachingAssignment ta) {
-        if (ta.getId() == null || ta.getId().isEmpty()) {
-            ta.setId(UUID.randomUUID().toString());
-        }
-        repository.save(ta);
-        return ta;
+    public boolean update(String id, TeachingAssignment student) {
+        return repository.update(id, student);
     }
 
-    public void deleteTeachingAssignment(String id) {
-        repository.deleteById(id);
+    public boolean delete(String id) {
+        return repository.delete(id);
     }
 }
