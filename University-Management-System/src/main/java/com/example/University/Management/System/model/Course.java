@@ -1,33 +1,41 @@
 package com.example.University.Management.System.model;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "courses")
 public class Course {
 
+    @Id
     private String courseID;
+
     private String title;
     private int credits;
     private String departmentID;
     private String roomID;
-    private List<Enrollment> enrollments;
-    private List<TeachingAssignment> assignments;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_id") // foreign key în Enrollment
+    private List<Enrollment> enrollments = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_id") // foreign key în TeachingAssignment
+    private List<TeachingAssignment> assignments = new ArrayList<>();
 
     public Course() {}
 
     public Course(String courseID, String title, int credits,
-                  String departmentID, String roomID,
-                  List<Enrollment> enrollments,
-                  List<TeachingAssignment> assignments) {
-
+                  String departmentID, String roomID) {
         this.courseID = courseID;
         this.title = title;
         this.credits = credits;
         this.departmentID = departmentID;
         this.roomID = roomID;
-        this.enrollments = enrollments;
-        this.assignments = assignments;
     }
 
+    // Getters & Setters
     public String getCourseID() {
         return courseID;
     }

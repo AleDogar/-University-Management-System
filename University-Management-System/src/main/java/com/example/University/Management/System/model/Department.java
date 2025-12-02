@@ -1,27 +1,39 @@
 package com.example.University.Management.System.model;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "departments")
 public class Department {
 
+    @Id
     private String departmentID;
+
     private String departmentName;
-    private List<Course> courses;
-    private List<Teacher> teachers;
+
     private String phoneNumber;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id") // foreign key în Course
+    private List<Course> courses = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id") // foreign key în Teacher
+    private List<Teacher> teachers = new ArrayList<>();
 
     public Department() {}
 
-    public Department(String departmentID, String departmentName,
-                      List<Course> courses, List<Teacher> teachers,
-                      String phoneNumber) {
+    public Department(String departmentID, String departmentName, String phoneNumber) {
         this.departmentID = departmentID;
         this.departmentName = departmentName;
-        this.courses = courses;
-        this.teachers = teachers;
         this.phoneNumber = phoneNumber;
+        this.courses = new ArrayList<>();
+        this.teachers = new ArrayList<>();
     }
 
+    // Getters & Setters
     public String getDepartmentID() {
         return departmentID;
     }
@@ -36,6 +48,14 @@ public class Department {
 
     public void setDepartmentName(String departmentName) {
         this.departmentName = departmentName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public List<Course> getCourses() {
@@ -54,22 +74,14 @@ public class Department {
         this.teachers = teachers;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     @Override
     public String toString() {
         return "Department{" +
                 "departmentID='" + departmentID + '\'' +
                 ", departmentName='" + departmentName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 ", courses=" + courses +
                 ", teachers=" + teachers +
-                ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 }
