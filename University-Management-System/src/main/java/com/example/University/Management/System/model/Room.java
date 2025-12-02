@@ -1,19 +1,31 @@
 package com.example.University.Management.System.model;
 
+import jakarta.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "rooms")
 public class Room {
-    private String roomID;
-    private String number;
-    private double capacity;
-    private List<Course> courses;
 
-    // Constructor corect: number înaintea capacity
-    public Room(String roomID, String number, double capacity, List<Course> courses) {
+    @Id
+    private String roomID;
+
+    private String number;
+
+    private double capacity;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "room_id") // coloana în Course care va referi Room-ul
+    private List<Course> courses = new ArrayList<>();
+
+    public Room() {}
+
+    public Room(String roomID, String number, double capacity) {
         this.roomID = roomID;
         this.number = number;
         this.capacity = capacity;
-        this.courses = courses;
+        this.courses = new ArrayList<>();
     }
 
     public String getRoomID() {

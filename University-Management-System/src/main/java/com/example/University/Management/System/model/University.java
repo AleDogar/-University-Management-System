@@ -1,20 +1,32 @@
 package com.example.University.Management.System.model;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
+@Table(name = "universities")
 public class University {
+
+    @Id
     private String universityID;
+
     private String universityName;
+
     private String city;
-    private List<Department> departments;
-    private List<Room> rooms;
 
-    public University() {
-        this.departments = new ArrayList<>();
-        this.rooms = new ArrayList<>();
-    }
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "university_id") // cheia străină în Department
+    private List<Department> departments = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "university_id") // cheia străină în Room
+    private List<Room> rooms = new ArrayList<>();
+
+    // Constructor gol
+    public University() {}
+
+    // Constructor cu parametri
     public University(String universityID, String universityName, String city) {
         this.universityID = universityID;
         this.universityName = universityName;
@@ -23,6 +35,7 @@ public class University {
         this.rooms = new ArrayList<>();
     }
 
+    // Getters și setters
     public String getUniversityID() {
         return universityID;
     }
@@ -61,5 +74,16 @@ public class University {
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+    }
+
+    @Override
+    public String toString() {
+        return "University{" +
+                "universityID='" + universityID + '\'' +
+                ", universityName='" + universityName + '\'' +
+                ", city='" + city + '\'' +
+                ", departments=" + departments +
+                ", rooms=" + rooms +
+                '}';
     }
 }

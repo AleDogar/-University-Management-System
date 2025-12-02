@@ -2,6 +2,7 @@ package com.example.University.Management.System.controller;
 
 import com.example.University.Management.System.model.Department;
 import com.example.University.Management.System.service.DepartmentService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +13,14 @@ public class DepartmentController {
 
     private final DepartmentService service;
 
+    @Autowired
     public DepartmentController(DepartmentService service) {
         this.service = service;
     }
 
     @GetMapping
     public String listAll(Model model) {
-        model.addAttribute("departments", service.getAllDepartments());
+        model.addAttribute("departments", service.findAll());
         return "department/index";
     }
 
@@ -30,7 +32,7 @@ public class DepartmentController {
 
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model) {
-        Department d = service.getDepartmentById(id);
+        Department d = service.findById(id);
         if (d != null) {
             model.addAttribute("department", d);
             return "department/form";
@@ -38,21 +40,21 @@ public class DepartmentController {
         return "redirect:/departments";
     }
 
-    @PostMapping("/save")
-    public String save(@ModelAttribute Department department) {
-        service.saveDepartment(department);
+    @PostMapping("/create")
+    public String create(@ModelAttribute Department department) {
+        service.create(department);
         return "redirect:/departments";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id) {
-        service.deleteDepartment(id);
+        service.delete(id);
         return "redirect:/departments";
     }
 
     @GetMapping("/{id}")
     public String viewDetails(@PathVariable String id, Model model) {
-        Department d = service.getDepartmentById(id);
+        Department d = service.findById(id);
         if (d != null) {
             model.addAttribute("department", d);
             return "department/details";

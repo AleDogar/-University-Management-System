@@ -4,15 +4,25 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Column;
 
 @Entity
 public class TeachingAssignment {
     @Id
     private String id;
+
+    @Column(name = "course_id", insertable = false, updatable = false)
     private String courseId;
+
     private String staffId;
     @Enumerated(EnumType.STRING)
     private ClassType classType;
+
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private Course course;
 
     //Constructorul
     public TeachingAssignment() {}
@@ -54,6 +64,17 @@ public class TeachingAssignment {
 
     public void setClassType(ClassType classType) {
         this.classType = classType;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+        if(course != null) {
+            this.courseId = course.getCourseID(); // synchronize id
+        }
     }
 
     @Override

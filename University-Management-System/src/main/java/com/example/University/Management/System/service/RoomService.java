@@ -2,37 +2,41 @@ package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.Room;
 import com.example.University.Management.System.repository.RoomRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
 public class RoomService {
 
-    private final RoomRepository roomRepository;
 
-    public RoomService(RoomRepository roomRepository) {
-        this.roomRepository = roomRepository;
+    private RoomRepository repository;
+
+    @Autowired
+    public RoomService(RoomRepository repository) {
+        this.repository = repository;
     }
 
-    public List<Room> getAllRooms() {
-        return roomRepository.findAll();
+    public boolean create(Room assignment) {
+        return repository.create(assignment);
     }
 
-    public Room getRoomById(String id) {
-        return roomRepository.findById(id);
+    public Map<String, Room> findAll() {
+        return repository.findAll();
     }
 
-    public Room saveRoom(Room room) {
-        if (room.getRoomID() == null || room.getRoomID().isEmpty()) {
-            room.setRoomID(UUID.randomUUID().toString());
-        }
-        roomRepository.save(room);
-        return room;
+    public Room findById(String id) {
+        return repository.findById(id);
     }
 
-    public void removeRoom(String id) {
-        roomRepository.deleteById(id);
+    public boolean update(String id, Room room) {
+        return repository.update(id, room);
+    }
+
+    public boolean delete(String id) {
+        return repository.delete(id);
     }
 }
