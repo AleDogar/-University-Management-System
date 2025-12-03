@@ -11,16 +11,12 @@ public class EnrollmentValidator {
             throw new RuntimeException("Date înscriere invalide.");
         }
 
-        // Validare ID Enrollment
         validateEnrollmentID(enrollment.getEnrollmentID());
 
-        // Validare Student ID
         validateStudentID(enrollment.getStudentID());
 
-        // Validare Course ID
         validateCourseID(enrollment.getCourseID());
 
-        // Validare Grade
         validateGrade(enrollment.getGrade());
     }
 
@@ -59,7 +55,7 @@ public class EnrollmentValidator {
             throw new RuntimeException("Notă invalidă.");
         }
 
-        // Verifică că grade este o valoare validă din enum
+
         try {
             ClassGrade.valueOf(grade.name());
         } catch (IllegalArgumentException | NullPointerException e) {

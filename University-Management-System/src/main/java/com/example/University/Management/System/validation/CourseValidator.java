@@ -20,19 +20,14 @@ public class CourseValidator {
             throw new RuntimeException("Date curs invalide.");
         }
 
-        // Validare ID Curs
         validateCourseID(course.getCourseID());
 
-        // Validare Titlu
         validateTitle(course.getTitle());
 
-        // Validare Credite
         validateCredits(course.getCredits());
 
-        // Validare Departament ID
         validateDepartmentID(course.getDepartmentID());
 
-        // Validare Sala ID
         validateRoomID(course.getRoomID());
     }
 
@@ -71,12 +66,10 @@ public class CourseValidator {
             throw new RuntimeException("ID departament invalid.");
         }
 
-        // Verifică formatul
         if (!Pattern.matches("^D[0-9]+$", departmentID)) {
             throw new RuntimeException("ID departament invalid. Format: D + număr (ex: D1, D10)");
         }
 
-        // Verifică existența departamentului
         if (departmentService != null && departmentService.findById(departmentID) == null) {
             throw new RuntimeException("Departamentul cu ID-ul '" + departmentID + "' nu există.");
         }
@@ -87,12 +80,10 @@ public class CourseValidator {
             throw new RuntimeException("ID sală invalid.");
         }
 
-        // Verifică formatul
         if (!Pattern.matches("^R[0-9]+$", roomID)) {
             throw new RuntimeException("ID sală invalid. Format: R + număr (ex: R101, R205)");
         }
 
-        // Verifică existența sălii
         if (roomService != null && roomService.findById(roomID) == null) {
             throw new RuntimeException("Sala cu ID-ul '" + roomID + "' nu există.");
         }
