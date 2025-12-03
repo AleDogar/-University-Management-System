@@ -1,76 +1,42 @@
 package com.example.University.Management.System.validation;
 
 import com.example.University.Management.System.model.TeachingAssignment;
-import com.example.University.Management.System.service.CourseService;
-import org.springframework.stereotype.Component;
+import com.example.University.Management.System.model.ClassType;
+import java.util.regex.Pattern;
 
-import java.util.Map;
-
-@Component
 public class TeachingAssignmentValidator {
-
-    private final CourseService courseService;
-
-    public TeachingAssignmentValidator(CourseService courseService) {
-        this.courseService = courseService;
-    }
 
     public void validateTeachingAssignment(TeachingAssignment assignment) {
         if (assignment == null) {
-            throw new RuntimeException("Asignarea nu poate fi null!");
+            throw new RuntimeException("Date atribuire invalide.");
         }
 
-        validateId(assignment.getId());
-        validateCourseId(assignment.getCourseId());
-        validateStaffId(assignment.getStaffId());
+        validateID(assignment.getId());
+        validateCourseID(assignment.getCourseId());
         validateClassType(assignment.getClassType());
     }
 
-    private void validateId(String id) {
+    private void validateID(String id) {
         if (id == null || id.trim().isEmpty()) {
-            throw new RuntimeException("ID-ul asignării este obligatoriu!");
+            throw new RuntimeException("ID atribuire invalid.");
         }
-
-        if (!id.matches("TA[0-9]+")) {
-            throw new RuntimeException("ID-ul asignării trebuie să înceapă cu 'TA' urmat de numere!");
+        if (!Pattern.matches("^TA[1-9][0-9]{0,2}$", id)) {
+            throw new RuntimeException("ID atribuire invalid. Format: TA1, TA2, ..., TA999");
         }
     }
 
-    private void validateCourseId(String courseId) {
+    private void validateCourseID(String courseId) {
         if (courseId == null || courseId.trim().isEmpty()) {
-            throw new RuntimeException("ID-ul cursului este obligatoriu!");
+            throw new RuntimeException("ID curs invalid.");
         }
-
-        if (!courseId.matches("C[0-9]+")) {
-            throw new RuntimeException("ID-ul cursului trebuie să înceapă cu 'C' urmat de numere!");
-        }
-
-        // Verifică dacă cursul există
-        Map<String, ?> courses = courseService.findAll();
-        if (!courses.containsKey(courseId)) {
-            throw new RuntimeException("Cursul cu ID-ul '" + courseId + "' nu există!");
+        if (!Pattern.matches("^C[1-9][0-9]{0,2}$", courseId)) {
+            throw new RuntimeException("ID curs invalid. Format: C1, C2, ..., C999");
         }
     }
 
-    private void validateStaffId(String staffId) {
-        if (staffId == null || staffId.trim().isEmpty()) {
-            throw new RuntimeException("ID-ul staff-ului este obligatoriu!");
-        }
-
-        // Format simplu: T sau A urmat de numere
-        if (!staffId.matches("(T|A)[0-9]+")) {
-            throw new RuntimeException("ID staff invalid! Folosește formatul: T1, T2, A1, A2, etc.");
-        }
-    }
-
-    private void validateClassType(Object classType) {
+    private void validateClassType(ClassType classType) {
         if (classType == null) {
-            throw new RuntimeException("Tipul clasei este obligatoriu!");
-        }
-
-        String type = classType.toString();
-        if (!type.equals("COURSE") && !type.equals("LAB") && !type.equals("SEMINARY")) {
-            throw new RuntimeException("Tipul clasei trebuie să fie: COURSE, LAB sau SEMINARY!");
+            throw new RuntimeException("Tip de clasă invalid.");
         }
     }
 }

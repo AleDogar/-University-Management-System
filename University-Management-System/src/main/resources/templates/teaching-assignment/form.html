@@ -2,52 +2,67 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Formular Asignare</title>
+    <title>Formular Atribuire Didactică</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-4">
-    <h1 th:text="${assignment.id != null} ? 'Editare Asignare' : 'Adăugare Asignare'">
-        Formular Asignare
-    </h1>
 
+    <h1 th:text="${assignment.id != null} ? 'Editare Atribuire' : 'Atribuire Nouă'"></h1>
+
+    <div th:if="${message}" class="alert alert-success">
+        <span th:text="${message}"></span>
+    </div>
     <div th:if="${error}" class="alert alert-danger">
         <span th:text="${error}"></span>
     </div>
 
-    <form th:action="@{/teaching-assignments/create}" method="post">
+    <form th:action="${assignment.id == null ? '/teaching-assignments/create' : '/teaching-assignments/update'}"
+          th:object="${assignment}" method="post" novalidate>
 
         <div class="mb-3">
-            <label for="id" class="form-label">ID Asignare *</label>
-            <input type="text" class="form-control" id="id" name="id"
-                   th:value="${assignment.id}" required>
+            <label class="form-label">ID Atribuire</label>
+            <input type="text" class="form-control" th:field="*{id}"
+                   th:readonly="${assignment.id != null}" placeholder="ex: TA1">
+            <div class="form-text">
+                <span th:if="${assignment.id == null}">Format: TA + număr (ex: TA1, TA10)</span>
+                <span th:if="${assignment.id != null}">ID-ul nu poate fi modificat</span>
+            </div>
         </div>
 
         <div class="mb-3">
-            <label for="courseId" class="form-label">ID Curs *</label>
-            <input type="text" class="form-control" id="courseId" name="courseId"
-                   th:value="${assignment.courseId}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="staffId" class="form-label">ID Staff *</label>
-            <input type="text" class="form-control" id="staffId" name="staffId"
-                   th:value="${assignment.staffId}" required>
-        </div>
-
-        <div class="mb-3">
-            <label for="classType" class="form-label">Tip Activitate *</label>
-            <select class="form-select" id="classType" name="classType" required>
-                <option value="">-- Selectează --</option>
-                <option value="COURSE" th:selected="${assignment.classType == 'COURSE'}">Curs</option>
-                <option value="LAB" th:selected="${assignment.classType == 'LAB'}">Laborator</option>
-                <option value="SEMINARY" th:selected="${assignment.classType == 'SEMINARY'}">Seminar</option>
+            <label class="form-label">Curs *</label>
+            <select class="form-control" th:field="*{courseId}" required>
+                <option value="">Selectează curs...</option>
+                <option th:each="courseEntry : ${courses}"
+                        th:value="${courseEntry.key}"
+                        th:text="${courseEntry.key + ' - ' + courseEntry.value.title}">
+                </option>
             </select>
+            <div class="form-text">Selectează un curs existent</div>
         </div>
 
-        <button type="submit" class="btn btn-success">Salvează</button>
-        <a th:href="@{/teaching-assignments}" class="btn btn-secondary">Anulează</a>
+        <div class="mb-3">
+            <label class="form-label">Tip Clasă *</label>
+            <select class="form-control" th:field="*{classType}" required>
+                <option value="">Selectează tip...</option>
+                <option th:each="type : ${T(com.example.University.Management.System.model.ClassType).values()}"
+                        th:value="${type}"
+                        th:text="${type.getTypeName()}">
+                </option>
+            </select>
+            <div class="form-text">Selectează tipul de clasă</div>
+        </div>
+
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">
+                <span th:text="${assignment.id == null ? 'Creează' : 'Actualizează'}"></span>
+            </button>
+            <a th:href="@{/teaching-assignments}" class="btn btn-secondary">Înapoi</a>
+        </div>
+
     </form>
+
 </div>
 </body>
 </html>
