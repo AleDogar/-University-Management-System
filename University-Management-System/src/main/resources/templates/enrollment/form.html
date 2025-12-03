@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -39,26 +40,21 @@
             </div>
         </div>
 
-        <!-- Course ID - cu dropdown sau datalist ca la profesor -->
+        <!-- Course ID - DROPDOWN din baza de date -->
         <div class="mb-3">
-            <label class="form-label">ID Curs *</label>
-            <input type="text" class="form-control" th:field="*{courseID}"
-                   list="courseOptions"
-                   placeholder="ex: C101">
-            <datalist id="courseOptions">
-                <option value="C101">
-                <option value="C102">
-                <option value="C103">
-                <option value="C104">
-                <option value="C105">
-                <option value="C201">
-                <option value="C202">
-                <option value="C203">
-            </datalist>
-            <div class="form-text">Format: C + număr (C101, C102, ..., C999)</div>
+            <label class="form-label">Curs *</label>
+            <select class="form-control" th:field="*{courseID}" required>
+                <option value="">Selectează curs...</option>
+                <!-- Iterăm prin Map<String, Course> pentru dropdown -->
+                <option th:each="courseEntry : ${courses}"
+                        th:value="${courseEntry.key}"
+                        th:text="${courseEntry.key + ' - ' + courseEntry.value.title}">
+                </option>
+            </select>
+            <div class="form-text">Selectează un curs existent din listă</div>
         </div>
 
-        <!-- Grade - dropdown similar cu titlul profesorului -->
+        <!-- Grade - dropdown -->
         <div class="mb-3">
             <label class="form-label">Notă *</label>
             <select class="form-control" th:field="*{grade}" required>
@@ -71,7 +67,7 @@
             <div class="form-text">Selectează nota pentru curs</div>
         </div>
 
-        <!-- Butoane - exact ca la formularul profesorului -->
+        <!-- Butoane -->
         <div class="mb-3">
             <button type="submit" class="btn btn-primary">
                 <span th:text="${enrollment.enrollmentID == null ? 'Creează' : 'Actualizează'}"></span>

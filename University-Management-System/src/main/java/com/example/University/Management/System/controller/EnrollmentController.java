@@ -1,8 +1,9 @@
+
 package com.example.University.Management.System.controller;
 
 import com.example.University.Management.System.model.Enrollment;
 import com.example.University.Management.System.service.EnrollmentService;
-import com.example.University.Management.System.service.CourseService; // ADAUGĂ ASTA
+import com.example.University.Management.System.service.CourseService;
 import com.example.University.Management.System.validation.EnrollmentValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,11 +15,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class EnrollmentController {
 
     private final EnrollmentService service;
-    private final CourseService courseService; // ADAUGĂ ASTA
+    private final CourseService courseService;
 
     public EnrollmentController(EnrollmentService service, CourseService courseService) {
         this.service = service;
-        this.courseService = courseService; // ADAUGĂ ASTA
+        this.courseService = courseService;
     }
 
     @GetMapping
@@ -40,6 +41,8 @@ public class EnrollmentController {
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("enrollment", new Enrollment());
+        // Adaugă cursurile disponibile pentru dropdown
+        model.addAttribute("courses", courseService.findAll());
         return "enrollment/form";
     }
 
@@ -48,6 +51,8 @@ public class EnrollmentController {
         Enrollment enrollment = service.findById(id);
         if (enrollment != null) {
             model.addAttribute("enrollment", enrollment);
+            // Adaugă cursurile disponibile pentru dropdown
+            model.addAttribute("courses", courseService.findAll());
             return "enrollment/form";
         }
         return "redirect:/enrollments";
@@ -81,6 +86,8 @@ public class EnrollmentController {
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("enrollment", enrollment);
+            // Reîncarcă cursurile pentru dropdown
+            model.addAttribute("courses", courseService.findAll());
             return "enrollment/form";
         }
 
@@ -115,6 +122,8 @@ public class EnrollmentController {
         } catch (RuntimeException e) {
             model.addAttribute("error", e.getMessage());
             model.addAttribute("enrollment", enrollment);
+            // Reîncarcă cursurile pentru dropdown
+            model.addAttribute("courses", courseService.findAll());
             return "enrollment/form";
         }
 

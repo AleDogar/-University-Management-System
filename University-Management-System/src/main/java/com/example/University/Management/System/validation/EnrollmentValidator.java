@@ -1,3 +1,4 @@
+
 package com.example.University.Management.System.validation;
 
 import com.example.University.Management.System.model.Enrollment;
@@ -11,38 +12,46 @@ public class EnrollmentValidator {
             throw new RuntimeException("Date înscriere invalide.");
         }
 
-        // Validare ID (ex: E1, E10, E100)
-        if (enrollment.getEnrollmentID() == null ||
-                enrollment.getEnrollmentID().trim().isEmpty()) {
+        // Validare ID Enrollment
+        validateEnrollmentID(enrollment.getEnrollmentID());
+
+        // Validare Course ID
+        validateCourseID(enrollment.getCourseID());
+
+        // Validare Grade
+        validateGrade(enrollment.getGrade());
+    }
+
+    private static void validateEnrollmentID(String enrollmentID) {
+        if (enrollmentID == null || enrollmentID.trim().isEmpty()) {
             throw new RuntimeException("ID înscriere invalid.");
         }
 
-        // Verifică format: E urmat de cifre
-        if (!Pattern.matches("^E[1-9][0-9]{0,2}$", enrollment.getEnrollmentID())) {
-            throw new RuntimeException("ID înscriere invalid. Format: E1, E2, ..., E100");
+        if (!Pattern.matches("^E[1-9][0-9]{0,2}$", enrollmentID)) {
+            throw new RuntimeException("ID înscriere invalid. Format: E1, E2, ..., E999");
         }
+    }
 
-        // Validare Course ID (ex: C1, C10, C100)
-        if (enrollment.getCourseID() == null ||
-                enrollment.getCourseID().trim().isEmpty()) {
+    private static void validateCourseID(String courseID) {
+        if (courseID == null || courseID.trim().isEmpty()) {
             throw new RuntimeException("ID curs invalid.");
         }
 
-        // Verifică format: C urmat de cifre
-        if (!Pattern.matches("^C[1-9][0-9]{0,2}$", enrollment.getCourseID())) {
-            throw new RuntimeException("ID curs invalid. Format: C1, C2, ..., C100");
+        if (!Pattern.matches("^C[1-9][0-9]{0,2}$", courseID)) {
+            throw new RuntimeException("ID curs invalid. Format: C1, C2, ..., C999");
         }
+    }
 
-        // Validare Grade
-        if (enrollment.getGrade() == null) {
+    private static void validateGrade(ClassGrade grade) {
+        if (grade == null) {
             throw new RuntimeException("Notă invalidă.");
         }
 
-        // Verifică că grade este unul dintre valorile enum ClassGrade
+        // Verifică că grade nu este null și este o valoare validă din enum
         try {
-            ClassGrade.valueOf(enrollment.getGrade().name());
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Notă invalidă. Valori permise: A, B, C, D, F");
+            ClassGrade.valueOf(grade.name());
+        } catch (IllegalArgumentException | NullPointerException e) {
+            throw new RuntimeException("Notă invalidă. Valori permise: A, B, C, D, F, NA");
         }
     }
 }
