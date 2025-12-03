@@ -1,4 +1,3 @@
-
 package com.example.University.Management.System.validation;
 
 import com.example.University.Management.System.model.Enrollment;
@@ -7,13 +6,16 @@ import java.util.regex.Pattern;
 
 public class EnrollmentValidator {
 
-    public static void validateEnrollment(Enrollment enrollment) {
+    public void validateEnrollment(Enrollment enrollment) {
         if (enrollment == null) {
             throw new RuntimeException("Date înscriere invalide.");
         }
 
         // Validare ID Enrollment
         validateEnrollmentID(enrollment.getEnrollmentID());
+
+        // Validare Student ID
+        validateStudentID(enrollment.getStudentID());
 
         // Validare Course ID
         validateCourseID(enrollment.getCourseID());
@@ -22,7 +24,7 @@ public class EnrollmentValidator {
         validateGrade(enrollment.getGrade());
     }
 
-    private static void validateEnrollmentID(String enrollmentID) {
+    private void validateEnrollmentID(String enrollmentID) {
         if (enrollmentID == null || enrollmentID.trim().isEmpty()) {
             throw new RuntimeException("ID înscriere invalid.");
         }
@@ -32,7 +34,17 @@ public class EnrollmentValidator {
         }
     }
 
-    private static void validateCourseID(String courseID) {
+    private void validateStudentID(String studentID) {
+        if (studentID == null || studentID.trim().isEmpty()) {
+            throw new RuntimeException("ID student invalid.");
+        }
+
+        if (!Pattern.matches("^S[1-9][0-9]{0,2}$", studentID)) {
+            throw new RuntimeException("ID student invalid. Format: S1, S2, ..., S999");
+        }
+    }
+
+    private void validateCourseID(String courseID) {
         if (courseID == null || courseID.trim().isEmpty()) {
             throw new RuntimeException("ID curs invalid.");
         }
@@ -42,12 +54,12 @@ public class EnrollmentValidator {
         }
     }
 
-    private static void validateGrade(ClassGrade grade) {
+    private void validateGrade(ClassGrade grade) {
         if (grade == null) {
             throw new RuntimeException("Notă invalidă.");
         }
 
-        // Verifică că grade nu este null și este o valoare validă din enum
+        // Verifică că grade este o valoare validă din enum
         try {
             ClassGrade.valueOf(grade.name());
         } catch (IllegalArgumentException | NullPointerException e) {
