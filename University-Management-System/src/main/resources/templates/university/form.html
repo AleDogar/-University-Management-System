@@ -1,33 +1,70 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"/>
-    <title th:text="${university.universityID != null ? 'Edit University' : 'New University'}">University Form</title>
-    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <meta charset="UTF-8">
+    <title>Formular Universitate</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="container mt-4">
+<body>
+<div class="container mt-4">
 
-<h1 th:text="${university.universityID != null ? 'Edit University' : 'New University'}"></h1>
+    <h1 th:text="${university.universityID != null} ? 'Editare Universitate' : 'Universitate Nouă'"></h1>
 
-<form th:action="@{/universities/save}" method="post" th:object="${university}">
-    <div class="mb-3">
-        <label for="id" class="form-label">ID:</label>
-        <input type="text" id="id" class="form-control" th:field="*{universityID}" th:readonly="${university.universityID != null}"/>
+    <!-- Mesaj succes -->
+    <div th:if="${message}" class="alert alert-success">
+        <span th:text="${message}"></span>
     </div>
 
-    <div class="mb-3">
-        <label for="name" class="form-label">Name:</label>
-        <input type="text" id="name" class="form-control" th:field="*{universityName}" required/>
+    <!-- Eroare -->
+    <div th:if="${error}" class="alert alert-danger">
+        <span th:text="${error}"></span>
     </div>
 
-    <div class="mb-3">
-        <label for="city" class="form-label">City:</label>
-        <input type="text" id="city" class="form-control" th:field="*{city}" required/>
-    </div>
+    <!-- Formular unic -->
+    <form th:action="${university.universityID == null ? '/universities/create' : '/universities/update'}"
+          th:object="${university}"
+          method="post"
+          novalidate>
 
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a th:href="@{/universities}" class="btn btn-secondary">Back</a>
-</form>
+        <!-- ID Universitate -->
+        <div class="mb-3">
+            <label class="form-label">ID Universitate *</label>
+            <input type="text" class="form-control"
+                   th:field="*{universityID}"
+                   th:readonly="${university.universityID != null}"
+                   placeholder="ex: U1" required>
+            <div class="form-text">
+                <span th:if="${university.universityID == null}">Format: U + număr (ex: U1, U101)</span>
+                <span th:if="${university.universityID != null}">ID-ul nu poate fi modificat</span>
+            </div>
+        </div>
 
+        <!-- Nume Universitate -->
+        <div class="mb-3">
+            <label class="form-label">Nume Universitate *</label>
+            <input type="text" class="form-control" th:field="*{universityName}"
+                   placeholder="ex: Universitatea București" required>
+            <div class="form-text">Minim 2 caractere, maxim 200. Doar litere și spații.</div>
+        </div>
+
+        <!-- Oraș -->
+        <div class="mb-3">
+            <label class="form-label">Oraș *</label>
+            <input type="text" class="form-control" th:field="*{city}"
+                   placeholder="ex: București" required>
+            <div class="form-text">Minim 2 caractere, maxim 100. Doar litere și spații.</div>
+        </div>
+
+        <!-- Butoane -->
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary">
+                <span th:text="${university.universityID == null ? 'Creează' : 'Actualizează'}"></span>
+            </button>
+            <a th:href="@{/universities}" class="btn btn-secondary">Înapoi</a>
+        </div>
+
+    </form>
+
+</div>
 </body>
 </html>
