@@ -160,20 +160,19 @@ public class DBInitializer implements CommandLineRunner {
         studentRepository.create(new Student("S9", "Student 9", "s9@mail.com"));
         studentRepository.create(new Student("S10", "Student 10", "s10@mail.com"));
 
-        // -----------------------
-        // ENROLLMENTS
-        // -----------------------
-        enrollmentRepository.create(new Enrollment("E1", "C1", ClassGrade.A));
-        enrollmentRepository.create(new Enrollment("E2", "C2", ClassGrade.B));
-        enrollmentRepository.create(new Enrollment("E3", "C3", ClassGrade.C));
-        enrollmentRepository.create(new Enrollment("E4", "C4", ClassGrade.A));
-        enrollmentRepository.create(new Enrollment("E5", "C5", ClassGrade.B));
-        enrollmentRepository.create(new Enrollment("E6", "C6", ClassGrade.C));
-        enrollmentRepository.create(new Enrollment("E7", "C7", ClassGrade.A));
-        enrollmentRepository.create(new Enrollment("E8", "C8", ClassGrade.B));
-        enrollmentRepository.create(new Enrollment("E9", "C9", ClassGrade.C));
-        enrollmentRepository.create(new Enrollment("E10", "C10", ClassGrade.A));
-
+// -----------------------
+// ENROLLMENTS
+// -----------------------
+        enrollmentRepository.create(new Enrollment("E1", "S1", "C1", ClassGrade.A));
+        enrollmentRepository.create(new Enrollment("E2", "S2", "C2", ClassGrade.B));
+        enrollmentRepository.create(new Enrollment("E3", "S3", "C3", ClassGrade.C));
+        enrollmentRepository.create(new Enrollment("E4", "S4", "C4", ClassGrade.A));
+        enrollmentRepository.create(new Enrollment("E5", "S5", "C5", ClassGrade.B));
+        enrollmentRepository.create(new Enrollment("E6", "S6", "C6", ClassGrade.C));
+        enrollmentRepository.create(new Enrollment("E7", "S7", "C7", ClassGrade.A));
+        enrollmentRepository.create(new Enrollment("E8", "S8", "C8", ClassGrade.B));
+        enrollmentRepository.create(new Enrollment("E9", "S9", "C9", ClassGrade.C));
+        enrollmentRepository.create(new Enrollment("E10", "S10", "C10", ClassGrade.A));
 // -----------------------
 // TEACHING ASSIGNMENTS - CORECTAT
 // -----------------------
