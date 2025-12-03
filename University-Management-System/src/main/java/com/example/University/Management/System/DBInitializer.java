@@ -174,18 +174,17 @@ public class DBInitializer implements CommandLineRunner {
         enrollmentRepository.create(new Enrollment("E9", "C9", ClassGrade.C));
         enrollmentRepository.create(new Enrollment("E10", "C10", ClassGrade.A));
 
-        // -----------------------
-        // TEACHING ASSIGNMENTS
-        // -----------------------
+// -----------------------
+// TEACHING ASSIGNMENTS - CORECTAT
+// -----------------------
+
+
+// Cursuri COURSE cu profesori
         teachingAssignmentRepository.create(new TeachingAssignment("TA1", ClassType.COURSE, "C1", "T1"));
-        teachingAssignmentRepository.create(new TeachingAssignment("TA2", ClassType.LAB, "C2", "A2"));
         teachingAssignmentRepository.create(new TeachingAssignment("TA3", ClassType.COURSE, "C3", "T3"));
-        teachingAssignmentRepository.create(new TeachingAssignment("TA4", ClassType.LAB, "C4", "A4"));
         teachingAssignmentRepository.create(new TeachingAssignment("TA5", ClassType.COURSE, "C5", "T5"));
-        teachingAssignmentRepository.create(new TeachingAssignment("TA6", ClassType.LAB, "C6", "A6"));
         teachingAssignmentRepository.create(new TeachingAssignment("TA7", ClassType.COURSE, "C7", "T7"));
-        teachingAssignmentRepository.create(new TeachingAssignment("TA8", ClassType.LAB, "C8", "A8"));
         teachingAssignmentRepository.create(new TeachingAssignment("TA9", ClassType.COURSE, "C9", "T9"));
-        teachingAssignmentRepository.create(new TeachingAssignment("TA10", ClassType.LAB, "C10", "A10"));
+
     }
 }
