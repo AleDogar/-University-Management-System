@@ -42,23 +42,20 @@ public class DepartmentController {
         return "redirect:/departments";
     }
 
-    // CREATE (departament nou)
     @PostMapping("/create")
     public String createDepartment(@ModelAttribute Department department,
                                    Model model,
                                    RedirectAttributes redirectAttributes) {
 
         try {
-            // Validare câmpuri
+
             DepartmentValidator.validateDepartment(department);
 
-            // Verifică dacă ID-ul există deja
             Department existingDepartment = service.findById(department.getDepartmentID());
             if (existingDepartment != null) {
                 throw new RuntimeException("Există deja un departament cu acest ID.");
             }
 
-            // Creează departament nou
             service.create(department);
             redirectAttributes.addFlashAttribute("message", "Departament creat cu succes!");
 
@@ -71,23 +68,20 @@ public class DepartmentController {
         return "redirect:/departments";
     }
 
-    // UPDATE (editare)
     @PostMapping("/update")
     public String updateDepartment(@ModelAttribute Department department,
                                    Model model,
                                    RedirectAttributes redirectAttributes) {
 
         try {
-            // Validare câmpuri
+
             DepartmentValidator.validateDepartment(department);
 
-            // Verifică că departamentul există
             Department existingDepartment = service.findById(department.getDepartmentID());
             if (existingDepartment == null) {
                 throw new RuntimeException("Departamentul nu există.");
             }
 
-            // Face update
             service.update(department.getDepartmentID(), department);
             redirectAttributes.addFlashAttribute("message", "Departament actualizat cu succes!");
 

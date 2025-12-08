@@ -2,24 +2,20 @@ package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.Assistant;
 import com.example.University.Management.System.repository.AssistantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class AssistantService {
 
+    private final AssistantRepository repository;
 
-    private AssistantRepository repository;
-
-    @Autowired
     public AssistantService(AssistantRepository repository) {
         this.repository = repository;
     }
 
+    // TOATE METODELE TALE EXISTENTE RĂMÂN LA FEL!
     public boolean create(Assistant assistant) {
         return repository.create(assistant);
     }
@@ -32,8 +28,8 @@ public class AssistantService {
         return repository.findById(id);
     }
 
-    public boolean update(String id, Assistant student) {
-        return repository.update(id, student);
+    public boolean update(String id, Assistant assistant) {
+        return repository.update(id, assistant);
     }
 
     public boolean delete(String id) {

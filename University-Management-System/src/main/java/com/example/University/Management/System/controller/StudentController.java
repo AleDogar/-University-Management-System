@@ -57,16 +57,14 @@ public class StudentController {
                                 RedirectAttributes redirectAttributes) {
 
         try {
-            // 1. Validare câmpuri
+
             StudentValidator.validateStudent(student);
 
-            // 2. Verifică dacă ID-ul există deja (doar pentru CREATE)
             Student existingStudent = service.findById(student.getId());
             if (existingStudent != null) {
                 throw new RuntimeException("Există deja un student cu acest ID.");
             }
 
-            // 3. Creează student nou
             service.create(student);
             redirectAttributes.addFlashAttribute("message", "Student creat cu succes!");
 
@@ -86,16 +84,14 @@ public class StudentController {
                                 RedirectAttributes redirectAttributes) {
 
         try {
-            // 1. Validare câmpuri
+
             StudentValidator.validateStudent(student);
 
-            // 2. Verifică că studentul există (pentru update)
             Student existingStudent = service.findById(student.getId());
             if (existingStudent == null) {
                 throw new RuntimeException("Studentul nu există.");
             }
 
-            // 3. Face update (permite modificarea numelui și emailului)
             service.update(student.getId(), student);
             redirectAttributes.addFlashAttribute("message", "Student actualizat cu succes!");
 

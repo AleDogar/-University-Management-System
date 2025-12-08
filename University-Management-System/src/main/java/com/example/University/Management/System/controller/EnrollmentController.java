@@ -72,26 +72,25 @@ public class EnrollmentController {
                                    RedirectAttributes redirectAttributes) {
 
         try {
-            // 1. Validare câmpuri
+
             enrollmentValidator.validateEnrollment(enrollment);
 
-            // 2. Verifică dacă ID-ul există deja
+
             Enrollment existingEnrollment = enrollmentService.findById(enrollment.getEnrollmentID());
             if (existingEnrollment != null) {
                 throw new RuntimeException("Există deja o înscriere cu acest ID.");
             }
 
-            // 3. Verifică dacă Student ID există
+
             if (studentService.findById(enrollment.getStudentID()) == null) {
                 throw new RuntimeException("Studentul cu ID " + enrollment.getStudentID() + " nu există.");
             }
 
-            // 4. Verifică dacă Course ID există
+
             if (courseService.findById(enrollment.getCourseID()) == null) {
                 throw new RuntimeException("Cursul cu ID " + enrollment.getCourseID() + " nu există.");
             }
 
-            // 5. Creează înscriere nouă
             enrollmentService.create(enrollment);
             redirectAttributes.addFlashAttribute("message", "Înscriere creată cu succes!");
 
@@ -113,26 +112,22 @@ public class EnrollmentController {
                                    RedirectAttributes redirectAttributes) {
 
         try {
-            // 1. Validare câmpuri
+
             enrollmentValidator.validateEnrollment(enrollment);
 
-            // 2. Verifică că înscrierea există
             Enrollment existingEnrollment = enrollmentService.findById(enrollment.getEnrollmentID());
             if (existingEnrollment == null) {
                 throw new RuntimeException("Înscrierea nu există.");
             }
 
-            // 3. Verifică dacă Student ID există
             if (studentService.findById(enrollment.getStudentID()) == null) {
                 throw new RuntimeException("Studentul cu ID " + enrollment.getStudentID() + " nu există.");
             }
 
-            // 4. Verifică dacă Course ID există
             if (courseService.findById(enrollment.getCourseID()) == null) {
                 throw new RuntimeException("Cursul cu ID " + enrollment.getCourseID() + " nu există.");
             }
 
-            // 5. Face update
             enrollmentService.update(enrollment.getEnrollmentID(), enrollment);
             redirectAttributes.addFlashAttribute("message", "Înscriere actualizată cu succes!");
 

@@ -50,23 +50,21 @@ public class RoomController {
         return "redirect:/rooms";
     }
 
-    // CREATE (sală nouă)
+
     @PostMapping("/create")
     public String createRoom(@ModelAttribute Room room,
                              Model model,
                              RedirectAttributes redirectAttributes) {
 
         try {
-            // Validare câmpuri
+
             RoomValidator.validateRoom(room);
 
-            // Verifică dacă ID-ul există deja
             Room existingRoom = service.findById(room.getRoomID());
             if (existingRoom != null) {
                 throw new RuntimeException("Există deja o sală cu acest ID.");
             }
 
-            // Creează sală nouă
             service.create(room);
             redirectAttributes.addFlashAttribute("message", "Sală creată cu succes!");
 
@@ -79,17 +77,16 @@ public class RoomController {
         return "redirect:/rooms";
     }
 
-    // UPDATE (editare)
     @PostMapping("/update")
     public String updateRoom(@ModelAttribute Room room,
                              Model model,
                              RedirectAttributes redirectAttributes) {
 
         try {
-            // Validare câmpuri
+
             RoomValidator.validateRoom(room);
 
-            // Verifică că sala există
+
             Room existingRoom = service.findById(room.getRoomID());
             if (existingRoom == null) {
                 throw new RuntimeException("Sala nu există.");
