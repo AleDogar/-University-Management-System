@@ -4,6 +4,8 @@ import com.example.University.Management.System.model.Assistant;
 import com.example.University.Management.System.repository.AssistantRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -15,24 +17,41 @@ public class AssistantService {
         this.repository = repository;
     }
 
-    // TOATE METODELE TALE EXISTENTE RĂMÂN LA FEL!
     public boolean create(Assistant assistant) {
-        return repository.create(assistant);
+        if (repository.existsById(assistant.getStaffID())) {
+            return false;
+        }
+        repository.save(assistant);
+        return true;
     }
 
     public Map<String, Assistant> findAll() {
-        return repository.findAll();
+        List<Assistant> list = repository.findAll();
+        Map<String, Assistant> map = new HashMap<>();
+        for (Assistant a : list) {
+            map.put(a.getStaffID(), a);
+        }
+        return map;
     }
 
     public Assistant findById(String id) {
-        return repository.findById(id);
+        return repository.findById(id).orElse(null);
     }
 
     public boolean update(String id, Assistant assistant) {
-        return repository.update(id, assistant);
+        if (!repository.existsById(id)) {
+            return false;
+        }
+        assistant.setStaffID(id);
+        repository.save(assistant);
+        return true;
     }
 
     public boolean delete(String id) {
-        return repository.delete(id);
+        if (!repository.existsById(id)) {
+            return false;
+        }
+        repository.deleteById(id);
+        return true;
     }
 }
