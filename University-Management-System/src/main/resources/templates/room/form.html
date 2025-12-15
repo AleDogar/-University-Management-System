@@ -2,65 +2,62 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Room Form</title>
+    <title>Formular Sală</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="container mt-4">
+<body>
+<div class="container mt-4">
 
-<h1 th:text="${room.roomID != null ? 'Edit Room' : 'New Room'}"></h1>
+    <h1 th:text="${room.roomID != null} ? 'Editare Sală' : 'Sală Nouă'"></h1>
 
-<!-- Mesaj succes -->
-<div th:if="${message}" class="alert alert-success">
-    <span th:text="${message}"></span>
-</div>
+    <!-- Mesaje flash -->
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-<!-- Eroare -->
-<div th:if="${error}" class="alert alert-danger">
-    <span th:text="${error}"></span>
-</div>
+    <form th:action="${room.roomID == null ? '/rooms/create' : '/rooms/update'}"
+          th:object="${room}"
+          method="post"
+          novalidate>
 
-<form th:action="${room.roomID == null ? '/rooms/create' : '/rooms/update'}"
-      method="post"
-      th:object="${room}"
-      novalidate>
-
-    <!-- ID -->
-    <div class="mb-3">
-        <label for="roomID" class="form-label">Room ID</label>
-        <input type="text" id="roomID" class="form-control"
-               th:field="*{roomID}"
-               th:readonly="${room.roomID != null}"
-               placeholder="ex: R1">
-        <div class="form-text">
-            <span th:if="${room.roomID == null}">Format: R + număr (R1, R2, ..., R100)</span>
-            <span th:if="${room.roomID != null}">ID-ul nu poate fi modificat</span>
+        <!-- ID Sală -->
+        <div class="mb-3">
+            <label class="form-label">ID Sală *</label>
+            <input type="text"
+                   class="form-control"
+                   th:field="*{roomID}"
+                   th:readonly="${room.roomID != null}"
+                   placeholder="ex: R1">
+            <div class="text-danger" th:if="${#fields.hasErrors('roomID')}" th:errors="*{roomID}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('roomID')}">
+                <span th:if="${room.roomID == null}">Format: R + număr (ex: R1, R101)</span>
+                <span th:if="${room.roomID != null}">ID-ul nu poate fi modificat</span>
+            </div>
         </div>
-    </div>
 
-    <!-- Number -->
-    <div class="mb-3">
-        <label for="number" class="form-label">Room Number/Name</label>
-        <input type="text" id="number" class="form-control"
-               th:field="*{number}"
-               placeholder="ex: 234, A101, Amfiteatru 1">
-        <div class="form-text">Număr sau nume sală (ex: 234, A101, Amfiteatru 1, Laborator B)</div>
-    </div>
+        <!-- Nume Sală -->
+        <div class="mb-3">
+            <label class="form-label">Nume/Număr Sală *</label>
+            <input type="text" class="form-control" th:field="*{roomName}" placeholder="ex: Sala 101, Amfiteatru A">
+            <div class="text-danger" th:if="${#fields.hasErrors('roomName')}" th:errors="*{roomName}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('roomName')}">Între 1 și 100 caractere</div>
+        </div>
 
-    <!-- Capacity -->
-    <div class="mb-3">
-        <label for="capacity" class="form-label">Capacity (persons)</label>
-        <input type="number" id="capacity" class="form-control"
-               th:field="*{capacity}"
-               min="1" max="500" step="1"
-               placeholder="ex: 30">
-        <div class="form-text">1-500 persoane</div>
-    </div>
+        <!-- Capacitate -->
+        <div class="mb-3">
+            <label class="form-label">Capacitate (persoane) *</label>
+            <input type="number" class="form-control" th:field="*{capacity}" min="1" max="500" placeholder="ex: 30">
+            <div class="text-danger" th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('capacity')}">Între 1 și 500 persoane</div>
+        </div>
 
-    <button type="submit" class="btn btn-primary">
-        <span th:text="${room.roomID != null ? 'Update' : 'Create'}"></span>
-    </button>
-    <a th:href="@{/rooms}" class="btn btn-secondary">Back</a>
-</form>
+        <!-- Butoane -->
+        <div class="mb-3">
+            <button type="submit" class="btn btn-primary" th:text="${room.roomID == null ? 'Creează' : 'Actualizează'}"></button>
+            <a th:href="@{/rooms}" class="btn btn-secondary">Înapoi</a>
+        </div>
 
+    </form>
+
+</div>
 </body>
 </html>

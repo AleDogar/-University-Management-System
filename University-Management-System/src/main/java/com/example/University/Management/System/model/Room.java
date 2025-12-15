@@ -1,6 +1,7 @@
 package com.example.University.Management.System.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,21 +10,28 @@ import java.util.List;
 public class Room {
 
     @Id
+    @NotBlank(message = "ID-ul sălii este obligatoriu")
+    @Pattern(regexp = "R\\d+", message = "ID-ul trebuie să înceapă cu 'R' urmat de număr, ex: R1")
     private String roomID;
 
-    private String number;
+    @NotBlank(message = "Numărul/numele sălii este obligatoriu")
+    @Size(min = 1, max = 100, message = "Numărul/numele trebuie să aibă între 1 și 100 caractere")
+    private String roomName;
 
-    private double capacity;
+    @NotNull(message = "Capacitatea este obligatorie")
+    @Min(value = 1, message = "Capacitatea trebuie să fie cel puțin 1")
+    @Max(value = 500, message = "Capacitatea nu poate depăși 500")
+    private Integer capacity;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "room_id") // coloana în Course care va referi Room-ul
+    @JoinColumn(name = "room_id")
     private List<Course> courses = new ArrayList<>();
 
     public Room() {}
 
-    public Room(String roomID, String number, double capacity) {
+    public Room(String roomID, String roomName, Integer capacity) {
         this.roomID = roomID;
-        this.number = number;
+        this.roomName = roomName;
         this.capacity = capacity;
         this.courses = new ArrayList<>();
     }
@@ -36,19 +44,19 @@ public class Room {
         this.roomID = roomID;
     }
 
-    public String getNumber() {
-        return number;
+    public String getRoomName() {
+        return roomName;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
     }
 
-    public double getCapacity() {
+    public Integer getCapacity() {
         return capacity;
     }
 
-    public void setCapacity(double capacity) {
+    public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
 
@@ -64,9 +72,8 @@ public class Room {
     public String toString() {
         return "Room{" +
                 "roomID='" + roomID + '\'' +
-                ", number='" + number + '\'' +
+                ", roomName='" + roomName + '\'' +
                 ", capacity=" + capacity +
-                ", courses=" + courses +
                 '}';
     }
 }

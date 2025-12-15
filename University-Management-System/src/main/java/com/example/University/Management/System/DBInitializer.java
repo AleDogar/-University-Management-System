@@ -84,9 +84,10 @@ public class DBInitializer {
 
             // 3. ROOMS
             System.out.println("Creare săli...");
+            // În metoda init(), schimbă:
             roomService.create(new Room("R1", "Sala 101", 30));
             roomService.create(new Room("R2", "Sala 102", 25));
-            roomService.create(new Room("R3", "Sala 201", 40));
+// etc.
             roomService.create(new Room("R4", "Sala 202", 35));
             roomService.create(new Room("R5", "Sala 301", 50));
             roomService.create(new Room("R6", "Sala 302", 45));

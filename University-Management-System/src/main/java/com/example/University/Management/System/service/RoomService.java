@@ -17,14 +17,28 @@ public class RoomService {
         this.repository = repository;
     }
 
+    // Creare sală
     public boolean create(Room room) {
+        // Trim ID și alte câmpuri pentru siguranță
+        if (room.getRoomID() != null) {
+            room.setRoomID(room.getRoomID().trim());
+        }
+        if (room.getRoomName() != null) {
+            room.setRoomName(room.getRoomName().trim());
+        }
+
+        // Business validation: ID unic
         if (repository.existsById(room.getRoomID())) {
+            System.out.println("ID already exists: " + room.getRoomID());
             return false;
         }
+
         repository.save(room);
+        System.out.println("Room saved: " + room);
         return true;
     }
 
+    // Obținerea tuturor sălilor
     public Map<String, Room> findAll() {
         List<Room> list = repository.findAll();
         Map<String, Room> map = new HashMap<>();
@@ -34,24 +48,48 @@ public class RoomService {
         return map;
     }
 
+    // Obținere sală după ID
     public Room findById(String id) {
-        return repository.findById(id).orElse(null);
+        if (id == null) return null;
+        return repository.findById(id.trim()).orElse(null);
     }
 
+    // Update sală
     public boolean update(String id, Room room) {
-        if (!repository.existsById(id)) {
+        if (id == null || !repository.existsById(id.trim())) {
+            System.out.println("Update failed: Room ID does not exist -> " + id);
             return false;
         }
-        room.setRoomID(id);
+
+        // Trim câmpuri
+        room.setRoomID(id.trim());
+        if (room.getRoomName() != null) {
+            room.setRoomName(room.getRoomName().trim());
+        }
+
         repository.save(room);
+        System.out.println("Room updated: " + room);
         return true;
     }
 
+    // Ștergere sală
     public boolean delete(String id) {
-        if (!repository.existsById(id)) {
+        if (id == null) return false;
+
+        Room room = repository.findById(id.trim()).orElse(null);
+        if (room == null) {
+            System.out.println("Delete failed: Room ID not found -> " + id);
             return false;
         }
-        repository.deleteById(id);
+
+        // Business validation: nu putem șterge săli care au cursuri
+        if (room.getCourses() != null && !room.getCourses().isEmpty()) {
+            System.out.println("Delete failed: Room has courses -> " + id);
+            return false;
+        }
+
+        repository.deleteById(id.trim());
+        System.out.println("Room deleted: " + id);
         return true;
     }
 }
