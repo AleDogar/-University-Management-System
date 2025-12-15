@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ro" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Listă Cursuri</title>
@@ -13,13 +13,8 @@
     <a th:href="@{/courses/new}" class="btn btn-primary">Adaugă Curs Nou</a>
 </div>
 
-<!-- Mesaje flash -->
-<div th:if="${message}" class="alert alert-success">
-    <span th:text="${message}"></span>
-</div>
-<div th:if="${error}" class="alert alert-danger">
-    <span th:text="${error}"></span>
-</div>
+<div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+<div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
 <table class="table table-bordered table-striped">
     <thead>
@@ -33,17 +28,17 @@
     </tr>
     </thead>
     <tbody>
-    <!-- Iterăm prin Map<String, Course> -->
-    <tr th:each="entry : ${courses}">
-        <td th:text="${entry.key}"></td>
-        <td th:text="${entry.value.title}"></td>
-        <td th:text="${entry.value.credits}"></td>
-        <td th:text="${entry.value.departmentID}"></td>
-        <td th:text="${entry.value.roomID}"></td>
+    <tr th:each="course : ${courses.values()}">
+        <td th:text="${course.courseID}"></td>
+        <td th:text="${course.title}"></td>
+        <td th:text="${course.credits}"></td>
+        <td th:text="${course.departmentID}"></td>
+        <td th:text="${course.roomID}"></td>
         <td>
-            <a th:href="@{'/courses/' + ${entry.key}}" class="btn btn-info btn-sm">Detalii</a>
-            <a th:href="@{'/courses/' + ${entry.key} + '/edit'}" class="btn btn-warning btn-sm">Editare</a>
-            <form th:action="@{'/courses/' + ${entry.key} + '/delete'}" method="post" style="display:inline;">
+            <a th:href="@{/courses/{id}(id=${course.courseID})}" class="btn btn-info btn-sm">Detalii</a>
+            <a th:href="@{/courses/{id}/edit(id=${course.courseID})}" class="btn btn-warning btn-sm">Editare</a>
+            <form th:action="@{/courses/{id}/delete(id=${course.courseID})}" method="post" style="display:inline;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:if="${_csrf != null}" />
                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Sigur doriți să ștergeți?')">Șterge</button>
             </form>
         </td>

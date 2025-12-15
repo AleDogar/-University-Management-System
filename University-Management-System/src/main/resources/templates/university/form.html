@@ -10,17 +10,10 @@
 
     <h1 th:text="${university.universityID != null} ? 'Editare Universitate' : 'Universitate Nouă'"></h1>
 
-    <!-- Mesaj succes -->
-    <div th:if="${message}" class="alert alert-success">
-        <span th:text="${message}"></span>
-    </div>
+    <!-- Mesaje flash -->
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <!-- Eroare -->
-    <div th:if="${error}" class="alert alert-danger">
-        <span th:text="${error}"></span>
-    </div>
-
-    <!-- Formular unic -->
     <form th:action="${university.universityID == null ? '/universities/create' : '/universities/update'}"
           th:object="${university}"
           method="post"
@@ -29,52 +22,37 @@
         <!-- ID Universitate -->
         <div class="mb-3">
             <label class="form-label">ID Universitate *</label>
-            <input type="text" class="form-control"
+            <input type="text"
+                   class="form-control"
                    th:field="*{universityID}"
                    th:readonly="${university.universityID != null}"
-                   placeholder="ex: U1" required>
-            <div class="form-text">
+                   placeholder="ex: U1">
+            <div class="text-danger" th:if="${#fields.hasErrors('universityID')}" th:errors="*{universityID}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('universityID')}">
                 <span th:if="${university.universityID == null}">Format: U + număr (ex: U1, U101)</span>
-                <span th:if="${university.universityID != null}">ID-ul există deja</span>
+                <span th:if="${university.universityID != null}">ID-ul nu poate fi modificat</span>
             </div>
         </div>
 
         <!-- Nume Universitate -->
         <div class="mb-3">
             <label class="form-label">Nume Universitate *</label>
-            <input type="text" class="form-control" th:field="*{universityName}"
-                   placeholder="ex: Universitatea București" required>
-            <div class="form-text">
-                <span th:if="${university.universityName == null || university.universityName.isEmpty()}">Format: litere și spații (ex: Universitatea București)</span>
-                <span th:if="${university.universityName != null && !university.universityName.isEmpty()
-                               && !university.universityName.matches('^[a-zA-ZăîâșțĂÎÂȘȚ\\s]+$')}">Nume invalid</span>
-                <span th:if="${university.universityName != null && !university.universityName.isEmpty()
-                               && university.universityName.matches('^[a-zA-ZăîâșțĂÎÂȘȚ\\s]+$')}">Nume valid</span>
-            </div>
+            <input type="text" class="form-control" th:field="*{universityName}" placeholder="ex: Universitatea București">
+            <div class="text-danger" th:if="${#fields.hasErrors('universityName')}" th:errors="*{universityName}"></div>
         </div>
 
         <!-- Oraș -->
         <div class="mb-3">
             <label class="form-label">Oraș *</label>
-            <input type="text" class="form-control" th:field="*{city}"
-                   placeholder="ex: București" required>
-            <div class="form-text">
-                <span th:if="${university.city == null || university.city.isEmpty()}">Format: litere și spații (ex: București)</span>
-                <span th:if="${university.city != null && !university.city.isEmpty()
-                               && !university.city.matches('^[a-zA-ZăîâșțĂÎÂȘȚ\\s]+$')}">Oraș invalid</span>
-                <span th:if="${university.city != null && !university.city.isEmpty()
-                               && university.city.matches('^[a-zA-ZăîâșțĂÎÂȘȚ\\s]+$')}">Oraș valid</span>
-            </div>
+            <input type="text" class="form-control" th:field="*{city}" placeholder="ex: București">
+            <div class="text-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
         </div>
 
         <!-- Butoane -->
         <div class="mb-3">
-            <button type="submit" class="btn btn-primary">
-                <span th:text="${university.universityID == null ? 'Creează' : 'Actualizează'}"></span>
-            </button>
+            <button type="submit" class="btn btn-primary" th:text="${university.universityID == null ? 'Creează' : 'Actualizează'}"></button>
             <a th:href="@{/universities}" class="btn btn-secondary">Înapoi</a>
         </div>
-
     </form>
 
 </div>

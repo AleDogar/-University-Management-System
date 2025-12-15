@@ -238,29 +238,43 @@ public class DBInitializer {
 
 // În metoda init() a DBInitializer, adaugă la sfârșit:
 
-// --- Teaching Assignments (10 asignări) ---
-            TeachingAssignment ta1 = new TeachingAssignment("TA1", ClassType.COURSE, "C1", "T1");
-            TeachingAssignment ta2 = new TeachingAssignment("TA2", ClassType.SEMINARY, "C1", "T2");
-            TeachingAssignment ta3 = new TeachingAssignment("TA3", ClassType.LAB, "C1", "A1");
-            TeachingAssignment ta4 = new TeachingAssignment("TA4", ClassType.COURSE, "C2", "T3");
-            TeachingAssignment ta5 = new TeachingAssignment("TA5", ClassType.SEMINARY, "C2", "T4");
-            TeachingAssignment ta6 = new TeachingAssignment("TA6", ClassType.LAB, "C2", "A2");
-            TeachingAssignment ta7 = new TeachingAssignment("TA7", ClassType.COURSE, "C3", "T5");
-            TeachingAssignment ta8 = new TeachingAssignment("TA8", ClassType.SEMINARY, "C3", "T6");
-            TeachingAssignment ta9 = new TeachingAssignment("TA9", ClassType.LAB, "C3", "A3");
-            TeachingAssignment ta10 = new TeachingAssignment("TA10", ClassType.COURSE, "C4", "T7");
-
-            teachingAssignmentService.create(ta1);
-            teachingAssignmentService.create(ta2);
-            teachingAssignmentService.create(ta3);
-            teachingAssignmentService.create(ta4);
-            teachingAssignmentService.create(ta5);
-            teachingAssignmentService.create(ta6);
-            teachingAssignmentService.create(ta7);
-            teachingAssignmentService.create(ta8);
-            teachingAssignmentService.create(ta9);
-            teachingAssignmentService.create(ta10);
-            System.out.println("10 teaching assignments create");
+//// --- Teaching Assignments ---
+//
+//Course c1 = courseService.findById("C1");
+//Course c2 = courseService.findById("C2");
+//Course c3 = courseService.findById("C3");
+//Course c4 = courseService.findById("C4");
+//
+//if (c1 == null || c2 == null || c3 == null || c4 == null) {
+//    throw new RuntimeException("Cursurile nu există!");
+//}
+//
+//TeachingAssignment ta1 = new TeachingAssignment("TA1", ClassType.COURSE, c1, "T1");
+//TeachingAssignment ta2 = new TeachingAssignment("TA2", ClassType.SEMINARY, c1, "T2");
+//TeachingAssignment ta3 = new TeachingAssignment("TA3", ClassType.LAB, c1, "A1");
+//
+//TeachingAssignment ta4 = new TeachingAssignment("TA4", ClassType.COURSE, c2, "T3");
+//TeachingAssignment ta5 = new TeachingAssignment("TA5", ClassType.SEMINARY, c2, "T4");
+//TeachingAssignment ta6 = new TeachingAssignment("TA6", ClassType.LAB, c2, "A2");
+//
+//TeachingAssignment ta7 = new TeachingAssignment("TA7", ClassType.COURSE, c3, "T5");
+//TeachingAssignment ta8 = new TeachingAssignment("TA8", ClassType.SEMINARY, c3, "T6");
+//TeachingAssignment ta9 = new TeachingAssignment("TA9", ClassType.LAB, c3, "A3");
+//
+//TeachingAssignment ta10 = new TeachingAssignment("TA10", ClassType.COURSE, c4, "T7");
+//
+//teachingAssignmentService.create(ta1);
+//teachingAssignmentService.create(ta2);
+//teachingAssignmentService.create(ta3);
+//teachingAssignmentService.create(ta4);
+//teachingAssignmentService.create(ta5);
+//teachingAssignmentService.create(ta6);
+//teachingAssignmentService.create(ta7);
+//teachingAssignmentService.create(ta8);
+//teachingAssignmentService.create(ta9);
+//teachingAssignmentService.create(ta10);
+//
+//System.out.println("TeachingAssignments create cu succes!");
 
             System.out.println("Initializare completă cu succes!");
 
