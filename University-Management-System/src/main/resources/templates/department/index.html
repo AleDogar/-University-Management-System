@@ -2,23 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Departments List</title>
+    <title>Listă Departamente</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container mt-4">
 
-<h1>Departments List</h1>
+<h1>Listă Departamente</h1>
 
 <div class="mb-3">
-    <a th:href="@{/departments/new}" class="btn btn-primary">Add New Department</a>
+    <a th:href="@{/departments/new}" class="btn btn-primary">Adaugă Departament Nou</a>
 </div>
 
-<!-- Mesaj succes -->
+<!-- Mesaje flash -->
 <div th:if="${message}" class="alert alert-success">
     <span th:text="${message}"></span>
 </div>
-
-<!-- Eroare -->
 <div th:if="${error}" class="alert alert-danger">
     <span th:text="${error}"></span>
 </div>
@@ -27,9 +25,9 @@
     <thead>
     <tr>
         <th>ID</th>
-        <th>Name</th>
-        <th>Phone</th>
-        <th>Actions</th>
+        <th>Nume Departament</th>
+        <th>Număr Telefon</th>
+        <th>Acțiuni</th>
     </tr>
     </thead>
     <tbody>
@@ -39,10 +37,10 @@
         <td th:text="${entry.value.departmentName}"></td>
         <td th:text="${entry.value.phoneNumber}"></td>
         <td>
-            <a th:href="@{'/departments/' + ${entry.key}}" class="btn btn-info btn-sm">Details</a>
-            <a th:href="@{'/departments/' + ${entry.key} + '/edit'}" class="btn btn-warning btn-sm">Edit</a>
+            <a th:href="@{'/departments/' + ${entry.key}}" class="btn btn-info btn-sm">Detalii</a>
+            <a th:href="@{'/departments/' + ${entry.key} + '/edit'}" class="btn btn-warning btn-sm">Editare</a>
             <form th:action="@{'/departments/' + ${entry.key} + '/delete'}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</button>
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Sigur doriți să ștergeți?')">Șterge</button>
             </form>
         </td>
     </tr>

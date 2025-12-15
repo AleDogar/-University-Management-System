@@ -13,6 +13,7 @@
     <a th:href="@{/enrollments/new}" class="btn btn-primary">Adaugă Înscriere Nouă</a>
 </div>
 
+<!-- Mesaje flash -->
 <div th:if="${message}" class="alert alert-success">
     <span th:text="${message}"></span>
 </div>
@@ -31,6 +32,7 @@
     </tr>
     </thead>
     <tbody>
+    <!-- Iterăm prin Map<String, Enrollment> -->
     <tr th:each="entry : ${enrollments}">
         <td th:text="${entry.key}"></td>
         <td th:text="${entry.value.studentID}"></td>

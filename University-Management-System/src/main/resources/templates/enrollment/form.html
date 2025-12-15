@@ -10,15 +10,9 @@
 
     <h1 th:text="${enrollment.enrollmentID != null} ? 'Editare Înscriere' : 'Înscriere Nouă'"></h1>
 
-    <!-- Mesaj succes -->
-    <div th:if="${message}" class="alert alert-success">
-        <span th:text="${message}"></span>
-    </div>
-
-    <!-- Eroare -->
-    <div th:if="${error}" class="alert alert-danger">
-        <span th:text="${error}"></span>
-    </div>
+    <!-- Mesaje flash -->
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
     <form th:action="${enrollment.enrollmentID == null ? '/enrollments/create' : '/enrollments/update'}"
           th:object="${enrollment}"
@@ -27,12 +21,14 @@
 
         <!-- ID Enrollment -->
         <div class="mb-3">
-            <label class="form-label">ID Înscriere</label>
-            <input type="text" class="form-control"
+            <label class="form-label">ID Înscriere *</label>
+            <input type="text"
+                   class="form-control"
                    th:field="*{enrollmentID}"
                    th:readonly="${enrollment.enrollmentID != null}"
-                   placeholder="ex: E123">
-            <div class="form-text">
+                   placeholder="ex: E1">
+            <div class="text-danger" th:if="${#fields.hasErrors('enrollmentID')}" th:errors="*{enrollmentID}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('enrollmentID')}">
                 <span th:if="${enrollment.enrollmentID == null}">Format: E + număr (ex: E1, E123)</span>
                 <span th:if="${enrollment.enrollmentID != null}">ID-ul nu poate fi modificat</span>
             </div>
@@ -41,47 +37,48 @@
         <!-- Student ID - Dropdown -->
         <div class="mb-3">
             <label class="form-label">Student *</label>
-            <select class="form-control" th:field="*{studentID}" required>
+            <select class="form-control" th:field="*{studentID}">
                 <option value="">Selectează student...</option>
                 <option th:each="studentEntry : ${students}"
                         th:value="${studentEntry.key}"
                         th:text="${studentEntry.key + ' - ' + studentEntry.value.name}">
                 </option>
             </select>
-            <div class="form-text">Selectează un student existent</div>
+            <div class="text-danger" th:if="${#fields.hasErrors('studentID')}" th:errors="*{studentID}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('studentID')}">Selectează un student existent</div>
         </div>
 
         <!-- Course ID - Dropdown -->
         <div class="mb-3">
             <label class="form-label">Curs *</label>
-            <select class="form-control" th:field="*{courseID}" required>
+            <select class="form-control" th:field="*{courseID}">
                 <option value="">Selectează curs...</option>
                 <option th:each="courseEntry : ${courses}"
                         th:value="${courseEntry.key}"
                         th:text="${courseEntry.key + ' - ' + courseEntry.value.title}">
                 </option>
             </select>
-            <div class="form-text">Selectează un curs existent</div>
+            <div class="text-danger" th:if="${#fields.hasErrors('courseID')}" th:errors="*{courseID}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('courseID')}">Selectează un curs existent</div>
         </div>
 
         <!-- Grade - Dropdown -->
         <div class="mb-3">
             <label class="form-label">Notă *</label>
-            <select class="form-control" th:field="*{grade}" required>
+            <select class="form-control" th:field="*{grade}">
                 <option value="">Selectează nota...</option>
-                <option th:each="grade : ${T(com.example.University.Management.System.model.ClassGrade).values()}"
-                        th:value="${grade}"
-                        th:text="${grade.getTypeName()}">
+                <option th:each="gradeOption : ${T(com.example.University.Management.System.model.ClassGrade).values()}"
+                        th:value="${gradeOption}"
+                        th:text="${gradeOption.getTypeName()}">
                 </option>
             </select>
-            <div class="form-text">Selectează nota pentru curs</div>
+            <div class="text-danger" th:if="${#fields.hasErrors('grade')}" th:errors="*{grade}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('grade')}">Selectează nota pentru curs</div>
         </div>
 
         <!-- Butoane -->
         <div class="mb-3">
-            <button type="submit" class="btn btn-primary">
-                <span th:text="${enrollment.enrollmentID == null ? 'Creează' : 'Actualizează'}"></span>
-            </button>
+            <button type="submit" class="btn btn-primary" th:text="${enrollment.enrollmentID == null ? 'Creează' : 'Actualizează'}"></button>
             <a th:href="@{/enrollments}" class="btn btn-secondary">Înapoi</a>
         </div>
 

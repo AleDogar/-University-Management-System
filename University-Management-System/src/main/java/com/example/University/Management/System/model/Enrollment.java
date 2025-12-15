@@ -1,15 +1,23 @@
 package com.example.University.Management.System.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "enrollments")
 public class Enrollment {
 
     @Id
+    @NotBlank(message = "ID Înscriere este obligatoriu")
+    @Pattern(regexp = "E\\d+", message = "ID-ul trebuie să înceapă cu 'E' urmat de număr, ex: E1")
     private String enrollmentID;
 
+    @NotBlank(message = "Student ID este obligatoriu")
     private String studentID;
+
+    @NotBlank(message = "Course ID este obligatoriu")
     private String courseID;
 
     @ManyToOne
@@ -20,6 +28,7 @@ public class Enrollment {
     @JoinColumn(name = "course_id", insertable = false, updatable = false)
     private Course course;
 
+    @NotNull(message = "Nota este obligatorie")
     @Enumerated(EnumType.STRING)
     private ClassGrade grade;
 
@@ -64,7 +73,7 @@ public class Enrollment {
     public void setStudent(Student student) {
         this.student = student;
         if (student != null) {
-            this.studentID = student.getId(); // Folosește getId()
+            this.studentID = student.getId();
         }
     }
 

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/University-Management-System/src/main/java/com/example/University/Management/System/MappingLogger.java">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/University-Management-System/src/main/java/com/example/University/Management/System/MappingLogger.java" />
+              <option name="originalContent" value="&#10;" />
+              <option name="updatedContent" value="// MappingLogger removed as requested by user. No extra classes remain." />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

@@ -10,41 +10,42 @@ import java.util.List;
 public class Course {
 
     @Id
-    @Column(name = "course_id")
     @NotBlank(message = "ID cursului este obligatoriu")
-    @Pattern(regexp = "^C\\d+$", message = "Format: C urmat de cifre (ex: C1, C101)")
+    @Pattern(regexp = "C\\d+", message = "ID-ul trebuie să înceapă cu 'C' urmat de număr, ex: C1")
     private String courseID;
 
     @NotBlank(message = "Titlul este obligatoriu")
     @Size(min = 2, max = 255, message = "Titlul trebuie să aibă între 2 și 255 caractere")
     private String title;
 
+    @NotNull(message = "Creditele sunt obligatorii")
     @Min(value = 1, message = "Creditele trebuie să fie cel puțin 1")
     @Max(value = 30, message = "Creditele nu pot depăși 30")
-    private int credits;
+    private Integer credits;
 
-    @NotBlank(message = "Departament obligatoriu")
+    @NotBlank(message = "Departamentul este obligatoriu")
     private String departmentID;
 
-    @NotBlank(message = "Sală obligatorie")
+    @NotBlank(message = "Sala este obligatorie")
     private String roomID;
 
-    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "course_id")
     private List<TeachingAssignment> assignments = new ArrayList<>();
 
     public Course() {}
 
-    public Course(String courseID, String title, int credits,
+    public Course(String courseID, String title, Integer credits,
                   String departmentID, String roomID) {
         this.courseID = courseID;
         this.title = title;
         this.credits = credits;
         this.departmentID = departmentID;
         this.roomID = roomID;
+        this.assignments = new ArrayList<>();
     }
 
-    // getters & setters
-
+    // Getters & Setters
     public String getCourseID() {
         return courseID;
     }
@@ -61,11 +62,11 @@ public class Course {
         this.title = title;
     }
 
-    public int getCredits() {
+    public Integer getCredits() {
         return credits;
     }
 
-    public void setCredits(int credits) {
+    public void setCredits(Integer credits) {
         this.credits = credits;
     }
 
@@ -91,5 +92,16 @@ public class Course {
 
     public void setAssignments(List<TeachingAssignment> assignments) {
         this.assignments = assignments;
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "courseID='" + courseID + '\'' +
+                ", title='" + title + '\'' +
+                ", credits=" + credits +
+                ", departmentID='" + departmentID + '\'' +
+                ", roomID='" + roomID + '\'' +
+                '}';
     }
 }

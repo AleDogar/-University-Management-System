@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ro" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Detalii Curs</title>
@@ -9,20 +9,36 @@
 
 <h1>Detalii Curs</h1>
 
-<table class="table table-bordered">
-    <tr><th>ID</th><td th:text="${course.courseID}"></td></tr>
-    <tr><th>Titlu</th><td th:text="${course.title}"></td></tr>
-    <tr><th>Credite</th><td th:text="${course.credits}"></td></tr>
-    <tr><th>Departament</th><td th:text="${course.departmentID}"></td></tr>
-    <tr><th>Sală</th><td th:text="${course.roomID}"></td></tr>
-</table>
+<div class="card">
+    <div class="card-body">
+        <p><strong>ID Curs:</strong> <span th:text="${course.courseID}"></span></p>
+        <p><strong>Titlu:</strong> <span th:text="${course.title}"></span></p>
+        <p><strong>Credite:</strong> <span th:text="${course.credits}"></span></p>
+        <p><strong>Departament ID:</strong> <span th:text="${course.departmentID}"></span></p>
+        <p><strong>Sală ID:</strong> <span th:text="${course.roomID}"></span></p>
+        <p><strong>Număr Atribuiri Predare:</strong>
+            <span th:text="${course.assignments != null ? course.assignments.size() : 0}"></span>
+        </p>
 
-<a th:href="@{/courses}" class="btn btn-secondary">Înapoi</a>
-<a th:href="@{/courses/{id}/edit(id=${course.courseID})}" class="btn btn-warning">Editare</a>
-<form th:action="@{/courses/{id}/delete(id=${course.courseID})}" method="post" style="display:inline;">
-    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" th:if="${_csrf != null}" />
-    <button type="submit" class="btn btn-danger" onclick="return confirm('Sigur doriți să ștergeți?')">Șterge</button>
-</form>
+        <div th:if="${course.assignments != null && !course.assignments.isEmpty()}">
+            <h5 class="mt-3">Atribuiri de Predare:</h5>
+            <ul>
+                <li th:each="assignment : ${course.assignments}"
+                    th:text="${assignment.assignmentID + ' (Teacher: ' + assignment.teacherID + ')'}"></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="mt-3">
+    <a th:href="@{/courses/{id}/edit(id=${course.courseID})}" class="btn btn-warning">Editare</a>
+
+    <form th:action="@{/courses/{id}/delete(id=${course.courseID})}" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Sigur doriți să ștergeți?')">Șterge</button>
+    </form>
+
+    <a th:href="@{/courses}" class="btn btn-secondary">Înapoi la Listă</a>
+</div>
 
 </body>
 </html>

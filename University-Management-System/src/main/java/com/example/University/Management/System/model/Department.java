@@ -1,6 +1,9 @@
 package com.example.University.Management.System.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,18 +12,25 @@ import java.util.List;
 public class Department {
 
     @Id
+    @NotBlank(message = "ID Departament este obligatoriu")
+    @Pattern(regexp = "D\\d+", message = "ID-ul trebuie să înceapă cu 'D' urmat de număr, ex: D1")
     private String departmentID;
 
+    @NotBlank(message = "Numele departamentului este obligatoriu")
+    @Size(min = 2, max = 100, message = "Numele trebuie să aibă între 2 și 100 caractere")
+    @Pattern(regexp = "[a-zA-Z\\s]+", message = "Numele trebuie să conțină doar litere și spații")
     private String departmentName;
 
+    @NotBlank(message = "Numărul de telefon este obligatoriu")
+    @Pattern(regexp = "07\\d{8}", message = "Numărul de telefon trebuie să fie format din 07 urmat de 8 cifre")
     private String phoneNumber;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "department_id") // foreign key în Course
+    @JoinColumn(name = "department_id")
     private List<Course> courses = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "department_id") // foreign key în Teacher
+    @JoinColumn(name = "department_id")
     private List<Teacher> teachers = new ArrayList<>();
 
     public Department() {}
