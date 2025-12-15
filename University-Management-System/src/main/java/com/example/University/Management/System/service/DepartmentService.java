@@ -2,41 +2,56 @@ package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.Department;
 import com.example.University.Management.System.repository.DepartmentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class DepartmentService {
 
+    private final DepartmentRepository repository;
 
-    private DepartmentRepository repository;
-
-    @Autowired
     public DepartmentService(DepartmentRepository repository) {
         this.repository = repository;
     }
 
     public boolean create(Department department) {
-        return repository.create(department);
+        if (repository.existsById(department.getDepartmentID())) {
+            return false;
+        }
+        repository.save(department);
+        return true;
     }
 
     public Map<String, Department> findAll() {
-        return repository.findAll();
+        List<Department> list = repository.findAll();
+        Map<String, Department> map = new HashMap<>();
+        for (Department department : list) {
+            map.put(department.getDepartmentID(), department);
+        }
+        return map;
     }
 
     public Department findById(String id) {
-        return repository.findById(id);
+        return repository.findById(id).orElse(null);
     }
 
-    public boolean update(String id, Department student) {
-        return repository.update(id, student);
+    public boolean update(String id, Department department) {
+        if (!repository.existsById(id)) {
+            return false;
+        }
+        department.setDepartmentID(id);
+        repository.save(department);
+        return true;
     }
 
     public boolean delete(String id) {
-        return repository.delete(id);
+        if (!repository.existsById(id)) {
+            return false;
+        }
+        repository.deleteById(id);
+        return true;
     }
 }
