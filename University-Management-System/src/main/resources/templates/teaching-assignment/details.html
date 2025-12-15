@@ -9,36 +9,25 @@
 
 <h1>Detalii Asignare</h1>
 
-<div th:if="${assignment}" class="card">
-    <div class="card-header">
-        <h4>Asignare: <span th:text="${assignment.id}"></span></h4>
-    </div>
+<div class="card">
     <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">ID Asignare:</dt>
-            <dd class="col-sm-9" th:text="${assignment.id}"></dd>
-
-            <dt class="col-sm-3">ID Curs:</dt>
-            <dd class="col-sm-9" th:text="${assignment.courseId}"></dd>
-
-            <dt class="col-sm-3">ID Profesor:</dt>
-            <dd class="col-sm-9" th:text="${assignment.staffId}"></dd>
-
-            <dt class="col-sm-3">Tip Clasă:</dt>
-            <dd class="col-sm-9" th:text="${assignment.classType?.getTypeName()}"></dd>
-        </dl>
-
-        <!-- Dacă există obiectul Course -->
-        <div th:if="${assignment.course}">
-            <h5>Detalii Curs:</h5>
-            <p><strong>Titlu:</strong> <span th:text="${assignment.course.title}"></span></p>
-            <p><strong>Credite:</strong> <span th:text="${assignment.course.credits}"></span></p>
-        </div>
+        <p><strong>ID:</strong> <span th:text="${assignment.assignmentID}"></span></p>
+        <p><strong>Tip Clasă:</strong> <span th:text="${assignment.classType?.typeName}"></span></p>
+        <p><strong>ID Profesor:</strong> <span th:text="${assignment.staffID}"></span></p>
+        <p><strong>ID Curs:</strong> <span th:text="${assignment.course?.courseID}"></span></p>
+        <p><strong>Titlu Curs:</strong> <span th:text="${assignment.course?.title}"></span></p>
+        <p><strong>Credite Curs:</strong> <span th:text="${assignment.course?.credits}"></span></p>
     </div>
-    <div class="card-footer">
-        <a th:href="@{/teaching-assignments}" class="btn btn-secondary">Înapoi</a>
-        <a th:href="@{'/teaching-assignments/' + ${assignment.id} + '/edit'}" class="btn btn-warning">Editare</a>
-    </div>
+</div>
+
+<div class="mt-3">
+    <a th:href="@{'/teaching-assignments/' + ${assignment.assignmentID} + '/edit'}" class="btn btn-warning">Editare</a>
+
+    <form th:action="@{'/teaching-assignments/' + ${assignment.assignmentID} + '/delete'}" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-danger" onclick="return confirm('Sigur doriți să ștergeți?')">Șterge</button>
+    </form>
+
+    <a th:href="@{/teaching-assignments}" class="btn btn-secondary">Înapoi la Listă</a>
 </div>
 
 </body>

@@ -16,6 +16,7 @@ public class DBInitializer {
     private final CourseService courseService;
     private final StudentService studentService;
     private final EnrollmentService enrollmentService;
+    private final TeachingAssignmentService teachingAssignmentService;
 
     public DBInitializer(UniversityService universityService,
                          DepartmentService departmentService,
@@ -24,7 +25,8 @@ public class DBInitializer {
                          AssistantService assistantService,
                          CourseService courseService,
                          StudentService studentService,
-                         EnrollmentService enrollmentService) {
+                         EnrollmentService enrollmentService,
+                         TeachingAssignmentService teachingAssignmentService) {
         this.universityService = universityService;
         this.departmentService = departmentService;
         this.roomService = roomService;
@@ -33,6 +35,7 @@ public class DBInitializer {
         this.courseService = courseService;
         this.studentService = studentService;
         this.enrollmentService = enrollmentService;
+        this.teachingAssignmentService = teachingAssignmentService;
     }
 
     @PostConstruct
@@ -84,10 +87,9 @@ public class DBInitializer {
 
             // 3. ROOMS
             System.out.println("Creare săli...");
-            // În metoda init(), schimbă:
             roomService.create(new Room("R1", "Sala 101", 30));
             roomService.create(new Room("R2", "Sala 102", 25));
-// etc.
+            roomService.create(new Room("R3", "Sala 201", 40));
             roomService.create(new Room("R4", "Sala 202", 35));
             roomService.create(new Room("R5", "Sala 301", 50));
             roomService.create(new Room("R6", "Sala 302", 45));
@@ -139,7 +141,32 @@ public class DBInitializer {
             courseService.create(new Course("C10", "Anatomie", 5, "D10", "R10"));
             System.out.println("✓ 10 cursuri create");
 
-            // 7. STUDENTS
+            // 7. TEACHING ASSIGNMENTS
+            System.out.println("Creare asignări...");
+            Course c1 = courseService.findById("C1");
+            Course c2 = courseService.findById("C2");
+            Course c3 = courseService.findById("C3");
+            Course c4 = courseService.findById("C4");
+            Course c5 = courseService.findById("C5");
+            Course c6 = courseService.findById("C6");
+            Course c7 = courseService.findById("C7");
+            Course c8 = courseService.findById("C8");
+            Course c9 = courseService.findById("C9");
+            Course c10 = courseService.findById("C10");
+
+            teachingAssignmentService.create(new TeachingAssignment("TA1", ClassType.COURSE, c1, "T1"));
+            teachingAssignmentService.create(new TeachingAssignment("TA2", ClassType.LAB, c1, "T2"));
+            teachingAssignmentService.create(new TeachingAssignment("TA3", ClassType.SEMINARY, c2, "T3"));
+            teachingAssignmentService.create(new TeachingAssignment("TA4", ClassType.COURSE, c3, "T4"));
+            teachingAssignmentService.create(new TeachingAssignment("TA5", ClassType.LAB, c4, "T5"));
+            teachingAssignmentService.create(new TeachingAssignment("TA6", ClassType.SEMINARY, c5, "T6"));
+            teachingAssignmentService.create(new TeachingAssignment("TA7", ClassType.COURSE, c6, "T7"));
+            teachingAssignmentService.create(new TeachingAssignment("TA8", ClassType.LAB, c7, "T8"));
+            teachingAssignmentService.create(new TeachingAssignment("TA9", ClassType.SEMINARY, c8, "T9"));
+            teachingAssignmentService.create(new TeachingAssignment("TA10", ClassType.COURSE, c9, "T10"));
+            System.out.println("✓ 10 asignări create");
+
+            // 8. STUDENTS
             System.out.println("Creare studenți...");
             studentService.create(new Student("S1", "Student Ana", "ana.student@univ.com"));
             studentService.create(new Student("S2", "Student Mihai", "mihai.student@univ.com"));
@@ -153,7 +180,7 @@ public class DBInitializer {
             studentService.create(new Student("S10", "Student Raluca", "raluca.student@univ.com"));
             System.out.println("✓ 10 studenți creați");
 
-            // 8. ENROLLMENTS
+            // 9. ENROLLMENTS
             System.out.println("Creare înscrieri...");
             enrollmentService.create(new Enrollment("E1", "S1", "C1", ClassGrade.A));
             enrollmentService.create(new Enrollment("E2", "S2", "C2", ClassGrade.B));

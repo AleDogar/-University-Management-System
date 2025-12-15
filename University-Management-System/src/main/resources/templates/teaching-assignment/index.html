@@ -24,10 +24,11 @@
 <table class="table table-bordered table-striped">
     <thead>
     <tr>
-        <th>ID Asignare</th>
-        <th>ID Curs</th>
-        <th>ID Profesor</th>
+        <th>ID</th>
         <th>Tip Clasă</th>
+        <th>ID Profesor</th>
+        <th>ID Curs</th>
+        <th>Titlu Curs</th>
         <th>Acțiuni</th>
     </tr>
     </thead>
@@ -35,9 +36,10 @@
     <!-- Iterăm prin Map<String, TeachingAssignment> -->
     <tr th:each="entry : ${assignments}">
         <td th:text="${entry.key}"></td>
-        <td th:text="${entry.value.courseId}"></td>
-        <td th:text="${entry.value.staffId}"></td>
-        <td th:text="${entry.value.classType?.getTypeName()}"></td>
+        <td th:text="${entry.value.classType?.typeName}"></td>
+        <td th:text="${entry.value.staffID}"></td>
+        <td th:text="${entry.value.course?.courseID}"></td>
+        <td th:text="${entry.value.course?.title}"></td>
         <td>
             <a th:href="@{'/teaching-assignments/' + ${entry.key}}" class="btn btn-info btn-sm">Detalii</a>
             <a th:href="@{'/teaching-assignments/' + ${entry.key} + '/edit'}" class="btn btn-warning btn-sm">Editare</a>

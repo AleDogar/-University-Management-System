@@ -8,83 +8,77 @@
 <body>
 <div class="container mt-4">
 
-    <h1 th:text="${assignment.id != null} ? 'Editare Asignare' : 'Asignare Nouă'"></h1>
+    <h1 th:text="${assignment.assignmentID != null} ? 'Editare Asignare' : 'Asignare Nouă'"></h1>
 
-    <!-- Mesaj succes -->
-    <div th:if="${message}" class="alert alert-success">
-        <span th:text="${message}"></span>
-    </div>
+    <!-- Mesaje flash -->
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <!-- Eroare -->
-    <div th:if="${error}" class="alert alert-danger">
-        <span th:text="${error}"></span>
-    </div>
-
-    <!-- Formular unic -->
-    <form th:action="${assignment.id == null ? '/teaching-assignments/create' : '/teaching-assignments/update'}"
+    <form th:action="${assignment.assignmentID == null ? '/teaching-assignments/create' : '/teaching-assignments/update'}"
           th:object="${assignment}"
           method="post"
           novalidate>
 
         <!-- ID Asignare -->
         <div class="mb-3">
-            <label class="form-label">ID Asignare</label>
-            <input type="text" class="form-control"
-                   th:field="*{id}"
-                   th:readonly="${assignment.id != null}"
+            <label class="form-label">ID Asignare *</label>
+            <input type="text"
+                   class="form-control"
+                   th:field="*{assignmentID}"
+                   th:readonly="${assignment.assignmentID != null}"
                    placeholder="ex: TA1">
-            <div class="form-text">
-                <span th:if="${assignment.id == null}">Format: TA + număr (ex: TA1, TA101)</span>
-                <span th:if="${assignment.id != null}">ID-ul nu poate fi modificat</span>
+            <div class="text-danger" th:if="${#fields.hasErrors('assignmentID')}" th:errors="*{assignmentID}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('assignmentID')}">
+                <span th:if="${assignment.assignmentID == null}">Format: TA + număr (ex: TA1, TA101)</span>
+                <span th:if="${assignment.assignmentID != null}">ID-ul nu poate fi modificat</span>
             </div>
         </div>
 
-        <!-- ID Curs - Dropdown cu cursuri existente -->
+        <!-- Tip Clasă - Dropdown -->
+        <div class="mb-3">
+            <label class="form-label">Tip Clasă *</label>
+            <select class="form-control" th:field="*{classType}" required>
+                <option value="">Selectează tipul clasei...</option>
+                <option th:each="type : ${T(com.example.University.Management.System.model.ClassType).values()}"
+                        th:value="${type}"
+                        th:text="${type.typeName}">
+                </option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('classType')}" th:errors="*{classType}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('classType')}">Selectează: Lab, Seminary sau Course</div>
+        </div>
+
+        <!-- Profesor - Dropdown -->
+        <div class="mb-3">
+            <label class="form-label">Profesor *</label>
+            <select class="form-control" th:field="*{staffID}" required>
+                <option value="">Selectează profesor...</option>
+                <option th:each="teacherEntry : ${teachers}"
+                        th:value="${teacherEntry.key}"
+                        th:text="${teacherEntry.key + ' - ' + teacherEntry.value.staffName}">
+                </option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('staffID')}" th:errors="*{staffID}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('staffID')}">Selectează un profesor existent</div>
+        </div>
+
+        <!-- Curs - Dropdown -->
         <div class="mb-3">
             <label class="form-label">Curs *</label>
-            <select class="form-control" th:field="*{courseId}" required>
+            <select class="form-control" name="courseID" required>
                 <option value="">Selectează curs...</option>
-                <!-- Iterăm prin Map-ul courses (ID -> Course object) -->
-                <option th:each="courseEntry : ${courses.entrySet()}"
+                <option th:each="courseEntry : ${courses}"
                         th:value="${courseEntry.key}"
-                        th:text="${courseEntry.key} + ' - ' + ${courseEntry.value.title}">
+                        th:text="${courseEntry.key + ' - ' + courseEntry.value.title}"
+                        th:selected="${assignment.course != null && assignment.course.courseID == courseEntry.key}">
                 </option>
             </select>
             <div class="form-text">Selectează un curs existent</div>
         </div>
 
-        <!-- ID Profesor - Dropdown cu profesori existenți -->
-        <div class="mb-3">
-            <label class="form-label">Profesor *</label>
-            <select class="form-control" th:field="*{staffId}" required>
-                <option value="">Selectează profesor...</option>
-                <!-- Iterăm prin Map-ul teachers (ID -> Teacher object) -->
-                <option th:each="teacherEntry : ${teachers.entrySet()}"
-                        th:value="${teacherEntry.key}"
-                        th:text="${teacherEntry.key} + ' - ' + ${teacherEntry.value.staffName}">
-                </option>
-            </select>
-            <div class="form-text">Selectează un profesor existent</div>
-        </div>
-
-        <!-- Tipul clasei - Dropdown cu enum ClassType -->
-        <div class="mb-3">
-            <label class="form-label">Tipul Clasei *</label>
-            <select class="form-control" th:field="*{classType}" required>
-                <option value="">Selectează tipul clasei...</option>
-                <option th:each="classType : ${T(com.example.University.Management.System.model.ClassType).values()}"
-                        th:value="${classType}"
-                        th:text="${classType.getTypeName()}">
-                </option>
-            </select>
-            <div class="form-text">Selectează tipul clasei: Lab, Seminary sau Course</div>
-        </div>
-
         <!-- Butoane -->
         <div class="mb-3">
-            <button type="submit" class="btn btn-primary">
-                <span th:text="${assignment.id == null ? 'Creează' : 'Actualizează'}"></span>
-            </button>
+            <button type="submit" class="btn btn-primary" th:text="${assignment.assignmentID == null ? 'Creează' : 'Actualizează'}"></button>
             <a th:href="@{/teaching-assignments}" class="btn btn-secondary">Înapoi</a>
         </div>
 

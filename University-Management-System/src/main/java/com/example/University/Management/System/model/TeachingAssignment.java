@@ -1,20 +1,27 @@
 package com.example.University.Management.System.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "teaching_assignments")
 public class TeachingAssignment {
 
     @Id
-    private String id;
+    @NotBlank(message = "ID Asignare este obligatoriu")
+    @Pattern(regexp = "TA\\d+", message = "ID-ul trebuie să înceapă cu 'TA' urmat de număr, ex: TA1")
+    private String assignmentID;
 
+    @NotNull(message = "Tipul clasei este obligatoriu")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ClassType classType;
 
+    @NotBlank(message = "ID Profesor este obligatoriu")
     @Column(name = "staff_id", nullable = false)
-    private String staffId;
+    private String staffID;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "course_id")
@@ -22,21 +29,20 @@ public class TeachingAssignment {
 
     public TeachingAssignment() {}
 
-    public TeachingAssignment(String id, ClassType classType, Course course, String staffId) {
-        this.id = id;
+    public TeachingAssignment(String assignmentID, ClassType classType, Course course, String staffID) {
+        this.assignmentID = assignmentID;
         this.classType = classType;
         this.course = course;
-        this.staffId = staffId;
+        this.staffID = staffID;
     }
 
-    // getters & setters
-
-    public String getId() {
-        return id;
+    // Getters & Setters
+    public String getAssignmentID() {
+        return assignmentID;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setAssignmentID(String assignmentID) {
+        this.assignmentID = assignmentID;
     }
 
     public ClassType getClassType() {
@@ -47,12 +53,12 @@ public class TeachingAssignment {
         this.classType = classType;
     }
 
-    public String getStaffId() {
-        return staffId;
+    public String getStaffID() {
+        return staffID;
     }
 
-    public void setStaffId(String staffId) {
-        this.staffId = staffId;
+    public void setStaffID(String staffID) {
+        this.staffID = staffID;
     }
 
     public Course getCourse() {
@@ -61,5 +67,15 @@ public class TeachingAssignment {
 
     public void setCourse(Course course) {
         this.course = course;
+    }
+
+    @Override
+    public String toString() {
+        return "TeachingAssignment{" +
+                "assignmentID='" + assignmentID + '\'' +
+                ", classType=" + classType +
+                ", staffID='" + staffID + '\'' +
+                ", courseID=" + (course != null ? course.getCourseID() : "null") +
+                '}';
     }
 }
