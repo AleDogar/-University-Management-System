@@ -2,7 +2,6 @@ package com.example.University.Management.System.controller;
 
 import com.example.University.Management.System.model.Student;
 import com.example.University.Management.System.service.StudentService;
-import com.example.University.Management.System.validation.StudentValidator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -50,72 +49,24 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    // RUTĂ PENTRU CREARE STUDENT NOU
     @PostMapping("/create")
-    public String createStudent(@ModelAttribute Student student,
-                                Model model,
-                                RedirectAttributes redirectAttributes) {
-
-        try {
-            // 1. Validare câmpuri
-            StudentValidator.validateStudent(student);
-
-            // 2. Verifică dacă ID-ul există deja (doar pentru CREATE)
-            Student existingStudent = service.findById(student.getId());
-            if (existingStudent != null) {
-                throw new RuntimeException("Există deja un student cu acest ID.");
-            }
-
-            // 3. Creează student nou
-            service.create(student);
-            redirectAttributes.addFlashAttribute("message", "Student creat cu succes!");
-
-        } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("student", student);
-            return "student/form";
-        }
-
+    public String createStudent(@ModelAttribute Student student, RedirectAttributes redirectAttributes) {
+        service.create(student);
+        redirectAttributes.addFlashAttribute("message", "Student creat cu succes!");
         return "redirect:/students";
     }
 
-    // RUTĂ SEPARATĂ PENTRU UPDATE (EDITARE)
     @PostMapping("/update")
-    public String updateStudent(@ModelAttribute Student student,
-                                Model model,
-                                RedirectAttributes redirectAttributes) {
-
-        try {
-            // 1. Validare câmpuri
-            StudentValidator.validateStudent(student);
-
-            // 2. Verifică că studentul există (pentru update)
-            Student existingStudent = service.findById(student.getId());
-            if (existingStudent == null) {
-                throw new RuntimeException("Studentul nu există.");
-            }
-
-            // 3. Face update (permite modificarea numelui și emailului)
-            service.update(student.getId(), student);
-            redirectAttributes.addFlashAttribute("message", "Student actualizat cu succes!");
-
-        } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("student", student);
-            return "student/form";
-        }
-
+    public String updateStudent(@ModelAttribute Student student, RedirectAttributes redirectAttributes) {
+        service.update(student.getId(), student);
+        redirectAttributes.addFlashAttribute("message", "Student actualizat cu succes!");
         return "redirect:/students";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes redirectAttributes) {
-        try {
-            service.delete(id);
-            redirectAttributes.addFlashAttribute("message", "Student șters cu succes!");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-        }
+        service.delete(id);
+        redirectAttributes.addFlashAttribute("message", "Student șters cu succes!");
         return "redirect:/students";
     }
 }

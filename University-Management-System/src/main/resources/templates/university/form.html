@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -36,7 +35,7 @@
                    placeholder="ex: U1" required>
             <div class="form-text">
                 <span th:if="${university.universityID == null}">Format: U + număr (ex: U1, U101)</span>
-                <span th:if="${university.universityID != null}">ID-ul nu poate fi modificat</span>
+                <span th:if="${university.universityID != null}">ID-ul există deja</span>
             </div>
         </div>
 
@@ -45,7 +44,13 @@
             <label class="form-label">Nume Universitate *</label>
             <input type="text" class="form-control" th:field="*{universityName}"
                    placeholder="ex: Universitatea București" required>
-            <div class="form-text">Minim 2 caractere, maxim 200. Doar litere și spații.</div>
+            <div class="form-text">
+                <span th:if="${university.universityName == null || university.universityName.isEmpty()}">Format: litere și spații (ex: Universitatea București)</span>
+                <span th:if="${university.universityName != null && !university.universityName.isEmpty()
+                               && !university.universityName.matches('^[a-zA-ZăîâșțĂÎÂȘȚ\\s]+$')}">Nume invalid</span>
+                <span th:if="${university.universityName != null && !university.universityName.isEmpty()
+                               && university.universityName.matches('^[a-zA-ZăîâșțĂÎÂȘȚ\\s]+$')}">Nume valid</span>
+            </div>
         </div>
 
         <!-- Oraș -->
@@ -53,7 +58,13 @@
             <label class="form-label">Oraș *</label>
             <input type="text" class="form-control" th:field="*{city}"
                    placeholder="ex: București" required>
-            <div class="form-text">Minim 2 caractere, maxim 100. Doar litere și spații.</div>
+            <div class="form-text">
+                <span th:if="${university.city == null || university.city.isEmpty()}">Format: litere și spații (ex: București)</span>
+                <span th:if="${university.city != null && !university.city.isEmpty()
+                               && !university.city.matches('^[a-zA-ZăîâșțĂÎÂȘȚ\\s]+$')}">Oraș invalid</span>
+                <span th:if="${university.city != null && !university.city.isEmpty()
+                               && university.city.matches('^[a-zA-ZăîâșțĂÎÂȘȚ\\s]+$')}">Oraș valid</span>
+            </div>
         </div>
 
         <!-- Butoane -->

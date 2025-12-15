@@ -1,6 +1,9 @@
 package com.example.University.Management.System.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,21 +12,28 @@ import java.util.List;
 public class University {
 
     @Id
+    @NotBlank(message = "ID Universitate este obligatoriu")
+    @Pattern(regexp = "U\\d+", message = "ID-ul trebuie să înceapă cu 'U' urmat de număr, ex: U1")
     private String universityID;
 
+    @NotBlank(message = "Numele universității este obligatoriu")
+    @Size(min = 2, max = 200, message = "Numele trebuie să aibă între 2 și 200 caractere")
+    @Pattern(regexp = "[a-zA-Z\\s]+", message = "Numele trebuie să conțină doar litere și spații")
     private String universityName;
 
+    @NotBlank(message = "Orașul este obligatoriu")
+    @Size(min = 2, max = 100, message = "Orașul trebuie să aibă între 2 și 100 caractere")
+    @Pattern(regexp = "[a-zA-Z\\s]+", message = "Orașul trebuie să conțină doar litere și spații")
     private String city;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "university_id") // cheia străină în Department
+    @JoinColumn(name = "university_id")
     private List<Department> departments = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "university_id") // cheia străină în Room
+    @JoinColumn(name = "university_id")
     private List<Room> rooms = new ArrayList<>();
 
-    // Constructor gol
     public University() {}
 
     // Constructor cu parametri
