@@ -1,189 +1,273 @@
 package com.example.University.Management.System;
 
 import com.example.University.Management.System.model.*;
-import com.example.University.Management.System.repository.*;
-import org.springframework.boot.CommandLineRunner;
+import com.example.University.Management.System.service.*;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DBInitializer implements CommandLineRunner {
+public class DBInitializer {
 
-    private final UniversityRepository universityRepository;
-    private final DepartmentRepository departmentRepository;
-    private final RoomRepository roomRepository;
-    private final TeacherRepository teacherRepository;
-    private final AssistantRepository assistantRepository;
-    private final CourseRepository courseRepository;
-    private final EnrollmentRepository enrollmentRepository;
-    private final StudentRepository studentRepository;
-    private final TeachingAssignmentRepository teachingAssignmentRepository;
+    private final UniversityService universityService;
+    private final DepartmentService departmentService;
+    private final RoomService roomService;
+    private final TeacherService teacherService;
+    private final AssistantService assistantService;
+    private final CourseService courseService;
+    private final StudentService studentService;
+    private final EnrollmentService enrollmentService;
+    private final TeachingAssignmentService teachingAssignmentService;
 
-    public DBInitializer(
-            UniversityRepository universityRepository,
-            DepartmentRepository departmentRepository,
-            RoomRepository roomRepository,
-            TeacherRepository teacherRepository,
-            AssistantRepository assistantRepository,
-            CourseRepository courseRepository,
-            EnrollmentRepository enrollmentRepository,
-            StudentRepository studentRepository,
-            TeachingAssignmentRepository teachingAssignmentRepository
-    ) {
-        this.universityRepository = universityRepository;
-        this.departmentRepository = departmentRepository;
-        this.roomRepository = roomRepository;
-        this.teacherRepository = teacherRepository;
-        this.assistantRepository = assistantRepository;
-        this.courseRepository = courseRepository;
-        this.enrollmentRepository = enrollmentRepository;
-        this.studentRepository = studentRepository;
-        this.teachingAssignmentRepository = teachingAssignmentRepository;
+    public DBInitializer(UniversityService universityService,
+                         DepartmentService departmentService,
+                         RoomService roomService,
+                         TeacherService teacherService,
+                         AssistantService assistantService,
+                         CourseService courseService,
+                         StudentService studentService,
+                         EnrollmentService enrollmentService,
+                         TeachingAssignmentService teachingAssignmentService) {
+        this.universityService = universityService;
+        this.departmentService = departmentService;
+        this.roomService = roomService;
+        this.teacherService = teacherService;
+        this.assistantService = assistantService;
+        this.courseService = courseService;
+        this.studentService = studentService;
+        this.enrollmentService = enrollmentService;
+        this.teachingAssignmentService = teachingAssignmentService;
     }
 
-    @Override
-    public void run(String... args) {
-        // Verifică dacă baza de date este deja populată
-        if (isDatabaseAlreadyPopulated()) {
-            System.out.println("✓ Baza de date deja populată");
-            return;
+    @PostConstruct
+    public void init() {
+        System.out.println("Initializare baza de date...");
+
+        try {
+            // 1. Creăm 10 universități
+            University uni1 = new University("U1", "Universitatea Tehnica", "Cluj");
+            University uni2 = new University("U2", "University of Bucharest", "Bucuresti");
+            University uni3 = new University("U3", "Universitatea din Iasi", "Iasi");
+            University uni4 = new University("U4", "Universitatea din Timisoara", "Timisoara");
+            University uni5 = new University("U5", "Universitatea din Craiova", "Craiova");
+            University uni6 = new University("U6", "Universitatea din Oradea", "Oradea");
+            University uni7 = new University("U7", "Universitatea din Brasov", "Brasov");
+            University uni8 = new University("U8", "Universitatea din Sibiu", "Sibiu");
+            University uni9 = new University("U9", "Universitatea din Constanta", "Constanta");
+            University uni10 = new University("U10", "Universitatea din Galati", "Galati");
+
+            universityService.create(uni1);
+            universityService.create(uni2);
+            universityService.create(uni3);
+            universityService.create(uni4);
+            universityService.create(uni5);
+            universityService.create(uni6);
+            universityService.create(uni7);
+            universityService.create(uni8);
+            universityService.create(uni9);
+            universityService.create(uni10);
+            System.out.println("10 universități create");
+
+            // 2. Creăm 10 departamente
+            Department dep1 = new Department("D1", "Informatica", "07401001");
+            Department dep2 = new Department("D2", "Matematica", "07401002");
+            Department dep3 = new Department("D3", "Fizica", "07401003");
+            Department dep4 = new Department("D4", "Chimie", "07401004");
+            Department dep5 = new Department("D5", "Biologie", "07401005");
+            Department dep6 = new Department("D6", "Istorie", "07401006");
+            Department dep7 = new Department("D7", "Literatura", "07401007");
+            Department dep8 = new Department("D8", "Economie", "07401008");
+            Department dep9 = new Department("D9", "Drept", "07401009");
+            Department dep10 = new Department("D10", "Medicina", "07401010");
+
+            departmentService.create(dep1);
+            departmentService.create(dep2);
+            departmentService.create(dep3);
+            departmentService.create(dep4);
+            departmentService.create(dep5);
+            departmentService.create(dep6);
+            departmentService.create(dep7);
+            departmentService.create(dep8);
+            departmentService.create(dep9);
+            departmentService.create(dep10);
+            System.out.println("10 departamente create");
+
+            // 3. Creăm 10 săli
+            Room room1 = new Room("R1", "Sala 101", 30);
+            Room room2 = new Room("R2", "Sala 102", 25);
+            Room room3 = new Room("R3", "Sala 201", 40);
+            Room room4 = new Room("R4", "Sala 202", 35);
+            Room room5 = new Room("R5", "Sala 301", 50);
+            Room room6 = new Room("R6", "Sala 302", 45);
+            Room room7 = new Room("R7", "Amfiteatru A", 100);
+            Room room8 = new Room("R8", "Amfiteatru B", 120);
+            Room room9 = new Room("R9", "Laborator 1", 20);
+            Room room10 = new Room("R10", "Laborator 2", 15);
+
+            roomService.create(room1);
+            roomService.create(room2);
+            roomService.create(room3);
+            roomService.create(room4);
+            roomService.create(room5);
+            roomService.create(room6);
+            roomService.create(room7);
+            roomService.create(room8);
+            roomService.create(room9);
+            roomService.create(room10);
+            System.out.println("10 săli create");
+
+            // 4. Creăm 10 profesori
+            Teacher teacher1 = new Teacher("T1", "Profesor Popescu", "Lecturer", "D1", "popescu@univ.com");
+            Teacher teacher2 = new Teacher("T2", "Profesor Ionescu", "Senior Lecturer", "D2", "ionescu@univ.com");
+            Teacher teacher3 = new Teacher("T3", "Profesor Georgescu", "Professor", "D3", "georgescu@univ.com");
+            Teacher teacher4 = new Teacher("T4", "Profesor Marin", "Associate Professor", "D4", "marin@univ.com");
+            Teacher teacher5 = new Teacher("T5", "Profesor Stan", "Assistant Professor", "D5", "stan@univ.com");
+            Teacher teacher6 = new Teacher("T6", "Profesor Moldovan", "Lecturer", "D6", "moldovan@univ.com");
+            Teacher teacher7 = new Teacher("T7", "Profesor Radu", "Senior Lecturer", "D7", "radu@univ.com");
+            Teacher teacher8 = new Teacher("T8", "Profesor Gheorghe", "Professor", "D8", "gheorghe@univ.com");
+            Teacher teacher9 = new Teacher("T9", "Profesor Dumitru", "Associate Professor", "D9", "dumitru@univ.com");
+            Teacher teacher10 = new Teacher("T10", "Profesor Vasile", "Assistant Professor", "D10", "vasile@univ.com");
+
+            teacherService.create(teacher1);
+            teacherService.create(teacher2);
+            teacherService.create(teacher3);
+            teacherService.create(teacher4);
+            teacherService.create(teacher5);
+            teacherService.create(teacher6);
+            teacherService.create(teacher7);
+            teacherService.create(teacher8);
+            teacherService.create(teacher9);
+            teacherService.create(teacher10);
+            System.out.println("10 profesori create");
+
+            // 5. Creăm 10 asistenți
+            Assistant[] assistants = {
+                    new Assistant("A1", "Asistent Maria", ClassRole.LAB, "maria@univ.com"),
+                    new Assistant("A2", "Asistent Ion", ClassRole.TA, "ion@univ.com"),
+                    new Assistant("A3", "Asistent Ana", ClassRole.LAB, "ana@univ.com"),
+                    new Assistant("A4", "Asistent Mihai", ClassRole.TA, "mihai@univ.com"),
+                    new Assistant("A5", "Asistent Elena", ClassRole.LAB, "elena@univ.com"),
+                    new Assistant("A6", "Asistent Cristian", ClassRole.TA, "cristian@univ.com"),
+                    new Assistant("A7", "Asistent Andreea", ClassRole.LAB, "andreea@univ.com"),
+                    new Assistant("A8", "Asistent Robert", ClassRole.TA, "robert@univ.com"),
+                    new Assistant("A9", "Asistent Diana", ClassRole.LAB, "diana@univ.com"),
+                    new Assistant("A10", "Asistent Vlad", ClassRole.TA, "vlad@univ.com")
+            };
+
+            for (Assistant assistant : assistants) {
+                if (assistantService.findById(assistant.getStaffID()) == null) {
+                    assistantService.create(assistant);
+                    System.out.println("Asistent creat: " + assistant.getStaffID());
+                } else {
+                    System.out.println("Asistentul cu ID " + assistant.getStaffID() + " există deja. Sar peste creare.");
+                }
+            }
+
+
+
+            // 6. Creăm 10 cursuri
+            Course course1 = new Course("C1", "Programare Java", 5, "D1", "R1");
+            Course course2 = new Course("C2", "Algebra", 4, "D2", "R2");
+            Course course3 = new Course("C3", "Fizica Generală", 6, "D3", "R3");
+            Course course4 = new Course("C4", "Chimie Organică", 5, "D4", "R4");
+            Course course5 = new Course("C5", "Biologie Moleculară", 4, "D5", "R5");
+            Course course6 = new Course("C6", "Istoria României", 3, "D6", "R6");
+            Course course7 = new Course("C7", "Literatura Română", 4, "D7", "R7");
+            Course course8 = new Course("C8", "Economie Politică", 5, "D8", "R8");
+            Course course9 = new Course("C9", "Drept Civil", 6, "D9", "R9");
+            Course course10 = new Course("C10", "Anatomie", 5, "D10", "R10");
+
+            courseService.create(course1);
+            courseService.create(course2);
+            courseService.create(course3);
+            courseService.create(course4);
+            courseService.create(course5);
+            courseService.create(course6);
+            courseService.create(course7);
+            courseService.create(course8);
+            courseService.create(course9);
+            courseService.create(course10);
+            System.out.println("10 cursuri create");
+
+            // 7. Creăm 10 studenți
+            Student student1 = new Student("S1", "Student Ana", "ana@univ.com");
+            Student student2 = new Student("S2", "Student Mihai", "mihai@univ.com");
+            Student student3 = new Student("S3", "Student Ion", "ion@univ.com");
+            Student student4 = new Student("S4", "Student Maria", "maria@univ.com");
+            Student student5 = new Student("S5", "Student Andrei", "andrei@univ.com");
+            Student student6 = new Student("S6", "Student Elena", "elena@univ.com");
+            Student student7 = new Student("S7", "Student Cristian", "cristian@univ.com");
+            Student student8 = new Student("S8", "Student Alexandra", "alexandra@univ.com");
+            Student student9 = new Student("S9", "Student George", "george@univ.com");
+            Student student10 = new Student("S10", "Student Raluca", "raluca@univ.com");
+
+            studentService.create(student1);
+            studentService.create(student2);
+            studentService.create(student3);
+            studentService.create(student4);
+            studentService.create(student5);
+            studentService.create(student6);
+            studentService.create(student7);
+            studentService.create(student8);
+            studentService.create(student9);
+            studentService.create(student10);
+            System.out.println("10 studenți create");
+
+            // 8. Creăm 10 înscrieri
+            Enrollment enrollment1 = new Enrollment("E1", "S1", "C1", ClassGrade.A);
+            Enrollment enrollment2 = new Enrollment("E2", "S2", "C2", ClassGrade.B);
+            Enrollment enrollment3 = new Enrollment("E3", "S3", "C3", ClassGrade.C);
+            Enrollment enrollment4 = new Enrollment("E4", "S4", "C4", ClassGrade.A);
+            Enrollment enrollment5 = new Enrollment("E5", "S5", "C5", ClassGrade.B);
+            Enrollment enrollment6 = new Enrollment("E6", "S6", "C6", ClassGrade.C);
+            Enrollment enrollment7 = new Enrollment("E7", "S7", "C7", ClassGrade.A);
+            Enrollment enrollment8 = new Enrollment("E8", "S8", "C8", ClassGrade.B);
+            Enrollment enrollment9 = new Enrollment("E9", "S9", "C9", ClassGrade.C);
+            Enrollment enrollment10 = new Enrollment("E10", "S10", "C10", ClassGrade.A);
+
+            enrollmentService.create(enrollment1);
+            enrollmentService.create(enrollment2);
+            enrollmentService.create(enrollment3);
+            enrollmentService.create(enrollment4);
+            enrollmentService.create(enrollment5);
+            enrollmentService.create(enrollment6);
+            enrollmentService.create(enrollment7);
+            enrollmentService.create(enrollment8);
+            enrollmentService.create(enrollment9);
+            enrollmentService.create(enrollment10);
+            System.out.println("10 înscrieri create");
+
+// În metoda init() a DBInitializer, adaugă la sfârșit:
+
+// --- Teaching Assignments (10 asignări) ---
+            TeachingAssignment ta1 = new TeachingAssignment("TA1", ClassType.COURSE, "C1", "T1");
+            TeachingAssignment ta2 = new TeachingAssignment("TA2", ClassType.SEMINARY, "C1", "T2");
+            TeachingAssignment ta3 = new TeachingAssignment("TA3", ClassType.LAB, "C1", "A1");
+            TeachingAssignment ta4 = new TeachingAssignment("TA4", ClassType.COURSE, "C2", "T3");
+            TeachingAssignment ta5 = new TeachingAssignment("TA5", ClassType.SEMINARY, "C2", "T4");
+            TeachingAssignment ta6 = new TeachingAssignment("TA6", ClassType.LAB, "C2", "A2");
+            TeachingAssignment ta7 = new TeachingAssignment("TA7", ClassType.COURSE, "C3", "T5");
+            TeachingAssignment ta8 = new TeachingAssignment("TA8", ClassType.SEMINARY, "C3", "T6");
+            TeachingAssignment ta9 = new TeachingAssignment("TA9", ClassType.LAB, "C3", "A3");
+            TeachingAssignment ta10 = new TeachingAssignment("TA10", ClassType.COURSE, "C4", "T7");
+
+            teachingAssignmentService.create(ta1);
+            teachingAssignmentService.create(ta2);
+            teachingAssignmentService.create(ta3);
+            teachingAssignmentService.create(ta4);
+            teachingAssignmentService.create(ta5);
+            teachingAssignmentService.create(ta6);
+            teachingAssignmentService.create(ta7);
+            teachingAssignmentService.create(ta8);
+            teachingAssignmentService.create(ta9);
+            teachingAssignmentService.create(ta10);
+            System.out.println("10 teaching assignments create");
+
+            System.out.println("Initializare completă cu succes!");
+
+        } catch (Exception e) {
+            System.err.println("Eroare la initializare: " + e.getMessage());
+            // Nu arunca excepția mai departe pentru a permite pornirea aplicației
+            e.printStackTrace();
         }
-
-        System.out.println("⏳ Se populează baza de date cu date inițiale...");
-
-        // Populează doar dacă baza de date este goală
-        populateDatabase();
-
-        System.out.println("✅ Baza de date populată cu succes!");
-    }
-
-    private boolean isDatabaseAlreadyPopulated() {
-        // Verifică dacă există cel puțin un student în baza de date
-        return !studentRepository.findAll().isEmpty();
-    }
-
-    private void populateDatabase() {
-        // -----------------------
-        // UNIVERSITIES
-        // -----------------------
-        universityRepository.create(new University("U1", "University 1", "City 1"));
-        universityRepository.create(new University("U2", "University 2", "City 2"));
-        universityRepository.create(new University("U3", "University 3", "City 3"));
-        universityRepository.create(new University("U4", "University 4", "City 4"));
-        universityRepository.create(new University("U5", "University 5", "City 5"));
-        universityRepository.create(new University("U6", "University 6", "City 6"));
-        universityRepository.create(new University("U7", "University 7", "City 7"));
-        universityRepository.create(new University("U8", "University 8", "City 8"));
-        universityRepository.create(new University("U9", "University 9", "City 9"));
-        universityRepository.create(new University("U10", "University 10", "City 10"));
-
-        // -----------------------
-        // DEPARTMENTS
-        // -----------------------
-        departmentRepository.create(new Department("D1", "Department 1", "071000001"));
-        departmentRepository.create(new Department("D2", "Department 2", "071000002"));
-        departmentRepository.create(new Department("D3", "Department 3", "071000003"));
-        departmentRepository.create(new Department("D4", "Department 4", "071000004"));
-        departmentRepository.create(new Department("D5", "Department 5", "071000005"));
-        departmentRepository.create(new Department("D6", "Department 6", "071000006"));
-        departmentRepository.create(new Department("D7", "Department 7", "071000007"));
-        departmentRepository.create(new Department("D8", "Department 8", "071000008"));
-        departmentRepository.create(new Department("D9", "Department 9", "071000009"));
-        departmentRepository.create(new Department("D10", "Department 10", "071000010"));
-
-        // -----------------------
-        // ROOMS
-        // -----------------------
-        roomRepository.create(new Room("R1", "Room 1", 30));
-        roomRepository.create(new Room("R2", "Room 2", 32));
-        roomRepository.create(new Room("R3", "Room 3", 34));
-        roomRepository.create(new Room("R4", "Room 4", 36));
-        roomRepository.create(new Room("R5", "Room 5", 38));
-        roomRepository.create(new Room("R6", "Room 6", 40));
-        roomRepository.create(new Room("R7", "Room 7", 42));
-        roomRepository.create(new Room("R8", "Room 8", 44));
-        roomRepository.create(new Room("R9", "Room 9", 46));
-        roomRepository.create(new Room("R10", "Room 10", 48));
-
-        // -----------------------
-        // TEACHERS
-        // -----------------------
-        teacherRepository.create(new Teacher("T1", "Teacher 1", "Professor", "D1", "t1@univ.com"));
-        teacherRepository.create(new Teacher("T2", "Teacher 2", "Lecturer", "D2", "t2@univ.com"));
-        teacherRepository.create(new Teacher("T3", "Teacher 3", "Professor", "D3", "t3@univ.com"));
-        teacherRepository.create(new Teacher("T4", "Teacher 4", "Lecturer", "D4", "t4@univ.com"));
-        teacherRepository.create(new Teacher("T5", "Teacher 5", "Professor", "D5", "t5@univ.com"));
-        teacherRepository.create(new Teacher("T6", "Teacher 6", "Lecturer", "D6", "t6@univ.com"));
-        teacherRepository.create(new Teacher("T7", "Teacher 7", "Professor", "D7", "t7@univ.com"));
-        teacherRepository.create(new Teacher("T8", "Teacher 8", "Lecturer", "D8", "t8@univ.com"));
-        teacherRepository.create(new Teacher("T9", "Teacher 9", "Professor", "D9", "t9@univ.com"));
-        teacherRepository.create(new Teacher("T10", "Teacher 10", "Lecturer", "D10", "t10@univ.com"));
-
-        // -----------------------
-        // ASSISTANTS
-        // -----------------------
-        assistantRepository.create(new Assistant("A1", "Assistant 1", ClassRole.LAB, "a1@univ.com"));
-        assistantRepository.create(new Assistant("A2", "Assistant 2", ClassRole.TA, "a2@univ.com"));
-        assistantRepository.create(new Assistant("A3", "Assistant 3", ClassRole.LAB, "a3@univ.com"));
-        assistantRepository.create(new Assistant("A4", "Assistant 4", ClassRole.TA, "a4@univ.com"));
-        assistantRepository.create(new Assistant("A5", "Assistant 5", ClassRole.LAB, "a5@univ.com"));
-        assistantRepository.create(new Assistant("A6", "Assistant 6", ClassRole.TA, "a6@univ.com"));
-        assistantRepository.create(new Assistant("A7", "Assistant 7", ClassRole.LAB, "a7@univ.com"));
-        assistantRepository.create(new Assistant("A8", "Assistant 8", ClassRole.TA, "a8@univ.com"));
-        assistantRepository.create(new Assistant("A9", "Assistant 9", ClassRole.LAB, "a9@univ.com"));
-        assistantRepository.create(new Assistant("A10", "Assistant 10", ClassRole.TA, "a10@univ.com"));
-
-        // -----------------------
-        // COURSES
-        // -----------------------
-        courseRepository.create(new Course("C1", "Course 1", 3, "D1", "R1"));
-        courseRepository.create(new Course("C2", "Course 2", 3, "D2", "R2"));
-        courseRepository.create(new Course("C3", "Course 3", 3, "D3", "R3"));
-        courseRepository.create(new Course("C4", "Course 4", 3, "D4", "R4"));
-        courseRepository.create(new Course("C5", "Course 5", 3, "D5", "R5"));
-        courseRepository.create(new Course("C6", "Course 6", 3, "D6", "R6"));
-        courseRepository.create(new Course("C7", "Course 7", 3, "D7", "R7"));
-        courseRepository.create(new Course("C8", "Course 8", 3, "D8", "R8"));
-        courseRepository.create(new Course("C9", "Course 9", 3, "D9", "R9"));
-        courseRepository.create(new Course("C10", "Course 10", 3, "D10", "R10"));
-
-        // -----------------------
-        // STUDENTS
-        // -----------------------
-        studentRepository.create(new Student("S1", "Student 1", "s1@mail.com"));
-        studentRepository.create(new Student("S2", "Student 2", "s2@mail.com"));
-        studentRepository.create(new Student("S3", "Student 3", "s3@mail.com"));
-        studentRepository.create(new Student("S4", "Student 4", "s4@mail.com"));
-        studentRepository.create(new Student("S5", "Student 5", "s5@mail.com"));
-        studentRepository.create(new Student("S6", "Student 6", "s6@mail.com"));
-        studentRepository.create(new Student("S7", "Student 7", "s7@mail.com"));
-        studentRepository.create(new Student("S8", "Student 8", "s8@mail.com"));
-        studentRepository.create(new Student("S9", "Student 9", "s9@mail.com"));
-        studentRepository.create(new Student("S10", "Student 10", "s10@mail.com"));
-
-// -----------------------
-// ENROLLMENTS
-// -----------------------
-        enrollmentRepository.create(new Enrollment("E1", "S1", "C1", ClassGrade.A));
-        enrollmentRepository.create(new Enrollment("E2", "S2", "C2", ClassGrade.B));
-        enrollmentRepository.create(new Enrollment("E3", "S3", "C3", ClassGrade.C));
-        enrollmentRepository.create(new Enrollment("E4", "S4", "C4", ClassGrade.A));
-        enrollmentRepository.create(new Enrollment("E5", "S5", "C5", ClassGrade.B));
-        enrollmentRepository.create(new Enrollment("E6", "S6", "C6", ClassGrade.C));
-        enrollmentRepository.create(new Enrollment("E7", "S7", "C7", ClassGrade.A));
-        enrollmentRepository.create(new Enrollment("E8", "S8", "C8", ClassGrade.B));
-        enrollmentRepository.create(new Enrollment("E9", "S9", "C9", ClassGrade.C));
-        enrollmentRepository.create(new Enrollment("E10", "S10", "C10", ClassGrade.A));
-// -----------------------
-// TEACHING ASSIGNMENTS - CORECTAT
-// -----------------------
-
-
-// Cursuri COURSE cu profesori
-        teachingAssignmentRepository.create(new TeachingAssignment("TA1", ClassType.COURSE, "C1", "T1"));
-        teachingAssignmentRepository.create(new TeachingAssignment("TA3", ClassType.COURSE, "C3", "T3"));
-        teachingAssignmentRepository.create(new TeachingAssignment("TA5", ClassType.COURSE, "C5", "T5"));
-        teachingAssignmentRepository.create(new TeachingAssignment("TA7", ClassType.COURSE, "C7", "T7"));
-        teachingAssignmentRepository.create(new TeachingAssignment("TA9", ClassType.COURSE, "C9", "T9"));
-
     }
 }

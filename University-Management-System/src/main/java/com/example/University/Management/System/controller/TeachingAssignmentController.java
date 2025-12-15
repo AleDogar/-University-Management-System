@@ -1,9 +1,11 @@
 package com.example.University.Management.System.controller;
 
 import com.example.University.Management.System.model.TeachingAssignment;
+import com.example.University.Management.System.model.Course;
+import com.example.University.Management.System.model.Teacher;
 import com.example.University.Management.System.service.TeachingAssignmentService;
 import com.example.University.Management.System.service.CourseService;
-import com.example.University.Management.System.validation.TeachingAssignmentValidator;
+import com.example.University.Management.System.service.TeacherService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,19 +17,40 @@ public class TeachingAssignmentController {
 
     private final TeachingAssignmentService teachingAssignmentService;
     private final CourseService courseService;
-    private final TeachingAssignmentValidator validator;
+    private final TeacherService teacherService;
 
     public TeachingAssignmentController(TeachingAssignmentService teachingAssignmentService,
-                                        CourseService courseService) {
+                                        CourseService courseService,
+                                        TeacherService teacherService) {
         this.teachingAssignmentService = teachingAssignmentService;
         this.courseService = courseService;
-        this.validator = new TeachingAssignmentValidator();
+        this.teacherService = teacherService;
     }
 
     @GetMapping
     public String listAll(Model model) {
         model.addAttribute("assignments", teachingAssignmentService.findAll());
         return "teaching-assignment/index";
+    }
+
+    @GetMapping("/new")
+    public String showAddForm(Model model) {
+        model.addAttribute("assignment", new TeachingAssignment());
+        model.addAttribute("courses", courseService.findAll());
+        model.addAttribute("teachers", teacherService.findAll());
+        return "teaching-assignment/form";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable String id, Model model) {
+        TeachingAssignment assignment = teachingAssignmentService.findById(id);
+        if (assignment != null) {
+            model.addAttribute("assignment", assignment);
+            model.addAttribute("courses", courseService.findAll());
+            model.addAttribute("teachers", teacherService.findAll());
+            return "teaching-assignment/form";
+        }
+        return "redirect:/teaching-assignments";
     }
 
     @GetMapping("/{id}")
@@ -40,91 +63,37 @@ public class TeachingAssignmentController {
         return "redirect:/teaching-assignments";
     }
 
-    @GetMapping("/new")
-    public String showAddForm(Model model) {
-        model.addAttribute("assignment", new TeachingAssignment());
-        model.addAttribute("courses", courseService.findAll());
-        return "teaching-assignment/form";
-    }
-
-    @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
-        TeachingAssignment assignment = teachingAssignmentService.findById(id);
-        if (assignment != null) {
-            model.addAttribute("assignment", assignment);
-            model.addAttribute("courses", courseService.findAll());
-            return "teaching-assignment/form";
-        }
-        return "redirect:/teaching-assignments";
-    }
-
     @PostMapping("/create")
     public String createAssignment(@ModelAttribute TeachingAssignment assignment,
-                                   Model model,
                                    RedirectAttributes redirectAttributes) {
-
-        try {
-            validator.validateTeachingAssignment(assignment);
-
-            TeachingAssignment existing = teachingAssignmentService.findById(assignment.getId());
-            if (existing != null) {
-                throw new RuntimeException("Există deja o atribuire cu acest ID.");
-            }
-
-            if (courseService.findById(assignment.getCourseId()) == null) {
-                throw new RuntimeException("Cursul cu ID " + assignment.getCourseId() + " nu există.");
-            }
-
-            teachingAssignmentService.create(assignment);
-            redirectAttributes.addFlashAttribute("message", "Atribuire creată cu succes!");
-
-        } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("assignment", assignment);
-            model.addAttribute("courses", courseService.findAll());
-            return "teaching-assignment/form";
+        boolean created = teachingAssignmentService.create(assignment);
+        if (created) {
+            redirectAttributes.addFlashAttribute("message", "Asignare creată cu succes!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Există deja o asignare cu acest ID!");
         }
-
         return "redirect:/teaching-assignments";
     }
 
     @PostMapping("/update")
     public String updateAssignment(@ModelAttribute TeachingAssignment assignment,
-                                   Model model,
                                    RedirectAttributes redirectAttributes) {
-
-        try {
-            validator.validateTeachingAssignment(assignment);
-
-            TeachingAssignment existing = teachingAssignmentService.findById(assignment.getId());
-            if (existing == null) {
-                throw new RuntimeException("Atribuirea nu există.");
-            }
-
-            if (courseService.findById(assignment.getCourseId()) == null) {
-                throw new RuntimeException("Cursul cu ID " + assignment.getCourseId() + " nu există.");
-            }
-
-            teachingAssignmentService.update(assignment.getId(), assignment);
-            redirectAttributes.addFlashAttribute("message", "Atribuire actualizată cu succes!");
-
-        } catch (RuntimeException e) {
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("assignment", assignment);
-            model.addAttribute("courses", courseService.findAll());
-            return "teaching-assignment/form";
+        boolean updated = teachingAssignmentService.update(assignment.getId(), assignment);
+        if (updated) {
+            redirectAttributes.addFlashAttribute("message", "Asignare actualizată cu succes!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Asignarea nu există!");
         }
-
         return "redirect:/teaching-assignments";
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes redirectAttributes) {
-        try {
-            teachingAssignmentService.delete(id);
-            redirectAttributes.addFlashAttribute("message", "Atribuire ștearsă cu succes!");
-        } catch (RuntimeException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        boolean deleted = teachingAssignmentService.delete(id);
+        if (deleted) {
+            redirectAttributes.addFlashAttribute("message", "Asignare ștearsă cu succes!");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Asignarea nu există!");
         }
         return "redirect:/teaching-assignments";
     }

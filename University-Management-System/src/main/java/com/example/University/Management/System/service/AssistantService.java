@@ -2,41 +2,56 @@ package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.Assistant;
 import com.example.University.Management.System.repository.AssistantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 public class AssistantService {
 
+    private final AssistantRepository repository;
 
-    private AssistantRepository repository;
-
-    @Autowired
     public AssistantService(AssistantRepository repository) {
         this.repository = repository;
     }
 
     public boolean create(Assistant assistant) {
-        return repository.create(assistant);
+        if (repository.existsById(assistant.getStaffID())) {
+            return false;
+        }
+        repository.save(assistant);
+        return true;
     }
 
     public Map<String, Assistant> findAll() {
-        return repository.findAll();
+        List<Assistant> list = repository.findAll();
+        Map<String, Assistant> map = new HashMap<>();
+        for (Assistant assistant : list) {
+            map.put(assistant.getStaffID(), assistant);
+        }
+        return map;
     }
 
     public Assistant findById(String id) {
-        return repository.findById(id);
+        return repository.findById(id).orElse(null);
     }
 
-    public boolean update(String id, Assistant student) {
-        return repository.update(id, student);
+    public boolean update(String id, Assistant assistant) {
+        if (!repository.existsById(id)) {
+            return false;
+        }
+        assistant.setStaffID(id);
+        repository.save(assistant);
+        return true;
     }
 
     public boolean delete(String id) {
-        return repository.delete(id);
+        if (!repository.existsById(id)) {
+            return false;
+        }
+        repository.deleteById(id);
+        return true;
     }
 }
