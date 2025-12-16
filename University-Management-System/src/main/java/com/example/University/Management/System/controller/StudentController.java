@@ -9,6 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/students")
 public class StudentController {
@@ -19,14 +21,29 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    // Listare studenți
+    // ================= LISTARE cu SORTARE și FILTRARE =================
     @GetMapping
-    public String listAll(Model model) {
-        model.addAttribute("students", studentService.findAll());
+    public String listAll(@RequestParam(required = false) String sortBy,
+                          @RequestParam(required = false) String sortDir,
+                          @RequestParam(required = false) String filterStudentName,
+                          @RequestParam(required = false) String filterEmail,
+                          Model model) {
+
+        List<Student> students = studentService.findAllWithSortAndFilter(
+                sortBy, sortDir, filterStudentName, filterEmail);
+
+        model.addAttribute("students", students);
+
+        // Adăugăm parametrii pentru a-i păstra în formular
+        model.addAttribute("sortBy", sortBy != null ? sortBy : "studentID");
+        model.addAttribute("sortDir", sortDir != null ? sortDir : "asc");
+        model.addAttribute("filterStudentName", filterStudentName != null ? filterStudentName : "");
+        model.addAttribute("filterEmail", filterEmail != null ? filterEmail : "");
+
         return "student/index";
     }
 
-    // Detalii student
+    // ================= DETAILS =================
     @GetMapping("/{id}")
     public String viewDetails(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
         Student student = studentService.findById(id);
@@ -38,14 +55,14 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    // Formular adăugare student
+    // ================= CREATE FORM =================
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("student", new Student());
         return "student/form";
     }
 
-    // Formular editare student
+    // ================= EDIT FORM =================
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
         Student student = studentService.findById(id);
@@ -57,18 +74,17 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    // Creare student
+    // ================= CREATE =================
     @PostMapping("/create")
     public String createStudent(@Valid @ModelAttribute("student") Student student,
                                 BindingResult bindingResult,
                                 Model model,
                                 RedirectAttributes redirectAttributes) {
-        // Verificăm mai întâi erorile de validare
+
         if (bindingResult.hasErrors()) {
             return "student/form";
         }
 
-        // Verificăm dacă ID-ul există deja (business validation)
         boolean created = studentService.create(student);
         if (!created) {
             model.addAttribute("error", "ID-ul studentului '" + student.getStudentID() + "' există deja! Alegeți un alt ID.");
@@ -80,12 +96,13 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    // Actualizare student
+    // ================= UPDATE =================
     @PostMapping("/update")
     public String updateStudent(@Valid @ModelAttribute("student") Student student,
                                 BindingResult bindingResult,
                                 Model model,
                                 RedirectAttributes redirectAttributes) {
+
         if (bindingResult.hasErrors()) {
             return "student/form";
         }
@@ -100,7 +117,7 @@ public class StudentController {
         return "redirect:/students";
     }
 
-    // Ștergere student
+    // ================= DELETE =================
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes redirectAttributes) {
         boolean deleted = studentService.delete(id);

@@ -4,9 +4,8 @@ import com.example.University.Management.System.model.Student;
 import com.example.University.Management.System.repository.StudentRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -19,7 +18,6 @@ public class StudentService {
 
     // Creare student
     public boolean create(Student student) {
-        // Trim ID și alte câmpuri pentru siguranță
         if (student.getStudentID() != null) {
             student.setStudentID(student.getStudentID().trim());
         }
@@ -30,10 +28,8 @@ public class StudentService {
             student.setEmail(student.getEmail().trim());
         }
 
-        // Debug pentru ID
         System.out.println("Creating Student with ID: " + student.getStudentID());
 
-        // Business validation: ID unic
         if (repository.existsById(student.getStudentID())) {
             System.out.println("ID already exists: " + student.getStudentID());
             return false;
@@ -44,7 +40,7 @@ public class StudentService {
         return true;
     }
 
-    // Obținerea tuturor studenților
+    // Obținerea tuturor studenților (pentru dropdowns sau alte nevoi)
     public Map<String, Student> findAll() {
         List<Student> list = repository.findAll();
         Map<String, Student> map = new HashMap<>();
@@ -52,6 +48,59 @@ public class StudentService {
             map.put(student.getStudentID(), student);
         }
         return map;
+    }
+
+    // SORTARE + FILTRARE pentru studenți
+    public List<Student> findAllWithSortAndFilter(String sortBy, String sortDir,
+                                                  String filterStudentName, String filterEmail) {
+
+        List<Student> students;
+
+        // Transformăm string-urile goale în null pentru query
+        String nameParam = (filterStudentName != null && !filterStudentName.trim().isEmpty()) ?
+                filterStudentName.trim() : null;
+        String emailParam = (filterEmail != null && !filterEmail.trim().isEmpty()) ?
+                filterEmail.trim() : null;
+
+        // FILTRARE folosind metoda principală
+        students = repository.findByFilters(nameParam, emailParam);
+
+        // SORTARE
+        if (sortBy != null && !sortBy.isEmpty()) {
+            Comparator<Student> comparator = getComparator(sortBy, sortDir);
+            students = students.stream()
+                    .sorted(comparator)
+                    .collect(Collectors.toList());
+        }
+
+        return students;
+    }
+
+    // Comparator pentru sortare
+    private Comparator<Student> getComparator(String sortBy, String sortDir) {
+        Comparator<Student> comparator;
+
+        switch (sortBy) {
+            case "studentID":
+                comparator = Comparator.comparing(Student::getStudentID);
+                break;
+            case "studentName":
+                comparator = Comparator.comparing(Student::getStudentName,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "email":
+                comparator = Comparator.comparing(Student::getEmail,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            default:
+                comparator = Comparator.comparing(Student::getStudentID);
+        }
+
+        if ("desc".equalsIgnoreCase(sortDir)) {
+            comparator = comparator.reversed();
+        }
+
+        return comparator;
     }
 
     // Obținere student după ID
@@ -67,7 +116,6 @@ public class StudentService {
             return false;
         }
 
-        // Trim câmpuri
         student.setStudentID(id.trim());
         if (student.getStudentName() != null) {
             student.setStudentName(student.getStudentName().trim());
