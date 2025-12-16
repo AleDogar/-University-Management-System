@@ -140,3 +140,4 @@ public class UniversityController {
         return "redirect:/universities";
     }
 }
+
