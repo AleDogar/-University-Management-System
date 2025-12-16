@@ -4,52 +4,240 @@
     <meta charset="UTF-8">
     <title>Listă Cursuri</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .range-inputs {
+            display: flex;
+            gap: 10px;
+        }
+        .range-inputs .form-control {
+            flex: 1;
+        }
+    </style>
 </head>
 <body class="container mt-4">
 
-<h1>Listă Cursuri</h1>
+<h1 class="mb-4">Listă Cursuri</h1>
 
 <div class="mb-3">
-    <a th:href="@{/courses/new}" class="btn btn-primary">Adaugă Curs Nou</a>
+    <a th:href="@{/courses/new}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Adaugă Curs Nou
+    </a>
 </div>
 
 <!-- Mesaje flash -->
-<div th:if="${message}" class="alert alert-success">
-    <span th:text="${message}"></span>
+<div th:if="${message}" class="alert alert-success alert-dismissible fade show">
+    <i class="fas fa-check-circle"></i> <span th:text="${message}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
-<div th:if="${error}" class="alert alert-danger">
-    <span th:text="${error}"></span>
+<div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+    <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 
-<table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Titlu</th>
-        <th>Credite</th>
-        <th>Departament</th>
-        <th>Sală</th>
-        <th>Acțiuni</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Iterăm prin Map<String, Course> -->
-    <tr th:each="entry : ${courses}">
-        <td th:text="${entry.key}"></td>
-        <td th:text="${entry.value.title}"></td>
-        <td th:text="${entry.value.credits}"></td>
-        <td th:text="${entry.value.departmentID}"></td>
-        <td th:text="${entry.value.roomID}"></td>
-        <td>
-            <a th:href="@{/courses/{id}(id=${entry.key})}" class="btn btn-info btn-sm">Detalii</a>
-            <a th:href="@{/courses/{id}/edit(id=${entry.key})}" class="btn btn-warning btn-sm">Editare</a>
-            <form th:action="@{/courses/{id}/delete(id=${entry.key})}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Sigur doriți să ștergeți?')">Șterge</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<!-- ========== FILTRARE ========== -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <i class="fas fa-filter"></i> Filtrare și Căutare
+    </div>
+    <div class="card-body">
+        <form method="get" th:action="@{/courses}" class="row g-3">
 
+            <!-- Filtru după titlu -->
+            <div class="col-md-3">
+                <label for="filterTitle" class="form-label">Titlu Curs</label>
+                <input type="text"
+                       class="form-control"
+                       id="filterTitle"
+                       name="filterTitle"
+                       th:value="${filterTitle}"
+                       placeholder="ex: Java, Programare...">
+            </div>
+
+            <!-- Filtru după credite (range) -->
+            <div class="col-md-3">
+                <label class="form-label">Credite</label>
+                <div class="range-inputs">
+                    <input type="number"
+                           class="form-control"
+                           name="minCredits"
+                           th:value="${minCredits}"
+                           placeholder="Min"
+                           min="1" max="30">
+                    <input type="number"
+                           class="form-control"
+                           name="maxCredits"
+                           th:value="${maxCredits}"
+                           placeholder="Max"
+                           min="1" max="30">
+                </div>
+            </div>
+
+            <!-- Filtru după departament -->
+            <div class="col-md-3">
+                <label for="filterDepartmentID" class="form-label">Departament</label>
+                <select class="form-control" id="filterDepartmentID" name="filterDepartmentID">
+                    <option value="">Toate departamentele</option>
+                    <option th:each="deptEntry : ${departments}"
+                            th:value="${deptEntry.key}"
+                            th:selected="${filterDepartmentID == deptEntry.key}"
+                            th:text="${deptEntry.key + ' - ' + deptEntry.value.departmentName}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Filtru după sală -->
+            <div class="col-md-3">
+                <label for="filterRoomID" class="form-label">Sală</label>
+                <select class="form-control" id="filterRoomID" name="filterRoomID">
+                    <option value="">Toate sălile</option>
+                    <option th:each="roomEntry : ${rooms}"
+                            th:value="${roomEntry.key}"
+                            th:selected="${filterRoomID == roomEntry.key}"
+                            th:text="${roomEntry.key}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Sortare -->
+            <div class="col-md-3">
+                <label for="sortBy" class="form-label">Sortare după</label>
+                <select class="form-control" id="sortBy" name="sortBy">
+                    <option value="courseID" th:selected="${sortBy == 'courseID'}">ID Curs</option>
+                    <option value="title" th:selected="${sortBy == 'title'}">Titlu</option>
+                    <option value="credits" th:selected="${sortBy == 'credits'}">Credite</option>
+                    <option value="departmentID" th:selected="${sortBy == 'departmentID'}">Departament</option>
+                    <option value="roomID" th:selected="${sortBy == 'roomID'}">Sală</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label for="sortDir" class="form-label">Direcție</label>
+                <select class="form-control" id="sortDir" name="sortDir">
+                    <option value="asc" th:selected="${sortDir == 'asc'}">Crescător</option>
+                    <option value="desc" th:selected="${sortDir == 'desc'}">Descrescător</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-search"></i> Aplică Filtre
+                </button>
+                <a th:href="@{/courses}" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> Resetează
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========== TABEL ========== -->
+<div class="card">
+    <div class="card-header bg-secondary text-white">
+        <i class="fas fa-table"></i>
+        Rezultate:
+        <strong th:text="${#lists.size(courses)}"></strong> cursuri găsite
+    </div>
+
+    <div class="card-body p-0">
+        <table class="table table-bordered table-striped table-hover mb-0">
+            <thead class="table-dark">
+            <tr>
+                <th>
+                    <a th:href="@{/courses(sortBy='courseID', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'},
+                             filterTitle=${filterTitle}, minCredits=${minCredits}, maxCredits=${maxCredits},
+                             filterDepartmentID=${filterDepartmentID}, filterRoomID=${filterRoomID})}"
+                       class="text-white text-decoration-none">
+                        ID Curs
+                        <i class="fas"
+                           th:classappend="${sortBy == 'courseID' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/courses(sortBy='title', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'},
+                             filterTitle=${filterTitle}, minCredits=${minCredits}, maxCredits=${maxCredits},
+                             filterDepartmentID=${filterDepartmentID}, filterRoomID=${filterRoomID})}"
+                       class="text-white text-decoration-none">
+                        Titlu
+                        <i class="fas"
+                           th:classappend="${sortBy == 'title' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/courses(sortBy='credits', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'},
+                             filterTitle=${filterTitle}, minCredits=${minCredits}, maxCredits=${maxCredits},
+                             filterDepartmentID=${filterDepartmentID}, filterRoomID=${filterRoomID})}"
+                       class="text-white text-decoration-none">
+                        Credite
+                        <i class="fas"
+                           th:classappend="${sortBy == 'credits' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/courses(sortBy='departmentID', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'},
+                             filterTitle=${filterTitle}, minCredits=${minCredits}, maxCredits=${maxCredits},
+                             filterDepartmentID=${filterDepartmentID}, filterRoomID=${filterRoomID})}"
+                       class="text-white text-decoration-none">
+                        Departament
+                        <i class="fas"
+                           th:classappend="${sortBy == 'departmentID' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/courses(sortBy='roomID', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'},
+                             filterTitle=${filterTitle}, minCredits=${minCredits}, maxCredits=${maxCredits},
+                             filterDepartmentID=${filterDepartmentID}, filterRoomID=${filterRoomID})}"
+                       class="text-white text-decoration-none">
+                        Sală
+                        <i class="fas"
+                           th:classappend="${sortBy == 'roomID' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th class="text-center">Acțiuni</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!-- Fără rezultate -->
+            <tr th:if="${#lists.isEmpty(courses)}">
+                <td colspan="6" class="text-center text-muted py-4">
+                    <i class="fas fa-info-circle"></i>
+                    Nu există cursuri care să corespundă criteriilor de filtrare.
+                </td>
+            </tr>
+
+            <!-- Listare -->
+            <tr th:each="course : ${courses}">
+                <td th:text="${course.courseID}"></td>
+                <td th:text="${course.title}"></td>
+                <td th:text="${course.credits}"></td>
+                <td th:text="${course.departmentID}"></td>
+                <td th:text="${course.roomID}"></td>
+                <td class="text-center">
+                    <a th:href="@{/courses/{id}(id=${course.courseID})}"
+                       class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> Detalii
+                    </a>
+                    <a th:href="@{/courses/{id}/edit(id=${course.courseID})}"
+                       class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Editare
+                    </a>
+                    <form th:action="@{/courses/{id}/delete(id=${course.courseID})}"
+                          method="post"
+                          style="display:inline;">
+                        <button type="submit"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Sigur doriți să ștergeți?')">
+                            <i class="fas fa-trash"></i> Șterge
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
