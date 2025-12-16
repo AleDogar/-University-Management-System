@@ -2,11 +2,11 @@ package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.University;
 import com.example.University.Management.System.repository.UniversityRepository;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UniversityService {
@@ -19,7 +19,6 @@ public class UniversityService {
 
     // Creare universitate
     public boolean create(University university) {
-        // Trim ID și alte câmpuri pentru siguranță
         if (university.getUniversityID() != null) {
             university.setUniversityID(university.getUniversityID().trim());
         }
@@ -30,13 +29,11 @@ public class UniversityService {
             university.setCity(university.getCity().trim());
         }
 
-        // Debug pentru ID
         System.out.println("Creating University with ID: " + university.getUniversityID());
 
-        // Business validation: ID unic
         if (repository.existsById(university.getUniversityID())) {
             System.out.println("ID already exists: " + university.getUniversityID());
-            return false; // ID-ul există deja
+            return false;
         }
 
         repository.save(university);
@@ -44,7 +41,7 @@ public class UniversityService {
         return true;
     }
 
-    // Obținerea tuturor universităților
+    // Obținere toate universitățile (fără filtrare/sortare)
     public Map<String, University> findAll() {
         List<University> list = repository.findAll();
         Map<String, University> map = new HashMap<>();
@@ -52,6 +49,73 @@ public class UniversityService {
             map.put(u.getUniversityID(), u);
         }
         return map;
+    }
+
+    // SORTARE + FILTRARE
+    public List<University> findAllWithSortAndFilter(String sortBy, String sortDir,
+                                                     String filterName, String filterCity) {
+        List<University> universities;
+
+        // 1. FILTRARE
+        if ((filterName != null && !filterName.trim().isEmpty()) ||
+                (filterCity != null && !filterCity.trim().isEmpty())) {
+
+            // Dacă ambele filtre sunt completate
+            if (filterName != null && !filterName.trim().isEmpty() &&
+                    filterCity != null && !filterCity.trim().isEmpty()) {
+                universities = repository.findByUniversityNameContainingIgnoreCaseAndCityContainingIgnoreCase(
+                        filterName.trim(), filterCity.trim());
+            }
+            // Doar filtru după nume
+            else if (filterName != null && !filterName.trim().isEmpty()) {
+                universities = repository.findByUniversityNameContainingIgnoreCase(filterName.trim());
+            }
+            // Doar filtru după oraș
+            else {
+                universities = repository.findByCityContainingIgnoreCase(filterCity.trim());
+            }
+        } else {
+            // Fără filtre - returnează toate
+            universities = repository.findAll();
+        }
+
+        // 2. SORTARE
+        if (sortBy != null && !sortBy.isEmpty()) {
+            Comparator<University> comparator = getComparator(sortBy, sortDir);
+            universities = universities.stream()
+                    .sorted(comparator)
+                    .collect(Collectors.toList());
+        }
+
+        return universities;
+    }
+
+    // Comparator pentru sortare
+    private Comparator<University> getComparator(String sortBy, String sortDir) {
+        Comparator<University> comparator;
+
+        switch (sortBy) {
+            case "universityID":
+                comparator = Comparator.comparing(University::getUniversityID);
+                break;
+            case "universityName":
+                comparator = Comparator.comparing(University::getUniversityName,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "city":
+                comparator = Comparator.comparing(University::getCity,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            default:
+                comparator = Comparator.comparing(University::getUniversityID);
+        }
+
+        // Direcția sortării (ascending/descending)
+        if ("desc".equalsIgnoreCase(sortDir)) {
+            comparator = comparator.reversed();
+        }
+
+        return comparator;
     }
 
     // Obținere universitate după ID
@@ -64,10 +128,9 @@ public class UniversityService {
     public boolean update(String id, University university) {
         if (id == null || !repository.existsById(id.trim())) {
             System.out.println("Update failed: University ID does not exist -> " + id);
-            return false; // Universitatea nu există
+            return false;
         }
 
-        // Trim ID și alte câmpuri
         university.setUniversityID(id.trim());
         if (university.getUniversityName() != null) {
             university.setUniversityName(university.getUniversityName().trim());
@@ -88,10 +151,9 @@ public class UniversityService {
         University uni = repository.findById(id.trim()).orElse(null);
         if (uni == null) {
             System.out.println("Delete failed: University ID not found -> " + id);
-            return false; // Universitatea nu există
+            return false;
         }
 
-        // Business validation: nu putem șterge universități care au departamente sau săli
         if ((uni.getDepartments() != null && !uni.getDepartments().isEmpty()) ||
                 (uni.getRooms() != null && !uni.getRooms().isEmpty())) {
             System.out.println("Delete failed: University has related departments or rooms -> " + id);

@@ -2,59 +2,80 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Formular Universitate</title>
+    <title th:text="${isEdit} ? 'Editare Universitate' : 'Adaugă Universitate'"></title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
-<body>
-<div class="container mt-4">
+<body class="container mt-4">
 
-    <h1 th:text="${university.universityID != null} ? 'Editare Universitate' : 'Universitate Nouă'"></h1>
+<h1 th:text="${isEdit} ? 'Editare Universitate' : 'Adaugă Universitate'"></h1>
 
-    <!-- Mesaje flash -->
-    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
-    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
-
-    <form th:action="${university.universityID == null ? '/universities/create' : '/universities/update'}"
-          th:object="${university}"
-          method="post"
-          novalidate>
-
-        <!-- ID Universitate -->
-        <div class="mb-3">
-            <label class="form-label">ID Universitate *</label>
-            <input type="text"
-                   class="form-control"
-                   th:field="*{universityID}"
-                   th:readonly="${university.universityID != null}"
-                   placeholder="ex: U1">
-            <div class="text-danger" th:if="${#fields.hasErrors('universityID')}" th:errors="*{universityID}"></div>
-            <div class="form-text" th:if="${!#fields.hasErrors('universityID')}">
-                <span th:if="${university.universityID == null}">Format: U + număr (ex: U1, U101)</span>
-                <span th:if="${university.universityID != null}">ID-ul nu poate fi modificat</span>
-            </div>
-        </div>
-
-        <!-- Nume Universitate -->
-        <div class="mb-3">
-            <label class="form-label">Nume Universitate *</label>
-            <input type="text" class="form-control" th:field="*{universityName}" placeholder="ex: Universitatea București">
-            <div class="text-danger" th:if="${#fields.hasErrors('universityName')}" th:errors="*{universityName}"></div>
-        </div>
-
-        <!-- Oraș -->
-        <div class="mb-3">
-            <label class="form-label">Oraș *</label>
-            <input type="text" class="form-control" th:field="*{city}" placeholder="ex: București">
-            <div class="text-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
-        </div>
-
-        <!-- Butoane -->
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary" th:text="${university.universityID == null ? 'Creează' : 'Actualizează'}"></button>
-            <a th:href="@{/universities}" class="btn btn-secondary">Înapoi</a>
-        </div>
-    </form>
-
+<!-- Mesaj de eroare general -->
+<div th:if="${error}" class="alert alert-danger">
+    <i class="fas fa-exclamation-circle"></i>
+    <span th:text="${error}"></span>
 </div>
+
+<!-- ================= FORM CREATE ================= -->
+<form th:if="${!isEdit}" th:action="@{/universities/create}" th:object="${university}" method="post">
+
+    <!-- ID Universitate -->
+    <div class="mb-3">
+        <label class="form-label">ID Universitate</label>
+        <input type="text" th:field="*{universityID}" class="form-control" required>
+        <div class="text-danger" th:if="${#fields.hasErrors('universityID')}" th:errors="*{universityID}"></div>
+    </div>
+
+    <!-- Nume Universitate -->
+    <div class="mb-3">
+        <label class="form-label">Nume Universitate</label>
+        <input type="text" th:field="*{universityName}" class="form-control" required>
+        <div class="text-danger" th:if="${#fields.hasErrors('universityName')}" th:errors="*{universityName}"></div>
+    </div>
+
+    <!-- Oraș -->
+    <div class="mb-3">
+        <label class="form-label">Oraș</label>
+        <input type="text" th:field="*{city}" class="form-control" required>
+        <div class="text-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        <i class="fas fa-save"></i> Salvează
+    </button>
+    <a th:href="@{/universities}" class="btn btn-secondary">Înapoi</a>
+</form>
+
+<!-- ================= FORM UPDATE ================= -->
+<form th:if="${isEdit}" th:action="@{/universities/update}" th:object="${university}" method="post">
+
+    <!-- ID Universitate (readonly) -->
+    <div class="mb-3">
+        <label class="form-label">ID Universitate</label>
+        <input type="text" th:field="*{universityID}" class="form-control" readonly>
+    </div>
+
+    <!-- Nume Universitate -->
+    <div class="mb-3">
+        <label class="form-label">Nume Universitate</label>
+        <input type="text" th:field="*{universityName}" class="form-control" required>
+        <div class="text-danger" th:if="${#fields.hasErrors('universityName')}" th:errors="*{universityName}"></div>
+    </div>
+
+    <!-- Oraș -->
+    <div class="mb-3">
+        <label class="form-label">Oraș</label>
+        <input type="text" th:field="*{city}" class="form-control" required>
+        <div class="text-danger" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></div>
+    </div>
+
+    <button type="submit" class="btn btn-warning">
+        <i class="fas fa-edit"></i> Actualizează
+    </button>
+    <a th:href="@{/universities}" class="btn btn-secondary">Înapoi</a>
+</form>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
