@@ -73,7 +73,7 @@ public class Enrollment {
     public void setStudent(Student student) {
         this.student = student;
         if (student != null) {
-            this.studentID = student.getId();
+            this.studentID = student.getStudentID();
         }
     }
 
@@ -102,7 +102,7 @@ public class Enrollment {
                 "enrollmentID='" + enrollmentID + '\'' +
                 ", studentID='" + studentID + '\'' +
                 ", courseID='" + courseID + '\'' +
-                ", student=" + (student != null ? student.getName() : "null") +
+                ", student=" + (student != null ? student.getStudentName() : "null") +
                 ", course=" + (course != null ? course.getTitle() : "null") +
                 ", grade=" + grade +
                 '}';

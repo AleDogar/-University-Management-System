@@ -8,90 +8,54 @@
 <body>
 <div class="container mt-4">
 
-    <h1 th:text="${student.id != null} ? 'Editare Student' : 'Student Nou'"></h1>
+    <h1 th:text="${student.studentID != null} ? 'Editare Student' : 'Student Nou'"></h1>
 
-    <!-- Mesaj succes -->
-    <div th:if="${message}" class="alert alert-success">
-        <span th:text="${message}"></span>
-    </div>
+    <!-- Mesaje flash -->
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <!-- Eroare -->
-    <div th:if="${error}" class="alert alert-danger">
-        <span th:text="${error}"></span>
-    </div>
-
-    <!-- Formular pentru CREATE (student nou) -->
-    <form th:if="${student.id == null}"
-          th:action="@{/students/create}"
+    <form th:action="${student.studentID == null ? '/students/create' : '/students/update'}"
           th:object="${student}"
           method="post"
           novalidate>
 
-        <!-- ID -->
+        <!-- ID Student -->
         <div class="mb-3">
             <label class="form-label">ID Student *</label>
-            <input type="text" class="form-control" th:field="*{id}" placeholder="ex: A123">
-            <div class="form-text">1 literă mare + cifre (ex: A1, B123)</div>
+            <input type="text"
+                   class="form-control"
+                   th:field="*{studentID}"
+                   th:readonly="${student.studentID != null}"
+                   placeholder="ex: S1">
+            <div class="text-danger" th:if="${#fields.hasErrors('studentID')}" th:errors="*{studentID}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('studentID')}">
+                <span th:if="${student.studentID == null}">Format: S + număr (ex: S1, S101)</span>
+                <span th:if="${student.studentID != null}">ID-ul nu poate fi modificat</span>
+            </div>
         </div>
 
-        <!-- Nume -->
+        <!-- Nume Student -->
         <div class="mb-3">
-            <label class="form-label">Nume *</label>
-            <input type="text" class="form-control" th:field="*{name}" placeholder="ex: Ion Popescu">
-            <div class="form-text">Minim 2 caractere</div>
+            <label class="form-label">Nume Student *</label>
+            <input type="text" class="form-control" th:field="*{studentName}" placeholder="ex: Ion Popescu">
+            <div class="text-danger" th:if="${#fields.hasErrors('studentName')}" th:errors="*{studentName}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('studentName')}">Între 2 și 100 caractere, doar litere și spații</div>
         </div>
 
         <!-- Email -->
         <div class="mb-3">
             <label class="form-label">Email *</label>
-            <input type="text" class="form-control" th:field="*{email}" placeholder="ex: student@universitate.ro">
-            <div class="form-text">Format: nume@domeniu.com</div>
+            <input type="text" class="form-control" th:field="*{email}" placeholder="ex: student@univ.com">
+            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('email')}">Format: nume@domeniu.com</div>
         </div>
 
         <!-- Butoane -->
         <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Creează Student</button>
-            <a th:href="@{/students}" class="btn btn-secondary">Anulează</a>
+            <button type="submit" class="btn btn-primary" th:text="${student.studentID == null ? 'Creează' : 'Actualizează'}"></button>
+            <a th:href="@{/students}" class="btn btn-secondary">Înapoi</a>
         </div>
-
     </form>
-
-    <!-- Formular pentru UPDATE (editare) -->
-    <form th:if="${student.id != null}"
-          th:action="@{/students/update}"
-          th:object="${student}"
-          method="post"
-          novalidate>
-
-        <!-- ID (readonly la editare) -->
-        <div class="mb-3">
-            <label class="form-label">ID Student</label>
-            <input type="text" class="form-control" th:field="*{id}" readonly>
-            <div class="form-text">ID-ul nu poate fi modificat</div>
-        </div>
-
-        <!-- Nume -->
-        <div class="mb-3">
-            <label class="form-label">Nume *</label>
-            <input type="text" class="form-control" th:field="*{name}" placeholder="ex: Ion Popescu">
-            <div class="form-text">Minim 2 caractere</div>
-        </div>
-
-        <!-- Email -->
-        <div class="mb-3">
-            <label class="form-label">Email *</label>
-            <input type="text" class="form-control" th:field="*{email}" placeholder="ex: student@universitate.ro">
-            <div class="form-text">Format: nume@domeniu.com</div>
-        </div>
-
-        <!-- Butoane -->
-        <div class="mb-3">
-            <button type="submit" class="btn btn-primary">Actualizează Student</button>
-            <a th:href="@{/students}" class="btn btn-secondary">Anulează</a>
-        </div>
-
-    </form>
-
 
 </div>
 </body>
