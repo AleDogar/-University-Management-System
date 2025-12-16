@@ -26,7 +26,8 @@ public class University {
     @Pattern(regexp = "[a-zA-Z\\s]+", message = "Orașul trebuie să conțină doar litere și spații")
     private String city;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @Column
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "university_id")
     private List<Department> departments = new ArrayList<>();
 

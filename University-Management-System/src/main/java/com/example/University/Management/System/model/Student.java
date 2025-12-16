@@ -5,6 +5,8 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "students")
@@ -24,15 +26,20 @@ public class Student {
     @Email(message = "Email-ul trebuie să fie valid")
     private String email;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "student_id")
+    private List<Enrollment> enrollments = new ArrayList<>();
+
     public Student() {}
 
     public Student(String studentID, String studentName, String email) {
         this.studentID = studentID;
         this.studentName = studentName;
         this.email = email;
+        this.enrollments = new ArrayList<>();
     }
 
-    // Getters & Setters
+    // Getters și setters
     public String getStudentID() {
         return studentID;
     }
@@ -57,12 +64,21 @@ public class Student {
         this.email = email;
     }
 
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
+    }
+
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
+    }
+
     @Override
     public String toString() {
         return "Student{" +
                 "studentID='" + studentID + '\'' +
                 ", studentName='" + studentName + '\'' +
                 ", email='" + email + '\'' +
+                ", enrollments=" + enrollments +
                 '}';
     }
 }
