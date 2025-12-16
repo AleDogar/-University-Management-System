@@ -12,32 +12,7 @@ import java.util.List;
 @Repository
 public interface TeachingAssignmentRepository extends JpaRepository<TeachingAssignment, String> {
 
-    // Filtrare după tipul clasei
-    List<TeachingAssignment> findByClassType(ClassType classType);
-
-    // Filtrare după ID profesor
-    List<TeachingAssignment> findByStaffIDContainingIgnoreCase(String staffID);
-
-    // Filtrare după ID curs
-    List<TeachingAssignment> findByCourse_CourseIDContainingIgnoreCase(String courseID);
-
-    // Filtrare combinată: tip clasă și profesor
-    List<TeachingAssignment> findByClassTypeAndStaffIDContainingIgnoreCase(
-            ClassType classType, String staffID);
-
-    // Filtrare combinată: tip clasă și curs
-    List<TeachingAssignment> findByClassTypeAndCourse_CourseIDContainingIgnoreCase(
-            ClassType classType, String courseID);
-
-    // Filtrare combinată: profesor și curs
-    List<TeachingAssignment> findByStaffIDContainingIgnoreCaseAndCourse_CourseIDContainingIgnoreCase(
-            String staffID, String courseID);
-
-    // Filtrare completă
-    List<TeachingAssignment> findByClassTypeAndStaffIDContainingIgnoreCaseAndCourse_CourseIDContainingIgnoreCase(
-            ClassType classType, String staffID, String courseID);
-
-    // Query custom pentru filtrare flexibilă
+    // SINGURA metodă de filtrare necesară
     @Query("SELECT ta FROM TeachingAssignment ta WHERE " +
             "(:classType IS NULL OR ta.classType = :classType) AND " +
             "(:staffID IS NULL OR LOWER(ta.staffID) LIKE LOWER(CONCAT('%', :staffID, '%'))) AND " +

@@ -56,7 +56,7 @@ public class TeachingAssignmentService {
         return true;
     }
 
-    // Obținerea tuturor asignărilor
+    // Obținerea tuturor asignărilor (pentru alte situații)
     public Map<String, TeachingAssignment> findAll() {
         List<TeachingAssignment> list = repository.findAll();
         Map<String, TeachingAssignment> map = new HashMap<>();
@@ -66,12 +66,10 @@ public class TeachingAssignmentService {
         return map;
     }
 
-    // SORTARE + FILTRARE pentru asignări
+    // SORTARE + FILTRARE pentru asignări (folosește doar findByFilters)
     public List<TeachingAssignment> findAllWithSortAndFilter(String sortBy, String sortDir,
                                                              String filterClassType, String filterStaffID,
                                                              String filterCourseID) {
-
-        List<TeachingAssignment> assignments;
 
         // 1. CONVERTIRE FILTRE
         ClassType classTypeEnum = null;
@@ -84,20 +82,15 @@ public class TeachingAssignmentService {
             }
         }
 
-        // 2. FILTRARE
-        boolean hasFilter = (classTypeEnum != null) ||
-                (filterStaffID != null && !filterStaffID.trim().isEmpty()) ||
-                (filterCourseID != null && !filterCourseID.trim().isEmpty());
+        // 2. FILTRARE folosind metoda principală
+        // Transformăm string-urile goale în null pentru query
+        String staffIDParam = (filterStaffID != null && !filterStaffID.trim().isEmpty()) ?
+                filterStaffID.trim() : null;
+        String courseIDParam = (filterCourseID != null && !filterCourseID.trim().isEmpty()) ?
+                filterCourseID.trim() : null;
 
-        if (hasFilter) {
-            assignments = repository.findByFilters(
-                    classTypeEnum,
-                    filterStaffID != null ? filterStaffID.trim() : null,
-                    filterCourseID != null ? filterCourseID.trim() : null
-            );
-        } else {
-            assignments = repository.findAll();
-        }
+        List<TeachingAssignment> assignments = repository.findByFilters(
+                classTypeEnum, staffIDParam, courseIDParam);
 
         // 3. SORTARE
         if (sortBy != null && !sortBy.isEmpty()) {
