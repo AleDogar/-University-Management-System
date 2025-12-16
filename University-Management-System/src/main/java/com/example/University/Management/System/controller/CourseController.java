@@ -11,6 +11,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/courses")
 public class CourseController {
@@ -27,14 +29,38 @@ public class CourseController {
         this.roomService = roomService;
     }
 
-    // Listare cursuri
+    // ================= LISTARE cu SORTARE și FILTRARE =================
     @GetMapping
-    public String listAll(Model model) {
-        model.addAttribute("courses", courseService.findAll());
+    public String listAll(@RequestParam(required = false) String sortBy,
+                          @RequestParam(required = false) String sortDir,
+                          @RequestParam(required = false) String filterTitle,
+                          @RequestParam(required = false) Integer minCredits,
+                          @RequestParam(required = false) Integer maxCredits,
+                          @RequestParam(required = false) String filterDepartmentID,
+                          @RequestParam(required = false) String filterRoomID,
+                          Model model) {
+
+        List<Course> courses = courseService.findAllWithSortAndFilter(
+                sortBy, sortDir, filterTitle, minCredits, maxCredits,
+                filterDepartmentID, filterRoomID);
+
+        model.addAttribute("courses", courses);
+        model.addAttribute("departments", departmentService.findAll());
+        model.addAttribute("rooms", roomService.findAll());
+
+        // Adăugăm parametrii pentru a-i păstra în formular
+        model.addAttribute("sortBy", sortBy != null ? sortBy : "courseID");
+        model.addAttribute("sortDir", sortDir != null ? sortDir : "asc");
+        model.addAttribute("filterTitle", filterTitle != null ? filterTitle : "");
+        model.addAttribute("minCredits", minCredits);
+        model.addAttribute("maxCredits", maxCredits);
+        model.addAttribute("filterDepartmentID", filterDepartmentID != null ? filterDepartmentID : "");
+        model.addAttribute("filterRoomID", filterRoomID != null ? filterRoomID : "");
+
         return "course/index";
     }
 
-    // Detalii curs
+    // ================= DETAILS =================
     @GetMapping("/{id}")
     public String viewDetails(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
         Course course = courseService.findById(id);
@@ -46,77 +72,56 @@ public class CourseController {
         return "redirect:/courses";
     }
 
-    // Formular adăugare curs
+    // ================= CREATE FORM =================
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("course", new Course());
         model.addAttribute("departments", departmentService.findAll());
         model.addAttribute("rooms", roomService.findAll());
+        model.addAttribute("isEdit", false);
         return "course/form";
     }
 
-    // Formular editare curs
+    // ================= EDIT FORM =================
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
+    public String showEditForm(@PathVariable String id,
+                               Model model,
+                               RedirectAttributes redirectAttributes) {
+
         Course course = courseService.findById(id);
         if (course != null) {
             model.addAttribute("course", course);
             model.addAttribute("departments", departmentService.findAll());
             model.addAttribute("rooms", roomService.findAll());
+            model.addAttribute("isEdit", true);
             return "course/form";
         }
+
         redirectAttributes.addFlashAttribute("error", "Cursul nu există!");
         return "redirect:/courses";
     }
 
-    // Creare curs
+    // ================= CREATE =================
     @PostMapping("/create")
     public String createCourse(@Valid @ModelAttribute("course") Course course,
                                BindingResult bindingResult,
                                Model model,
                                RedirectAttributes redirectAttributes) {
 
-        // 1. Verificăm validările de câmpuri (@NotBlank, @Size, etc.)
         if (bindingResult.hasErrors()) {
             model.addAttribute("departments", departmentService.findAll());
             model.addAttribute("rooms", roomService.findAll());
+            model.addAttribute("isEdit", false);
             return "course/form";
         }
 
-        // 2. Business validation: Verificăm dacă ID-ul există deja
-        if (courseService.findById(course.getCourseID()) != null) {
-            bindingResult.rejectValue("courseID", "error.course",
-                    "ID-ul cursului '" + course.getCourseID() + "' există deja! Alegeți un alt ID.");
-            model.addAttribute("departments", departmentService.findAll());
-            model.addAttribute("rooms", roomService.findAll());
-            return "course/form";
-        }
-
-        // 3. Business validation: Verificăm dacă departamentul există
-        if (!courseService.departmentExists(course.getDepartmentID())) {
-            bindingResult.rejectValue("departmentID", "error.course",
-                    "Departamentul cu ID-ul '" + course.getDepartmentID() + "' nu există!");
-            model.addAttribute("departments", departmentService.findAll());
-            model.addAttribute("rooms", roomService.findAll());
-            return "course/form";
-        }
-
-        // 4. Business validation: Verificăm dacă sala există
-        if (!courseService.roomExists(course.getRoomID())) {
-            bindingResult.rejectValue("roomID", "error.course",
-                    "Sala cu ID-ul '" + course.getRoomID() + "' nu există!");
-            model.addAttribute("departments", departmentService.findAll());
-            model.addAttribute("rooms", roomService.findAll());
-            return "course/form";
-        }
-
-        // 5. Dacă toate validările au trecut, creăm cursul
         boolean created = courseService.create(course);
         if (!created) {
-            model.addAttribute("error", "Eroare la crearea cursului! Verificați datele introduse.");
-            model.addAttribute("course", course);
+            model.addAttribute("error",
+                    "ID-ul cursului există deja sau departamentul/sala nu există!");
             model.addAttribute("departments", departmentService.findAll());
             model.addAttribute("rooms", roomService.findAll());
+            model.addAttribute("isEdit", false);
             return "course/form";
         }
 
@@ -124,45 +129,27 @@ public class CourseController {
         return "redirect:/courses";
     }
 
-    // Actualizare curs
+    // ================= UPDATE =================
     @PostMapping("/update")
     public String updateCourse(@Valid @ModelAttribute("course") Course course,
                                BindingResult bindingResult,
                                Model model,
                                RedirectAttributes redirectAttributes) {
 
-        // 1. Verificăm validările de câmpuri
         if (bindingResult.hasErrors()) {
             model.addAttribute("departments", departmentService.findAll());
             model.addAttribute("rooms", roomService.findAll());
+            model.addAttribute("isEdit", true);
             return "course/form";
         }
 
-        // 2. Business validation: Verificăm dacă departamentul există
-        if (!courseService.departmentExists(course.getDepartmentID())) {
-            bindingResult.rejectValue("departmentID", "error.course",
-                    "Departamentul cu ID-ul '" + course.getDepartmentID() + "' nu există!");
-            model.addAttribute("departments", departmentService.findAll());
-            model.addAttribute("rooms", roomService.findAll());
-            return "course/form";
-        }
-
-        // 3. Business validation: Verificăm dacă sala există
-        if (!courseService.roomExists(course.getRoomID())) {
-            bindingResult.rejectValue("roomID", "error.course",
-                    "Sala cu ID-ul '" + course.getRoomID() + "' nu există!");
-            model.addAttribute("departments", departmentService.findAll());
-            model.addAttribute("rooms", roomService.findAll());
-            return "course/form";
-        }
-
-        // 4. Actualizăm cursul
         boolean updated = courseService.update(course.getCourseID(), course);
         if (!updated) {
-            model.addAttribute("error", "Cursul nu există pentru actualizare!");
-            model.addAttribute("course", course);
+            model.addAttribute("error",
+                    "Cursul nu există sau departamentul/sala nu există!");
             model.addAttribute("departments", departmentService.findAll());
             model.addAttribute("rooms", roomService.findAll());
+            model.addAttribute("isEdit", true);
             return "course/form";
         }
 
@@ -170,13 +157,16 @@ public class CourseController {
         return "redirect:/courses";
     }
 
-    // Ștergere curs
+    // ================= DELETE =================
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes redirectAttributes) {
+
         boolean deleted = courseService.delete(id);
         if (!deleted) {
-            redirectAttributes.addFlashAttribute("error",
-                    "Nu se poate șterge cursul! Cursul nu există sau are atribuiri de predare.");
+            redirectAttributes.addFlashAttribute(
+                    "error",
+                    "Nu se poate șterge cursul (poate are atribuiri de predare sau nu există)!"
+            );
             return "redirect:/courses";
         }
 

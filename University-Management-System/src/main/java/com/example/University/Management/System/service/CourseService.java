@@ -6,9 +6,8 @@ import com.example.University.Management.System.repository.DepartmentRepository;
 import com.example.University.Management.System.repository.RoomRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class CourseService {
@@ -27,7 +26,6 @@ public class CourseService {
 
     // Creare curs
     public boolean create(Course course) {
-        // Trim ID și alte câmpuri pentru siguranță
         if (course.getCourseID() != null) {
             course.setCourseID(course.getCourseID().trim());
         }
@@ -41,22 +39,18 @@ public class CourseService {
             course.setRoomID(course.getRoomID().trim());
         }
 
-        // Debug pentru ID
         System.out.println("Creating Course with ID: " + course.getCourseID());
 
-        // Business validation 1: ID unic
         if (repository.existsById(course.getCourseID())) {
             System.out.println("ID already exists: " + course.getCourseID());
             return false;
         }
 
-        // Business validation 2: Departamentul trebuie să existe
         if (!departmentRepository.existsById(course.getDepartmentID())) {
             System.out.println("Department ID does not exist: " + course.getDepartmentID());
             return false;
         }
 
-        // Business validation 3: Sala trebuie să existe
         if (!roomRepository.existsById(course.getRoomID())) {
             System.out.println("Room ID does not exist: " + course.getRoomID());
             return false;
@@ -77,6 +71,77 @@ public class CourseService {
         return map;
     }
 
+    // SORTARE + FILTRARE pentru cursuri
+    public List<Course> findAllWithSortAndFilter(String sortBy, String sortDir,
+                                                 String filterTitle, Integer minCredits,
+                                                 Integer maxCredits, String filterDepartmentID,
+                                                 String filterRoomID) {
+
+        List<Course> courses;
+
+        // 1. FILTRARE folosind query custom
+        boolean hasFilter = (filterTitle != null && !filterTitle.trim().isEmpty()) ||
+                (minCredits != null) ||
+                (maxCredits != null) ||
+                (filterDepartmentID != null && !filterDepartmentID.trim().isEmpty()) ||
+                (filterRoomID != null && !filterRoomID.trim().isEmpty());
+
+        if (hasFilter) {
+            // Folosim metoda cu query custom pentru mai multă flexibilitate
+            courses = repository.findByFilters(
+                    filterTitle != null ? filterTitle.trim() : null,
+                    minCredits,
+                    maxCredits,
+                    filterDepartmentID != null ? filterDepartmentID.trim() : null,
+                    filterRoomID != null ? filterRoomID.trim() : null
+            );
+        } else {
+            // Fără filtre - returnează toate
+            courses = repository.findAll();
+        }
+
+        // 2. SORTARE
+        if (sortBy != null && !sortBy.isEmpty()) {
+            Comparator<Course> comparator = getComparator(sortBy, sortDir);
+            courses = courses.stream()
+                    .sorted(comparator)
+                    .collect(Collectors.toList());
+        }
+
+        return courses;
+    }
+
+    // Comparator pentru sortare
+    private Comparator<Course> getComparator(String sortBy, String sortDir) {
+        Comparator<Course> comparator;
+
+        switch (sortBy) {
+            case "courseID":
+                comparator = Comparator.comparing(Course::getCourseID);
+                break;
+            case "title":
+                comparator = Comparator.comparing(Course::getTitle, String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "credits":
+                comparator = Comparator.comparing(Course::getCredits);
+                break;
+            case "departmentID":
+                comparator = Comparator.comparing(Course::getDepartmentID, String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "roomID":
+                comparator = Comparator.comparing(Course::getRoomID, String.CASE_INSENSITIVE_ORDER);
+                break;
+            default:
+                comparator = Comparator.comparing(Course::getCourseID);
+        }
+
+        if ("desc".equalsIgnoreCase(sortDir)) {
+            comparator = comparator.reversed();
+        }
+
+        return comparator;
+    }
+
     // Obținere curs după ID
     public Course findById(String id) {
         if (id == null) return null;
@@ -90,7 +155,6 @@ public class CourseService {
             return false;
         }
 
-        // Trim câmpuri
         course.setCourseID(id.trim());
         if (course.getTitle() != null) {
             course.setTitle(course.getTitle().trim());
@@ -102,13 +166,11 @@ public class CourseService {
             course.setRoomID(course.getRoomID().trim());
         }
 
-        // Business validation: Departamentul trebuie să existe
         if (!departmentRepository.existsById(course.getDepartmentID())) {
             System.out.println("Update failed: Department ID does not exist -> " + course.getDepartmentID());
             return false;
         }
 
-        // Business validation: Sala trebuie să existe
         if (!roomRepository.existsById(course.getRoomID())) {
             System.out.println("Update failed: Room ID does not exist -> " + course.getRoomID());
             return false;
@@ -129,7 +191,6 @@ public class CourseService {
             return false;
         }
 
-        // Business validation: nu putem șterge cursuri care au atribuiri de predare
         if (course.getAssignments() != null && !course.getAssignments().isEmpty()) {
             System.out.println("Delete failed: Course has teaching assignments -> " + id);
             return false;
@@ -140,13 +201,11 @@ public class CourseService {
         return true;
     }
 
-    // Verificare dacă departamentul există (pentru validare în controller)
     public boolean departmentExists(String departmentID) {
         if (departmentID == null) return false;
         return departmentRepository.existsById(departmentID.trim());
     }
 
-    // Verificare dacă sala există (pentru validare în controller)
     public boolean roomExists(String roomID) {
         if (roomID == null) return false;
         return roomRepository.existsById(roomID.trim());
