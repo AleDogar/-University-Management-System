@@ -5,9 +5,8 @@ import com.example.University.Management.System.repository.TeacherRepository;
 import com.example.University.Management.System.repository.DepartmentRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TeacherService {
@@ -22,12 +21,14 @@ public class TeacherService {
 
     // Creare profesor
     public boolean create(Teacher teacher) {
-        // Trim ID și alte câmpuri
         if (teacher.getStaffID() != null) {
             teacher.setStaffID(teacher.getStaffID().trim());
         }
         if (teacher.getStaffName() != null) {
             teacher.setStaffName(teacher.getStaffName().trim());
+        }
+        if (teacher.getTitle() != null) {
+            teacher.setTitle(teacher.getTitle().trim());
         }
         if (teacher.getDepartmentID() != null) {
             teacher.setDepartmentID(teacher.getDepartmentID().trim());
@@ -38,13 +39,11 @@ public class TeacherService {
 
         System.out.println("Creating Teacher with ID: " + teacher.getStaffID());
 
-        // Business validation 1: ID unic
         if (repository.existsById(teacher.getStaffID())) {
             System.out.println("ID already exists: " + teacher.getStaffID());
             return false;
         }
 
-        // Business validation 2: Departamentul trebuie să existe
         if (!departmentRepository.existsById(teacher.getDepartmentID())) {
             System.out.println("Department does not exist: " + teacher.getDepartmentID());
             return false;
@@ -55,7 +54,7 @@ public class TeacherService {
         return true;
     }
 
-    // Obținerea tuturor profesorilor
+    // Obținerea tuturor profesorilor (pentru dropdowns sau alte nevoi)
     public Map<String, Teacher> findAll() {
         List<Teacher> list = repository.findAll();
         Map<String, Teacher> map = new HashMap<>();
@@ -63,6 +62,72 @@ public class TeacherService {
             map.put(teacher.getStaffID(), teacher);
         }
         return map;
+    }
+
+    // SORTARE + FILTRARE pentru profesori
+    public List<Teacher> findAllWithSortAndFilter(String sortBy, String sortDir,
+                                                  String filterStaffName, String filterTitle,
+                                                  String filterDepartmentID, String filterEmail) {
+
+        List<Teacher> teachers;
+
+        // Transformăm string-urile goale în null pentru query
+        String staffNameParam = (filterStaffName != null && !filterStaffName.trim().isEmpty()) ?
+                filterStaffName.trim() : null;
+        String titleParam = (filterTitle != null && !filterTitle.trim().isEmpty()) ?
+                filterTitle.trim() : null;
+        String departmentParam = (filterDepartmentID != null && !filterDepartmentID.trim().isEmpty()) ?
+                filterDepartmentID.trim() : null;
+        String emailParam = (filterEmail != null && !filterEmail.trim().isEmpty()) ?
+                filterEmail.trim() : null;
+
+        // FILTRARE folosind metoda principală
+        teachers = repository.findByFilters(staffNameParam, titleParam, departmentParam, emailParam);
+
+        // SORTARE
+        if (sortBy != null && !sortBy.isEmpty()) {
+            Comparator<Teacher> comparator = getComparator(sortBy, sortDir);
+            teachers = teachers.stream()
+                    .sorted(comparator)
+                    .collect(Collectors.toList());
+        }
+
+        return teachers;
+    }
+
+    // Comparator pentru sortare
+    private Comparator<Teacher> getComparator(String sortBy, String sortDir) {
+        Comparator<Teacher> comparator;
+
+        switch (sortBy) {
+            case "staffID":
+                comparator = Comparator.comparing(Teacher::getStaffID);
+                break;
+            case "staffName":
+                comparator = Comparator.comparing(Teacher::getStaffName,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "title":
+                comparator = Comparator.comparing(Teacher::getTitle,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "departmentID":
+                comparator = Comparator.comparing(Teacher::getDepartmentID,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "email":
+                comparator = Comparator.comparing(Teacher::getEmail,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            default:
+                comparator = Comparator.comparing(Teacher::getStaffID);
+        }
+
+        if ("desc".equalsIgnoreCase(sortDir)) {
+            comparator = comparator.reversed();
+        }
+
+        return comparator;
     }
 
     // Obținere profesor după ID
@@ -78,10 +143,12 @@ public class TeacherService {
             return false;
         }
 
-        // Trim câmpuri
         teacher.setStaffID(id.trim());
         if (teacher.getStaffName() != null) {
             teacher.setStaffName(teacher.getStaffName().trim());
+        }
+        if (teacher.getTitle() != null) {
+            teacher.setTitle(teacher.getTitle().trim());
         }
         if (teacher.getDepartmentID() != null) {
             teacher.setDepartmentID(teacher.getDepartmentID().trim());
@@ -90,7 +157,6 @@ public class TeacherService {
             teacher.setEmail(teacher.getEmail().trim());
         }
 
-        // Business validation: Departamentul trebuie să existe
         if (!departmentRepository.existsById(teacher.getDepartmentID())) {
             System.out.println("Update failed: Department does not exist -> " + teacher.getDepartmentID());
             return false;
@@ -111,7 +177,6 @@ public class TeacherService {
             return false;
         }
 
-        // Business validation: nu putem șterge profesori care au asignări
         if (teacher.getAssignments() != null && !teacher.getAssignments().isEmpty()) {
             System.out.println("Delete failed: Teacher has assignments -> " + id);
             return false;
