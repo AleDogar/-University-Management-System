@@ -4,50 +4,200 @@
     <meta charset="UTF-8">
     <title>Listă Asistenți</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="container mt-4">
 
-<h1>Listă Asistenți</h1>
+<h1 class="mb-4">Listă Asistenți</h1>
 
 <div class="mb-3">
-    <a th:href="@{/assistants/new}" class="btn btn-primary">Adaugă Asistent Nou</a>
+    <a th:href="@{/assistants/new}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Adaugă Asistent Nou
+    </a>
 </div>
 
 <!-- Mesaje flash -->
-<div th:if="${message}" class="alert alert-success">
-    <span th:text="${message}"></span>
+<div th:if="${message}" class="alert alert-success alert-dismissible fade show">
+    <i class="fas fa-check-circle"></i> <span th:text="${message}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
-<div th:if="${error}" class="alert alert-danger">
-    <span th:text="${error}"></span>
+<div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+    <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 
-<table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nume</th>
-        <th>Rol</th>
-        <th>Email</th>
-        <th>Acțiuni</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Iterăm prin Map<String, Assistant> -->
-    <tr th:each="entry : ${assistants}">
-        <td th:text="${entry.key}"></td>
-        <td th:text="${entry.value.staffName}"></td>
-        <td th:text="${entry.value.role?.typeName}"></td>
-        <td th:text="${entry.value.email}"></td>
-        <td>
-            <a th:href="@{'/assistants/' + ${entry.key}}" class="btn btn-info btn-sm">Detalii</a>
-            <a th:href="@{'/assistants/' + ${entry.key} + '/edit'}" class="btn btn-warning btn-sm">Editare</a>
-            <form th:action="@{'/assistants/' + ${entry.key} + '/delete'}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Sigur doriți să ștergeți?')">Șterge</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<!-- ========== FILTRARE ========== -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <i class="fas fa-filter"></i> Filtrare și Căutare
+    </div>
+    <div class="card-body">
+        <form method="get" th:action="@{/assistants}" class="row g-3">
 
+            <!-- Filtru după nume -->
+            <div class="col-md-3">
+                <label for="filterStaffName" class="form-label">Nume Asistent</label>
+                <input type="text"
+                       class="form-control"
+                       id="filterStaffName"
+                       name="filterStaffName"
+                       th:value="${filterStaffName}"
+                       placeholder="ex: Popescu, Ion...">
+            </div>
+
+            <!-- Filtru după rol -->
+            <div class="col-md-3">
+                <label for="filterRole" class="form-label">Rol</label>
+                <select class="form-control" id="filterRole" name="filterRole">
+                    <option value="">Toate rolurile</option>
+                    <option th:each="role : ${allRoles}"
+                            th:value="${role}"
+                            th:selected="${filterRole == role}"
+                            th:text="${role.typeName}">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Filtru după email -->
+            <div class="col-md-3">
+                <label for="filterEmail" class="form-label">Email</label>
+                <input type="text"
+                       class="form-control"
+                       id="filterEmail"
+                       name="filterEmail"
+                       th:value="${filterEmail}"
+                       placeholder="ex: @univ.com">
+            </div>
+
+            <!-- Sortare -->
+            <div class="col-md-2">
+                <label for="sortBy" class="form-label">Sortare după</label>
+                <select class="form-control" id="sortBy" name="sortBy">
+                    <option value="staffID" th:selected="${sortBy == 'staffID'}">ID Asistent</option>
+                    <option value="staffName" th:selected="${sortBy == 'staffName'}">Nume</option>
+                    <option value="role" th:selected="${sortBy == 'role'}">Rol</option>
+                    <option value="email" th:selected="${sortBy == 'email'}">Email</option>
+                </select>
+            </div>
+
+            <div class="col-md-1">
+                <label for="sortDir" class="form-label">Direcție</label>
+                <select class="form-control" id="sortDir" name="sortDir">
+                    <option value="asc" th:selected="${sortDir == 'asc'}">↑</option>
+                    <option value="desc" th:selected="${sortDir == 'desc'}">↓</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-search"></i> Aplică Filtre
+                </button>
+                <a th:href="@{/assistants}" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> Resetează
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========== TABEL ========== -->
+<div class="card">
+    <div class="card-header bg-secondary text-white">
+        <i class="fas fa-table"></i>
+        Rezultate:
+        <strong th:text="${#lists.size(assistants)}"></strong> asistenți găsiți
+    </div>
+
+    <div class="card-body p-0">
+        <table class="table table-bordered table-striped table-hover mb-0">
+            <thead class="table-dark">
+            <tr>
+                <th>
+                    <a th:href="@{/assistants(sortBy='staffID', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'},
+                             filterStaffName=${filterStaffName}, filterRole=${filterRole}, filterEmail=${filterEmail})}"
+                       class="text-white text-decoration-none">
+                        ID Asistent
+                        <i class="fas"
+                           th:classappend="${sortBy == 'staffID' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/assistants(sortBy='staffName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'},
+                             filterStaffName=${filterStaffName}, filterRole=${filterRole}, filterEmail=${filterEmail})}"
+                       class="text-white text-decoration-none">
+                        Nume
+                        <i class="fas"
+                           th:classappend="${sortBy == 'staffName' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/assistants(sortBy='role', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'},
+                             filterStaffName=${filterStaffName}, filterRole=${filterRole}, filterEmail=${filterEmail})}"
+                       class="text-white text-decoration-none">
+                        Rol
+                        <i class="fas"
+                           th:classappend="${sortBy == 'role' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/assistants(sortBy='email', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'},
+                             filterStaffName=${filterStaffName}, filterRole=${filterRole}, filterEmail=${filterEmail})}"
+                       class="text-white text-decoration-none">
+                        Email
+                        <i class="fas"
+                           th:classappend="${sortBy == 'email' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th class="text-center">Acțiuni</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!-- Fără rezultate -->
+            <tr th:if="${#lists.isEmpty(assistants)}">
+                <td colspan="5" class="text-center text-muted py-4">
+                    <i class="fas fa-info-circle"></i>
+                    Nu există asistenți care să corespundă criteriilor de filtrare.
+                </td>
+            </tr>
+
+            <!-- Listare -->
+            <tr th:each="assistant : ${assistants}">
+                <td th:text="${assistant.staffID}"></td>
+                <td th:text="${assistant.staffName}"></td>
+                <td>
+                    <!-- CORECTARE AICI: folosește sintaxa corectă pentru operatorul ternar -->
+                    <span class="badge"
+                          th:class="${assistant.role.name() == 'LAB'} ? 'bg-info' :
+                                   (${assistant.role.name() == 'TA'} ? 'bg-warning' : 'bg-secondary')"
+                          th:text="${assistant.role?.typeName}"></span>
+                </td>
+                <td th:text="${assistant.email}"></td>
+                <td class="text-center">
+                    <a th:href="@{'/assistants/' + ${assistant.staffID}}"
+                       class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> Detalii
+                    </a>
+                    <a th:href="@{'/assistants/' + ${assistant.staffID} + '/edit'}"
+                       class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Editare
+                    </a>
+                    <form th:action="@{'/assistants/' + ${assistant.staffID} + '/delete'}"
+                          method="post"
+                          style="display:inline;">
+                        <button type="submit"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Sigur doriți să ștergeți?')">
+                            <i class="fas fa-trash"></i> Șterge
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
