@@ -1,35 +1,23 @@
 package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.Enrollment;
-import com.example.University.Management.System.model.Student;
-import com.example.University.Management.System.model.Course;
 import com.example.University.Management.System.repository.EnrollmentRepository;
-import com.example.University.Management.System.repository.StudentRepository;
-import com.example.University.Management.System.repository.CourseRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class EnrollmentService {
 
     private final EnrollmentRepository repository;
-    private final StudentRepository studentRepository;
-    private final CourseRepository courseRepository;
 
-    public EnrollmentService(EnrollmentRepository repository,
-                             StudentRepository studentRepository,
-                             CourseRepository courseRepository) {
+    public EnrollmentService(EnrollmentRepository repository) {
         this.repository = repository;
-        this.studentRepository = studentRepository;
-        this.courseRepository = courseRepository;
     }
 
     // Creare enrollment
     public boolean create(Enrollment enrollment) {
-        // Trim ID și alte câmpuri pentru siguranță
         if (enrollment.getEnrollmentID() != null) {
             enrollment.setEnrollmentID(enrollment.getEnrollmentID().trim());
         }
@@ -40,24 +28,10 @@ public class EnrollmentService {
             enrollment.setCourseID(enrollment.getCourseID().trim());
         }
 
-        // Debug pentru ID
         System.out.println("Creating Enrollment with ID: " + enrollment.getEnrollmentID());
 
-        // Business validation 1: ID unic
         if (repository.existsById(enrollment.getEnrollmentID())) {
             System.out.println("ID already exists: " + enrollment.getEnrollmentID());
-            return false;
-        }
-
-        // Business validation 2: Student-ul trebuie să existe
-        if (!studentRepository.existsById(enrollment.getStudentID())) {
-            System.out.println("Student ID does not exist: " + enrollment.getStudentID());
-            return false;
-        }
-
-        // Business validation 3: Cursul trebuie să existe
-        if (!courseRepository.existsById(enrollment.getCourseID())) {
-            System.out.println("Course ID does not exist: " + enrollment.getCourseID());
             return false;
         }
 
@@ -66,7 +40,7 @@ public class EnrollmentService {
         return true;
     }
 
-    // Obținerea tuturor înscrierilor
+    // Obținerea tuturor enrollment-urilor (pentru dropdowns sau alte nevoi)
     public Map<String, Enrollment> findAll() {
         List<Enrollment> list = repository.findAll();
         Map<String, Enrollment> map = new HashMap<>();
@@ -74,6 +48,71 @@ public class EnrollmentService {
             map.put(e.getEnrollmentID(), e);
         }
         return map;
+    }
+
+    // SORTARE + FILTRARE pentru enrollment-uri
+    public List<Enrollment> findAllWithSortAndFilter(String sortBy, String sortDir,
+                                                     String filterEnrollmentID,
+                                                     String filterStudentID,
+                                                     String filterCourseID,
+                                                     String filterGrade) {
+
+        List<Enrollment> enrollments;
+
+        // Transformăm string-urile goale în null pentru query
+        String enrollmentIdParam = (filterEnrollmentID != null && !filterEnrollmentID.trim().isEmpty()) ?
+                filterEnrollmentID.trim() : null;
+        String studentIdParam = (filterStudentID != null && !filterStudentID.trim().isEmpty()) ?
+                filterStudentID.trim() : null;
+        String courseIdParam = (filterCourseID != null && !filterCourseID.trim().isEmpty()) ?
+                filterCourseID.trim() : null;
+        String gradeParam = (filterGrade != null && !filterGrade.trim().isEmpty()) ?
+                filterGrade.trim() : null;
+
+        // FILTRARE folosind metoda principală
+        enrollments = repository.findByFilters(enrollmentIdParam, studentIdParam, courseIdParam, gradeParam);
+
+        // SORTARE
+        if (sortBy != null && !sortBy.isEmpty()) {
+            Comparator<Enrollment> comparator = getComparator(sortBy, sortDir);
+            enrollments = enrollments.stream()
+                    .sorted(comparator)
+                    .collect(Collectors.toList());
+        }
+
+        return enrollments;
+    }
+
+    // Comparator pentru sortare
+    private Comparator<Enrollment> getComparator(String sortBy, String sortDir) {
+        Comparator<Enrollment> comparator;
+
+        switch (sortBy) {
+            case "enrollmentID":
+                comparator = Comparator.comparing(Enrollment::getEnrollmentID);
+                break;
+            case "studentID":
+                comparator = Comparator.comparing(Enrollment::getStudentID,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "courseID":
+                comparator = Comparator.comparing(Enrollment::getCourseID,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "grade":
+                comparator = Comparator.comparing(e -> e.getGrade() != null ?
+                                e.getGrade().toString() : "",
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            default:
+                comparator = Comparator.comparing(Enrollment::getEnrollmentID);
+        }
+
+        if ("desc".equalsIgnoreCase(sortDir)) {
+            comparator = comparator.reversed();
+        }
+
+        return comparator;
     }
 
     // Obținere enrollment după ID
@@ -89,25 +128,12 @@ public class EnrollmentService {
             return false;
         }
 
-        // Trim câmpuri
         enrollment.setEnrollmentID(id.trim());
         if (enrollment.getStudentID() != null) {
             enrollment.setStudentID(enrollment.getStudentID().trim());
         }
         if (enrollment.getCourseID() != null) {
             enrollment.setCourseID(enrollment.getCourseID().trim());
-        }
-
-        // Business validation: Student-ul trebuie să existe
-        if (!studentRepository.existsById(enrollment.getStudentID())) {
-            System.out.println("Update failed: Student ID does not exist -> " + enrollment.getStudentID());
-            return false;
-        }
-
-        // Business validation: Cursul trebuie să existe
-        if (!courseRepository.existsById(enrollment.getCourseID())) {
-            System.out.println("Update failed: Course ID does not exist -> " + enrollment.getCourseID());
-            return false;
         }
 
         repository.save(enrollment);
@@ -130,15 +156,18 @@ public class EnrollmentService {
         return true;
     }
 
-    // Verificare dacă student-ul există (pentru validare în controller)
-    public boolean studentExists(String studentID) {
-        if (studentID == null) return false;
-        return studentRepository.existsById(studentID.trim());
+    // Metode alternative folosind metoda principală
+    public List<Enrollment> searchByStudentID(String studentID) {
+        if (studentID == null || studentID.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return repository.findByFilters(null, studentID.trim(), null, null);
     }
 
-    // Verificare dacă cursul există (pentru validare în controller)
-    public boolean courseExists(String courseID) {
-        if (courseID == null) return false;
-        return courseRepository.existsById(courseID.trim());
+    public List<Enrollment> searchByCourseID(String courseID) {
+        if (courseID == null || courseID.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        return repository.findByFilters(null, null, courseID.trim(), null);
     }
 }
