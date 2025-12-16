@@ -9,6 +9,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/rooms")
 public class RoomController {
@@ -19,14 +21,29 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-    // Listare săli
+    // ================= LISTARE cu SORTARE și FILTRARE =================
     @GetMapping
-    public String listAll(Model model) {
-        model.addAttribute("rooms", roomService.findAll());
+    public String listAll(@RequestParam(required = false) String sortBy,
+                          @RequestParam(required = false) String sortDir,
+                          @RequestParam(required = false) String filterRoomName,
+                          @RequestParam(required = false) String filterMinCapacity,
+                          Model model) {
+
+        List<Room> rooms = roomService.findAllWithSortAndFilter(
+                sortBy, sortDir, filterRoomName, filterMinCapacity);
+
+        model.addAttribute("rooms", rooms);
+
+        // Adăugăm parametrii pentru a-i păstra în formular
+        model.addAttribute("sortBy", sortBy != null ? sortBy : "roomID");
+        model.addAttribute("sortDir", sortDir != null ? sortDir : "asc");
+        model.addAttribute("filterRoomName", filterRoomName != null ? filterRoomName : "");
+        model.addAttribute("filterMinCapacity", filterMinCapacity != null ? filterMinCapacity : "");
+
         return "room/index";
     }
 
-    // Detalii sală
+    // ================= DETAILS =================
     @GetMapping("/{id}")
     public String viewDetails(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
         Room room = roomService.findById(id);
@@ -38,14 +55,14 @@ public class RoomController {
         return "redirect:/rooms";
     }
 
-    // Formular adăugare sală
+    // ================= CREATE FORM =================
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("room", new Room());
         return "room/form";
     }
 
-    // Formular editare sală
+    // ================= EDIT FORM =================
     @GetMapping("/{id}/edit")
     public String showEditForm(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
         Room room = roomService.findById(id);
@@ -57,7 +74,7 @@ public class RoomController {
         return "redirect:/rooms";
     }
 
-    // Creare sală
+    // ================= CREATE =================
     @PostMapping("/create")
     public String createRoom(@Valid @ModelAttribute("room") Room room,
                              BindingResult bindingResult,
@@ -87,7 +104,7 @@ public class RoomController {
         return "redirect:/rooms";
     }
 
-    // Actualizare sală
+    // ================= UPDATE =================
     @PostMapping("/update")
     public String updateRoom(@Valid @ModelAttribute("room") Room room,
                              BindingResult bindingResult,
@@ -110,7 +127,7 @@ public class RoomController {
         return "redirect:/rooms";
     }
 
-    // Ștergere sală
+    // ================= DELETE =================
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes redirectAttributes) {
         boolean deleted = roomService.delete(id);
