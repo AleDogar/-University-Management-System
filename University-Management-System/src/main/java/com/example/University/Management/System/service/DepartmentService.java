@@ -4,9 +4,8 @@ import com.example.University.Management.System.model.Department;
 import com.example.University.Management.System.repository.DepartmentRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class DepartmentService {
@@ -19,7 +18,6 @@ public class DepartmentService {
 
     // Creare departament
     public boolean create(Department department) {
-        // Trim ID și alte câmpuri pentru siguranță
         if (department.getDepartmentID() != null) {
             department.setDepartmentID(department.getDepartmentID().trim());
         }
@@ -30,13 +28,11 @@ public class DepartmentService {
             department.setPhoneNumber(department.getPhoneNumber().trim());
         }
 
-        // Debug pentru ID
         System.out.println("Creating Department with ID: " + department.getDepartmentID());
 
-        // Business validation: ID unic
         if (repository.existsById(department.getDepartmentID())) {
             System.out.println("ID already exists: " + department.getDepartmentID());
-            return false; // ID-ul există deja
+            return false;
         }
 
         repository.save(department);
@@ -44,7 +40,7 @@ public class DepartmentService {
         return true;
     }
 
-    // Obținerea tuturor departamentelor
+    // Obținerea tuturor departamentelor (pentru dropdowns sau alte nevoi)
     public Map<String, Department> findAll() {
         List<Department> list = repository.findAll();
         Map<String, Department> map = new HashMap<>();
@@ -52,6 +48,58 @@ public class DepartmentService {
             map.put(d.getDepartmentID(), d);
         }
         return map;
+    }
+
+    // SORTARE + FILTRARE pentru departamente
+    public List<Department> findAllWithSortAndFilter(String sortBy, String sortDir,
+                                                     String filterDepartmentName, String filterPhoneNumber) {
+
+        List<Department> departments;
+
+        // Transformăm string-urile goale în null pentru query
+        String nameParam = (filterDepartmentName != null && !filterDepartmentName.trim().isEmpty()) ?
+                filterDepartmentName.trim() : null;
+        String phoneParam = (filterPhoneNumber != null && !filterPhoneNumber.trim().isEmpty()) ?
+                filterPhoneNumber.trim() : null;
+
+        // FILTRARE folosind metoda principală
+        departments = repository.findByFilters(nameParam, phoneParam);
+
+        // SORTARE
+        if (sortBy != null && !sortBy.isEmpty()) {
+            Comparator<Department> comparator = getComparator(sortBy, sortDir);
+            departments = departments.stream()
+                    .sorted(comparator)
+                    .collect(Collectors.toList());
+        }
+
+        return departments;
+    }
+
+    // Comparator pentru sortare
+    private Comparator<Department> getComparator(String sortBy, String sortDir) {
+        Comparator<Department> comparator;
+
+        switch (sortBy) {
+            case "departmentID":
+                comparator = Comparator.comparing(Department::getDepartmentID);
+                break;
+            case "departmentName":
+                comparator = Comparator.comparing(Department::getDepartmentName,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "phoneNumber":
+                comparator = Comparator.comparing(Department::getPhoneNumber);
+                break;
+            default:
+                comparator = Comparator.comparing(Department::getDepartmentID);
+        }
+
+        if ("desc".equalsIgnoreCase(sortDir)) {
+            comparator = comparator.reversed();
+        }
+
+        return comparator;
     }
 
     // Obținere departament după ID
@@ -64,10 +112,9 @@ public class DepartmentService {
     public boolean update(String id, Department department) {
         if (id == null || !repository.existsById(id.trim())) {
             System.out.println("Update failed: Department ID does not exist -> " + id);
-            return false; // Departamentul nu există
+            return false;
         }
 
-        // Trim ID și alte câmpuri
         department.setDepartmentID(id.trim());
         if (department.getDepartmentName() != null) {
             department.setDepartmentName(department.getDepartmentName().trim());
@@ -88,10 +135,9 @@ public class DepartmentService {
         Department dept = repository.findById(id.trim()).orElse(null);
         if (dept == null) {
             System.out.println("Delete failed: Department ID not found -> " + id);
-            return false; // Departamentul nu există
+            return false;
         }
 
-        // Business validation: nu putem șterge departamente care au cursuri sau profesori
         if ((dept.getCourses() != null && !dept.getCourses().isEmpty()) ||
                 (dept.getTeachers() != null && !dept.getTeachers().isEmpty())) {
             System.out.println("Delete failed: Department has related courses or teachers -> " + id);
