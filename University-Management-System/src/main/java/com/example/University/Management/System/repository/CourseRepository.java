@@ -11,11 +11,7 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, String> {
 
-    // Metode simple pentru căutări individuale
-    List<Course> findByTitleContainingIgnoreCase(String title);
-    List<Course> findByDepartmentIDContainingIgnoreCase(String departmentID);
-
-    // Metoda de filtrare avansată
+    // SINGURA metodă de filtrare necesară
     @Query("SELECT c FROM Course c WHERE " +
             "(:title IS NULL OR LOWER(c.title) LIKE LOWER(CONCAT('%', :title, '%'))) AND " +
             "(:minCredits IS NULL OR c.credits >= :minCredits) AND " +

@@ -71,7 +71,7 @@ public class CourseService {
         return map;
     }
 
-    // SORTARE + FILTRARE pentru cursuri (folosește doar findByFilters)
+    // SORTARE + FILTRARE pentru cursuri
     public List<Course> findAllWithSortAndFilter(String sortBy, String sortDir,
                                                  String filterTitle, Integer minCredits,
                                                  Integer maxCredits, String filterDepartmentID,
@@ -87,12 +87,12 @@ public class CourseService {
         String roomParam = (filterRoomID != null && !filterRoomID.trim().isEmpty()) ?
                 filterRoomID.trim() : null;
 
-        // 1. FILTRARE folosind metoda principală
+        // FILTRARE folosind metoda principală
         courses = repository.findByFilters(
                 titleParam, minCredits, maxCredits, departmentParam, roomParam
         );
 
-        // 2. SORTARE
+        // SORTARE
         if (sortBy != null && !sortBy.isEmpty()) {
             Comparator<Course> comparator = getComparator(sortBy, sortDir);
             courses = courses.stream()
@@ -204,12 +204,12 @@ public class CourseService {
         return roomRepository.existsById(roomID.trim());
     }
 
-    // Metode alternative folosind metoda principală findByFilters
+    // Metode alternative folosind metoda principală (dacă sunt necesare)
     public List<Course> searchByTitle(String title) {
         if (title == null || title.trim().isEmpty()) {
             return Collections.emptyList();
         }
-        // Folosim findByFilters cu doar titlul setat, restul null
+        // Folosim findByFilters cu doar titlul setat
         return repository.findByFilters(title.trim(), null, null, null, null);
     }
 
@@ -217,7 +217,7 @@ public class CourseService {
         if (departmentID == null || departmentID.trim().isEmpty()) {
             return Collections.emptyList();
         }
-        // Folosim findByFilters cu doar departamentul setat, restul null
+        // Folosim findByFilters cu doar departamentul setat
         return repository.findByFilters(null, null, null, departmentID.trim(), null);
     }
 }

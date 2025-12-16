@@ -11,11 +11,7 @@ import java.util.List;
 @Repository
 public interface DepartmentRepository extends JpaRepository<Department, String> {
 
-    // Metode individuale simple
-    List<Department> findByDepartmentNameContainingIgnoreCase(String departmentName);
-    List<Department> findByPhoneNumberContainingIgnoreCase(String phoneNumber);
-
-    // Metoda de filtrare avansată pentru pagina principală
+    // SINGURA metodă de filtrare necesară
     @Query("SELECT d FROM Department d WHERE " +
             "(:departmentName IS NULL OR LOWER(d.departmentName) LIKE LOWER(CONCAT('%', :departmentName, '%'))) AND " +
             "(:phoneNumber IS NULL OR LOWER(d.phoneNumber) LIKE LOWER(CONCAT('%', :phoneNumber, '%')))")

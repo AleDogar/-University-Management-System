@@ -148,4 +148,21 @@ public class DepartmentService {
         System.out.println("Department deleted: " + id);
         return true;
     }
+
+    // Metode alternative folosind metoda principală (dacă sunt necesare)
+    public List<Department> searchByName(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        // Folosim findByFilters cu doar numele setat
+        return repository.findByFilters(name.trim(), null);
+    }
+
+    public List<Department> searchByPhone(String phone) {
+        if (phone == null || phone.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        // Folosim findByFilters cu doar telefonul setat
+        return repository.findByFilters(null, phone.trim());
+    }
 }
