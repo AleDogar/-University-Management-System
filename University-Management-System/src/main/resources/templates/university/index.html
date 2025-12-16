@@ -1,55 +1,167 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Listă Universități</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body class="container mt-4">
 
-<h1>Listă Universități</h1>
+<h1 class="mb-4">Listă Universități</h1>
 
 <div class="mb-3">
-    <a th:href="@{/universities/new}" class="btn btn-primary">Adaugă Universitate Nouă</a>
+    <a th:href="@{/universities/new}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Adaugă Universitate Nouă
+    </a>
 </div>
 
 <!-- Mesaje flash -->
-<div th:if="${message}" class="alert alert-success">
-    <span th:text="${message}"></span>
+<div th:if="${message}" class="alert alert-success alert-dismissible fade show">
+    <i class="fas fa-check-circle"></i> <span th:text="${message}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
-<div th:if="${error}" class="alert alert-danger">
-    <span th:text="${error}"></span>
+<div th:if="${error}" class="alert alert-danger alert-dismissible fade show">
+    <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 
-<table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Nume Universitate</th>
-        <th>Oraș</th>
-        <th>Acțiuni</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Iterăm prin Map<String, University> -->
-    <tr th:each="entry : ${universities}">
-        <td th:text="${entry.key}"></td>
-        <td th:text="${entry.value.universityName}"></td>
-        <td th:text="${entry.value.city}"></td>
-        <td>
-            <a th:href="@{'/universities/' + ${entry.key}}" class="btn btn-info btn-sm">Detalii</a>
-            <a th:href="@{'/universities/' + ${entry.key} + '/edit'}" class="btn btn-warning btn-sm">Editare</a>
-            <form th:action="@{'/universities/' + ${entry.key} + '/delete'}" method="post" style="display:inline;">
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Sigur doriți să ștergeți?')">Șterge</button>
-            </form>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<!-- ========== FILTRARE ========== -->
+<div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+        <i class="fas fa-filter"></i> Filtrare și Căutare
+    </div>
+    <div class="card-body">
+        <form method="get" th:action="@{/universities}" class="row g-3">
 
+            <div class="col-md-4">
+                <label for="filterName" class="form-label">Nume Universitate</label>
+                <input type="text"
+                       class="form-control"
+                       id="filterName"
+                       name="filterName"
+                       th:value="${filterName}"
+                       placeholder="ex: Tehnică, București...">
+            </div>
+
+            <div class="col-md-4">
+                <label for="filterCity" class="form-label">Oraș</label>
+                <input type="text"
+                       class="form-control"
+                       id="filterCity"
+                       name="filterCity"
+                       th:value="${filterCity}"
+                       placeholder="ex: Cluj, București...">
+            </div>
+
+            <div class="col-md-2">
+                <label for="sortBy" class="form-label">Sortare după</label>
+                <select class="form-control" id="sortBy" name="sortBy">
+                    <option value="universityID" th:selected="${sortBy == 'universityID'}">ID</option>
+                    <option value="universityName" th:selected="${sortBy == 'universityName'}">Nume</option>
+                    <option value="city" th:selected="${sortBy == 'city'}">Oraș</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label for="sortDir" class="form-label">Direcție</label>
+                <select class="form-control" id="sortDir" name="sortDir">
+                    <option value="asc" th:selected="${sortDir == 'asc'}">Crescător</option>
+                    <option value="desc" th:selected="${sortDir == 'desc'}">Descrescător</option>
+                </select>
+            </div>
+
+            <div class="col-12">
+                <button type="submit" class="btn btn-success">
+                    <i class="fas fa-search"></i> Aplică Filtre
+                </button>
+                <a th:href="@{/universities}" class="btn btn-secondary">
+                    <i class="fas fa-redo"></i> Resetează
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ========== TABEL ========== -->
+<div class="card">
+    <div class="card-header bg-secondary text-white">
+        <i class="fas fa-table"></i>
+        Rezultate:
+        <strong th:text="${#lists.size(universities)}"></strong> universități găsite
+    </div>
+
+    <div class="card-body p-0">
+        <table class="table table-bordered table-striped table-hover mb-0">
+            <thead class="table-dark">
+            <tr>
+                <th>
+                    <a th:href="@{/universities(sortBy='universityID', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, filterName=${filterName}, filterCity=${filterCity})}"
+                       class="text-white text-decoration-none">
+                        ID
+                        <i class="fas"
+                           th:classappend="${sortBy == 'universityID' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/universities(sortBy='universityName', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, filterName=${filterName}, filterCity=${filterCity})}"
+                       class="text-white text-decoration-none">
+                        Nume Universitate
+                        <i class="fas"
+                           th:classappend="${sortBy == 'universityName' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th>
+                    <a th:href="@{/universities(sortBy='city', sortDir=${sortDir == 'asc' ? 'desc' : 'asc'}, filterName=${filterName}, filterCity=${filterCity})}"
+                       class="text-white text-decoration-none">
+                        Oraș
+                        <i class="fas"
+                           th:classappend="${sortBy == 'city' ? (sortDir == 'asc' ? 'fa-sort-up' : 'fa-sort-down') : 'fa-sort'}"></i>
+                    </a>
+                </th>
+                <th class="text-center">Acțiuni</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <!-- Fără rezultate -->
+            <tr th:if="${#lists.isEmpty(universities)}">
+                <td colspan="4" class="text-center text-muted py-4">
+                    <i class="fas fa-info-circle"></i>
+                    Nu există universități care să corespundă criteriilor de filtrare.
+                </td>
+            </tr>
+
+            <!-- Listare -->
+            <tr th:each="university : ${universities}">
+                <td th:text="${university.universityID}"></td>
+                <td th:text="${university.universityName}"></td>
+                <td th:text="${university.city}"></td>
+                <td class="text-center">
+                    <a th:href="@{/universities/{id}(id=${university.universityID})}"
+                       class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> Detalii
+                    </a>
+                    <a th:href="@{/universities/{id}/edit(id=${university.universityID})}"
+                       class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Editare
+                    </a>
+                    <form th:action="@{/universities/{id}/delete(id=${university.universityID})}"
+                          method="post"
+                          style="display:inline;">
+                        <button type="submit"
+                                class="btn btn-danger btn-sm"
+                                onclick="return confirm('Sigur doriți să ștergeți?')">
+                            <i class="fas fa-trash"></i> Șterge
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
-///index
