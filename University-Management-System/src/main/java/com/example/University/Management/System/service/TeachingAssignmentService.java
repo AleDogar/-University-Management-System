@@ -1,14 +1,14 @@
 package com.example.University.Management.System.service;
 
 import com.example.University.Management.System.model.TeachingAssignment;
+import com.example.University.Management.System.model.ClassType;
 import com.example.University.Management.System.repository.TeachingAssignmentRepository;
 import com.example.University.Management.System.repository.CourseRepository;
 import com.example.University.Management.System.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TeachingAssignmentService {
@@ -27,7 +27,6 @@ public class TeachingAssignmentService {
 
     // Creare asignare
     public boolean create(TeachingAssignment assignment) {
-        // Trim ID și alte câmpuri pentru siguranță
         if (assignment.getAssignmentID() != null) {
             assignment.setAssignmentID(assignment.getAssignmentID().trim());
         }
@@ -35,22 +34,18 @@ public class TeachingAssignmentService {
             assignment.setStaffID(assignment.getStaffID().trim());
         }
 
-        // Debug pentru ID
         System.out.println("Creating TeachingAssignment with ID: " + assignment.getAssignmentID());
 
-        // Business validation: ID unic
         if (repository.existsById(assignment.getAssignmentID())) {
             System.out.println("ID already exists: " + assignment.getAssignmentID());
             return false;
         }
 
-        // Business validation: Cursul trebuie să existe
         if (assignment.getCourse() == null || !courseRepository.existsById(assignment.getCourse().getCourseID())) {
             System.out.println("Course does not exist");
             return false;
         }
 
-        // Business validation: Profesorul trebuie să existe
         if (!teacherRepository.existsById(assignment.getStaffID())) {
             System.out.println("Teacher does not exist: " + assignment.getStaffID());
             return false;
@@ -71,6 +66,86 @@ public class TeachingAssignmentService {
         return map;
     }
 
+    // SORTARE + FILTRARE pentru asignări
+    public List<TeachingAssignment> findAllWithSortAndFilter(String sortBy, String sortDir,
+                                                             String filterClassType, String filterStaffID,
+                                                             String filterCourseID) {
+
+        List<TeachingAssignment> assignments;
+
+        // 1. CONVERTIRE FILTRE
+        ClassType classTypeEnum = null;
+        if (filterClassType != null && !filterClassType.trim().isEmpty()) {
+            try {
+                classTypeEnum = ClassType.valueOf(filterClassType.toUpperCase());
+            } catch (IllegalArgumentException e) {
+                // Dacă valoarea nu este validă, ignorăm filtrul
+                System.out.println("Invalid class type filter: " + filterClassType);
+            }
+        }
+
+        // 2. FILTRARE
+        boolean hasFilter = (classTypeEnum != null) ||
+                (filterStaffID != null && !filterStaffID.trim().isEmpty()) ||
+                (filterCourseID != null && !filterCourseID.trim().isEmpty());
+
+        if (hasFilter) {
+            assignments = repository.findByFilters(
+                    classTypeEnum,
+                    filterStaffID != null ? filterStaffID.trim() : null,
+                    filterCourseID != null ? filterCourseID.trim() : null
+            );
+        } else {
+            assignments = repository.findAll();
+        }
+
+        // 3. SORTARE
+        if (sortBy != null && !sortBy.isEmpty()) {
+            Comparator<TeachingAssignment> comparator = getComparator(sortBy, sortDir);
+            assignments = assignments.stream()
+                    .sorted(comparator)
+                    .collect(Collectors.toList());
+        }
+
+        return assignments;
+    }
+
+    // Comparator pentru sortare
+    private Comparator<TeachingAssignment> getComparator(String sortBy, String sortDir) {
+        Comparator<TeachingAssignment> comparator;
+
+        switch (sortBy) {
+            case "assignmentID":
+                comparator = Comparator.comparing(TeachingAssignment::getAssignmentID);
+                break;
+            case "classType":
+                comparator = Comparator.comparing(ta -> ta.getClassType().getTypeName());
+                break;
+            case "staffID":
+                comparator = Comparator.comparing(TeachingAssignment::getStaffID,
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "courseID":
+                comparator = Comparator.comparing(ta ->
+                                ta.getCourse() != null ? ta.getCourse().getCourseID() : "",
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            case "courseTitle":
+                comparator = Comparator.comparing(ta ->
+                                ta.getCourse() != null ? ta.getCourse().getTitle() : "",
+                        String.CASE_INSENSITIVE_ORDER);
+                break;
+            default:
+                comparator = Comparator.comparing(TeachingAssignment::getAssignmentID);
+        }
+
+        if ("desc".equalsIgnoreCase(sortDir)) {
+            comparator = comparator.reversed();
+        }
+
+        return comparator;
+    }
+
     // Obținere asignare după ID
     public TeachingAssignment findById(String id) {
         if (id == null) return null;
@@ -84,19 +159,16 @@ public class TeachingAssignmentService {
             return false;
         }
 
-        // Trim câmpuri
         assignment.setAssignmentID(id.trim());
         if (assignment.getStaffID() != null) {
             assignment.setStaffID(assignment.getStaffID().trim());
         }
 
-        // Business validation: Cursul trebuie să existe
         if (assignment.getCourse() == null || !courseRepository.existsById(assignment.getCourse().getCourseID())) {
             System.out.println("Update failed: Course does not exist");
             return false;
         }
 
-        // Business validation: Profesorul trebuie să existe
         if (!teacherRepository.existsById(assignment.getStaffID())) {
             System.out.println("Update failed: Teacher does not exist -> " + assignment.getStaffID());
             return false;
