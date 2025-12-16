@@ -11,29 +11,11 @@ import java.util.List;
 @Repository
 public interface CourseRepository extends JpaRepository<Course, String> {
 
-    // Filtrare după titlu
+    // Metode simple pentru căutări individuale
     List<Course> findByTitleContainingIgnoreCase(String title);
-
-    // Filtrare după credite (valoare exactă)
-    List<Course> findByCredits(Integer credits);
-
-    // Filtrare după departament
     List<Course> findByDepartmentIDContainingIgnoreCase(String departmentID);
 
-    // Filtrare după sală
-    List<Course> findByRoomIDContainingIgnoreCase(String roomID);
-
-    // Filtrare combinată: titlu și credite
-    List<Course> findByTitleContainingIgnoreCaseAndCredits(String title, Integer credits);
-
-    // Filtrare combinată: titlu și departament
-    List<Course> findByTitleContainingIgnoreCaseAndDepartmentIDContainingIgnoreCase(String title, String departmentID);
-
-    // Filtrare combinată: titlu, credite și departament
-    List<Course> findByTitleContainingIgnoreCaseAndCreditsAndDepartmentIDContainingIgnoreCase(
-            String title, Integer credits, String departmentID);
-
-    // Query custom pentru filtrare flexibilă
+    // Metoda de filtrare avansată
     @Query("SELECT c FROM Course c WHERE " +
             "(:title IS NULL OR LOWER(c.title) LIKE LOWER(CONCAT('%', :title, '%'))) AND " +
             "(:minCredits IS NULL OR c.credits >= :minCredits) AND " +

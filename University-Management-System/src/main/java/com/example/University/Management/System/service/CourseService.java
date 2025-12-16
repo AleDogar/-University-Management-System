@@ -61,7 +61,7 @@ public class CourseService {
         return true;
     }
 
-    // Obținerea tuturor cursurilor
+    // Obținerea tuturor cursurilor (pentru dropdowns sau alte nevoi)
     public Map<String, Course> findAll() {
         List<Course> list = repository.findAll();
         Map<String, Course> map = new HashMap<>();
@@ -71,7 +71,7 @@ public class CourseService {
         return map;
     }
 
-    // SORTARE + FILTRARE pentru cursuri
+    // SORTARE + FILTRARE pentru cursuri (folosește doar findByFilters)
     public List<Course> findAllWithSortAndFilter(String sortBy, String sortDir,
                                                  String filterTitle, Integer minCredits,
                                                  Integer maxCredits, String filterDepartmentID,
@@ -79,26 +79,18 @@ public class CourseService {
 
         List<Course> courses;
 
-        // 1. FILTRARE folosind query custom
-        boolean hasFilter = (filterTitle != null && !filterTitle.trim().isEmpty()) ||
-                (minCredits != null) ||
-                (maxCredits != null) ||
-                (filterDepartmentID != null && !filterDepartmentID.trim().isEmpty()) ||
-                (filterRoomID != null && !filterRoomID.trim().isEmpty());
+        // Transformăm string-urile goale în null pentru query
+        String titleParam = (filterTitle != null && !filterTitle.trim().isEmpty()) ?
+                filterTitle.trim() : null;
+        String departmentParam = (filterDepartmentID != null && !filterDepartmentID.trim().isEmpty()) ?
+                filterDepartmentID.trim() : null;
+        String roomParam = (filterRoomID != null && !filterRoomID.trim().isEmpty()) ?
+                filterRoomID.trim() : null;
 
-        if (hasFilter) {
-            // Folosim metoda cu query custom pentru mai multă flexibilitate
-            courses = repository.findByFilters(
-                    filterTitle != null ? filterTitle.trim() : null,
-                    minCredits,
-                    maxCredits,
-                    filterDepartmentID != null ? filterDepartmentID.trim() : null,
-                    filterRoomID != null ? filterRoomID.trim() : null
-            );
-        } else {
-            // Fără filtre - returnează toate
-            courses = repository.findAll();
-        }
+        // 1. FILTRARE folosind metoda principală
+        courses = repository.findByFilters(
+                titleParam, minCredits, maxCredits, departmentParam, roomParam
+        );
 
         // 2. SORTARE
         if (sortBy != null && !sortBy.isEmpty()) {
@@ -201,6 +193,7 @@ public class CourseService {
         return true;
     }
 
+    // Verificări pentru validare
     public boolean departmentExists(String departmentID) {
         if (departmentID == null) return false;
         return departmentRepository.existsById(departmentID.trim());
@@ -209,5 +202,22 @@ public class CourseService {
     public boolean roomExists(String roomID) {
         if (roomID == null) return false;
         return roomRepository.existsById(roomID.trim());
+    }
+
+    // Metode alternative folosind metoda principală findByFilters
+    public List<Course> searchByTitle(String title) {
+        if (title == null || title.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        // Folosim findByFilters cu doar titlul setat, restul null
+        return repository.findByFilters(title.trim(), null, null, null, null);
+    }
+
+    public List<Course> findByDepartment(String departmentID) {
+        if (departmentID == null || departmentID.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+        // Folosim findByFilters cu doar departamentul setat, restul null
+        return repository.findByFilters(null, null, null, departmentID.trim(), null);
     }
 }
