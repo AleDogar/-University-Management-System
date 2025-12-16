@@ -1,27 +1,39 @@
 package com.example.University.Management.System.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "assistants")
 public class Assistant extends Staff {
 
+    @NotNull(message = "Rolul este obligatoriu")
     @Enumerated(EnumType.STRING)
     private ClassRole role;
 
+    @NotBlank(message = "Email-ul este obligatoriu")
+    @Email(message = "Email-ul trebuie să fie valid")
     private String email;
 
     public Assistant() {
         super();
     }
 
-    public Assistant(String id, String name, ClassRole role, String email) {
-        super(id, name);
+    public Assistant(String staffID, String staffName, ClassRole role, String email) {
+        super(staffID, staffName);
         this.role = role;
         this.email = email;
     }
 
-    // Getters & Setters
+    // Validare specifică pentru Assistant
+    @Override
+    public void setStaffID(String staffID) {
+        this.staffID = staffID;
+    }
+
     public ClassRole getRole() {
         return role;
     }
@@ -41,9 +53,9 @@ public class Assistant extends Staff {
     @Override
     public String toString() {
         return "Assistant{" +
-                "role=" + role +
+                "staffID='" + getStaffID() + '\'' +
                 ", staffName='" + getStaffName() + '\'' +
-                ", staffID='" + getStaffID() + '\'' +
+                ", role=" + role +
                 ", email='" + email + '\'' +
                 '}';
     }

@@ -2,8 +2,11 @@ package com.example.University.Management.System.controller;
 
 import com.example.University.Management.System.model.Teacher;
 import com.example.University.Management.System.service.TeacherService;
+import com.example.University.Management.System.service.DepartmentService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -11,61 +14,140 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/teachers")
 public class TeacherController {
 
-    private final TeacherService service;
+    private final TeacherService teacherService;
+    private final DepartmentService departmentService;
 
-    public TeacherController(TeacherService service) {
-        this.service = service;
+    public TeacherController(TeacherService teacherService, DepartmentService departmentService) {
+        this.teacherService = teacherService;
+        this.departmentService = departmentService;
     }
 
+    // Listare profesori
     @GetMapping
     public String listAll(Model model) {
-        model.addAttribute("teachers", service.findAll());
+        model.addAttribute("teachers", teacherService.findAll());
         return "teacher/index";
     }
 
+    // Detalii profesor
     @GetMapping("/{id}")
-    public String viewDetails(@PathVariable String id, Model model) {
-        Teacher teacher = service.findById(id);
+    public String viewDetails(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
+        Teacher teacher = teacherService.findById(id);
         if (teacher != null) {
             model.addAttribute("teacher", teacher);
             return "teacher/details";
         }
+        redirectAttributes.addFlashAttribute("error", "Profesorul nu există!");
         return "redirect:/teachers";
     }
 
+    // Formular adăugare profesor
     @GetMapping("/new")
     public String showAddForm(Model model) {
         model.addAttribute("teacher", new Teacher());
+        model.addAttribute("departments", departmentService.findAll());
         return "teacher/form";
     }
 
+    // Formular editare profesor
     @GetMapping("/{id}/edit")
-    public String showEditForm(@PathVariable String id, Model model) {
-        Teacher teacher = service.findById(id);
+    public String showEditForm(@PathVariable String id, Model model, RedirectAttributes redirectAttributes) {
+        Teacher teacher = teacherService.findById(id);
         if (teacher != null) {
             model.addAttribute("teacher", teacher);
+            model.addAttribute("departments", departmentService.findAll());
             return "teacher/form";
         }
+        redirectAttributes.addFlashAttribute("error", "Profesorul nu există!");
         return "redirect:/teachers";
     }
 
+    // Creare profesor
     @PostMapping("/create")
-    public String createTeacher(@ModelAttribute Teacher teacher, RedirectAttributes redirectAttributes) {
-        service.create(teacher);
+    public String createTeacher(@Valid @ModelAttribute("teacher") Teacher teacher,
+                                BindingResult bindingResult,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+
+        // 1. Verificăm validările de câmpuri
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("departments", departmentService.findAll());
+            return "teacher/form";
+        }
+
+        // 2. Business validation: Verificăm dacă ID-ul există deja
+        if (teacherService.findById(teacher.getStaffID()) != null) {
+            model.addAttribute("error", "ID-ul profesorului '" + teacher.getStaffID() + "' există deja! Alegeți un alt ID.");
+            model.addAttribute("teacher", teacher);
+            model.addAttribute("departments", departmentService.findAll());
+            return "teacher/form";
+        }
+
+        // 3. Business validation: Verificăm dacă departamentul există
+        if (!teacherService.departmentExists(teacher.getDepartmentID())) {
+            model.addAttribute("error", "Departamentul cu ID-ul '" + teacher.getDepartmentID() + "' nu există!");
+            model.addAttribute("teacher", teacher);
+            model.addAttribute("departments", departmentService.findAll());
+            return "teacher/form";
+        }
+
+        // 4. Creăm profesorul
+        boolean created = teacherService.create(teacher);
+        if (!created) {
+            model.addAttribute("error", "Eroare la crearea profesorului! Verificați datele introduse.");
+            model.addAttribute("teacher", teacher);
+            model.addAttribute("departments", departmentService.findAll());
+            return "teacher/form";
+        }
+
         redirectAttributes.addFlashAttribute("message", "Profesor creat cu succes!");
         return "redirect:/teachers";
     }
 
+    // Actualizare profesor
     @PostMapping("/update")
-    public String updateTeacher(@ModelAttribute Teacher teacher, RedirectAttributes redirectAttributes) {
-        service.update(teacher.getStaffID(), teacher);
+    public String updateTeacher(@Valid @ModelAttribute("teacher") Teacher teacher,
+                                BindingResult bindingResult,
+                                Model model,
+                                RedirectAttributes redirectAttributes) {
+
+        // 1. Verificăm validările de câmpuri
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("departments", departmentService.findAll());
+            return "teacher/form";
+        }
+
+        // 2. Business validation: Verificăm dacă departamentul există
+        if (!teacherService.departmentExists(teacher.getDepartmentID())) {
+            model.addAttribute("error", "Departamentul cu ID-ul '" + teacher.getDepartmentID() + "' nu există!");
+            model.addAttribute("teacher", teacher);
+            model.addAttribute("departments", departmentService.findAll());
+            return "teacher/form";
+        }
+
+        // 3. Actualizăm profesorul
+        boolean updated = teacherService.update(teacher.getStaffID(), teacher);
+        if (!updated) {
+            model.addAttribute("error", "Profesorul nu există pentru actualizare!");
+            model.addAttribute("teacher", teacher);
+            model.addAttribute("departments", departmentService.findAll());
+            return "teacher/form";
+        }
+
         redirectAttributes.addFlashAttribute("message", "Profesor actualizat cu succes!");
         return "redirect:/teachers";
     }
 
+    // Ștergere profesor
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable String id, RedirectAttributes redirectAttributes) {
-        service.delete(id);
+        boolean deleted = teacherService.delete(id);
+        if (!deleted) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Nu se poate șterge profesorul! Profesorul nu există sau are asignări de predare.");
+            return "redirect:/teachers";
+        }
+
         redirectAttributes.addFlashAttribute("message", "Profesor șters cu succes!");
         return "redirect:/teachers";
     }

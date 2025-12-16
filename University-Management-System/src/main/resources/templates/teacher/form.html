@@ -10,84 +10,80 @@
 
     <h1 th:text="${teacher.staffID != null} ? 'Editare Profesor' : 'Profesor Nou'"></h1>
 
-    <!-- Mesaj succes -->
-    <div th:if="${message}" class="alert alert-success">
-        <span th:text="${message}"></span>
-    </div>
+    <!-- Mesaje flash -->
+    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
 
-    <!-- Eroare -->
-    <div th:if="${error}" class="alert alert-danger">
-        <span th:text="${error}"></span>
-    </div>
-
-    <!-- Formular unic -->
     <form th:action="${teacher.staffID == null ? '/teachers/create' : '/teachers/update'}"
           th:object="${teacher}"
           method="post"
           novalidate>
 
-        <!-- ID -->
+        <!-- ID Profesor -->
         <div class="mb-3">
-            <label class="form-label">ID Profesor</label>
-            <input type="text" class="form-control"
+            <label class="form-label">ID Profesor *</label>
+            <input type="text"
+                   class="form-control"
                    th:field="*{staffID}"
                    th:readonly="${teacher.staffID != null}"
-                   placeholder="ex: T123">
-            <div class="form-text">
-                <span th:if="${teacher.staffID == null}">1 literă mare + cifre (ex: T1, P123)</span>
+                   placeholder="ex: T1">
+            <div class="text-danger" th:if="${#fields.hasErrors('staffID')}" th:errors="*{staffID}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('staffID')}">
+                <span th:if="${teacher.staffID == null}">Format: T + număr (ex: T1, T101)</span>
                 <span th:if="${teacher.staffID != null}">ID-ul nu poate fi modificat</span>
             </div>
         </div>
 
         <!-- Nume -->
         <div class="mb-3">
-            <label class="form-label">Nume complet *</label>
-            <input type="text" class="form-control" th:field="*{staffName}"
-                   placeholder="ex: Prof. Dr. Ion Popescu">
-            <div class="form-text">Minim 2 caractere</div>
+            <label class="form-label">Nume Complet *</label>
+            <input type="text" class="form-control" th:field="*{staffName}" placeholder="ex: Prof. Dr. Ion Popescu">
+            <div class="text-danger" th:if="${#fields.hasErrors('staffName')}" th:errors="*{staffName}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('staffName')}">Între 2 și 100 caractere</div>
         </div>
 
-        <!-- Titlu - dropdown cu opțiuni sugerate + input liber -->
+        <!-- Titlu -->
         <div class="mb-3">
             <label class="form-label">Titlu *</label>
             <input type="text" class="form-control" th:field="*{title}"
                    list="titleOptions"
                    placeholder="ex: Profesor universitar">
             <datalist id="titleOptions">
-                <option value="Profesor universitar">
-                <option value="Conferențiar universitar">
-                <option value="Lector universitar">
-                <option value="Asistent universitar">
-                <option value="Șef lucrări">
-                <option value="Profesor">
-                <option value="Doctor">
-                <option value="Profesor asociat">
-                <option value="Profesor consultant">
+                <option value="Lecturer">
+                <option value="Senior Lecturer">
+                <option value="Professor">
+                <option value="Associate Professor">
+                <option value="Assistant Professor">
             </datalist>
-            <div class="form-text">Exemple: Profesor, Conferențiar, Lector, Asistent, Șef lucrări</div>
+            <div class="text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('title')}">Titlul academic sau științific</div>
         </div>
 
         <!-- Email -->
         <div class="mb-3">
             <label class="form-label">Email *</label>
-            <input type="text" class="form-control" th:field="*{email}"
-                   placeholder="ex: profesor@universitate.ro">
-            <div class="form-text">Format: nume@domeniu.com</div>
+            <input type="email" class="form-control" th:field="*{email}" placeholder="ex: profesor@universitate.ro">
+            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('email')}">Format: nume@domeniu.com</div>
         </div>
 
-        <!-- Departament ID -->
+        <!-- Departament - Dropdown -->
         <div class="mb-3">
-            <label class="form-label">Departament ID *</label>
-            <input type="text" class="form-control" th:field="*{departmentID}"
-                   placeholder="ex: D1">
-            <div class="form-text">Format: D urmat de număr (D1, D2, ..., D100)</div>
+            <label class="form-label">Departament *</label>
+            <select class="form-control" th:field="*{departmentID}">
+                <option value="">Selectează departament...</option>
+                <option th:each="deptEntry : ${departments}"
+                        th:value="${deptEntry.key}"
+                        th:text="${deptEntry.key + ' - ' + deptEntry.value.departmentName}">
+                </option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('departmentID')}" th:errors="*{departmentID}"></div>
+            <div class="form-text" th:if="${!#fields.hasErrors('departmentID')}">Selectează un departament existent</div>
         </div>
 
         <!-- Butoane -->
         <div class="mb-3">
-            <button type="submit" class="btn btn-primary">
-                <span th:text="${teacher.staffID == null ? 'Creează' : 'Actualizează'}"></span>
-            </button>
+            <button type="submit" class="btn btn-primary" th:text="${teacher.staffID == null ? 'Creează' : 'Actualizează'}"></button>
             <a th:href="@{/teachers}" class="btn btn-secondary">Înapoi</a>
         </div>
 

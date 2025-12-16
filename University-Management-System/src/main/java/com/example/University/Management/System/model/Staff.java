@@ -1,21 +1,21 @@
 package com.example.University.Management.System.model;
 
 import jakarta.persistence.*;
-import java.util.List;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @MappedSuperclass
 public abstract class Staff {
 
     @Id
     @Column(name = "id")
+    @NotBlank(message = "ID Staff este obligatoriu")
     protected String staffID;
 
     @Column(name = "name")
+    @NotBlank(message = "Numele este obligatoriu")
+    @Size(min = 2, max = 100, message = "Numele trebuie să aibă între 2 și 100 caractere")
     protected String staffName;
-
-
-    @Transient  // relatia se implementeaza in Teacher si Assistant
-    protected List<TeachingAssignment> assignments;
 
     public Staff() {}
 
@@ -38,13 +38,5 @@ public abstract class Staff {
 
     public void setStaffName(String staffName) {
         this.staffName = staffName;
-    }
-
-    public List<TeachingAssignment> getAssignments() {
-        return assignments;
-    }
-
-    public void setAssignments(List<TeachingAssignment> assignments) {
-        this.assignments = assignments;
     }
 }
