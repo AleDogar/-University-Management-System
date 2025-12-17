@@ -27,7 +27,8 @@
                    class="form-control"
                    th:field="*{assignmentID}"
                    th:readonly="${assignment.assignmentID != null}"
-                   placeholder="ex: TA1">
+                   placeholder="ex: TA1"
+                   required>
             <div class="text-danger" th:if="${#fields.hasErrors('assignmentID')}" th:errors="*{assignmentID}"></div>
             <div class="form-text" th:if="${!#fields.hasErrors('assignmentID')}">
                 <span th:if="${assignment.assignmentID == null}">Format: TA + număr (ex: TA1, TA101)</span>

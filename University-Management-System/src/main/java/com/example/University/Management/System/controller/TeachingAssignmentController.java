@@ -13,7 +13,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -47,11 +46,8 @@ public class TeachingAssignmentController {
         model.addAttribute("assignments", assignments);
         model.addAttribute("courses", courseService.findAll());
         model.addAttribute("teachers", teacherService.findAll());
-
-        // Adăugăm toate tipurile de clasă pentru dropdown
         model.addAttribute("allClassTypes", ClassType.values());
 
-        // Adăugăm parametrii pentru a-i păstra în formular
         model.addAttribute("sortBy", sortBy != null ? sortBy : "assignmentID");
         model.addAttribute("sortDir", sortDir != null ? sortDir : "asc");
         model.addAttribute("filterClassType", filterClassType != null ? filterClassType : "");
@@ -99,14 +95,15 @@ public class TeachingAssignmentController {
     // ================= CREATE =================
     @PostMapping("/create")
     public String createAssignment(@Valid @ModelAttribute("assignment") TeachingAssignment assignment,
-                                   @RequestParam(value = "courseID", required = false) String courseID,
                                    BindingResult bindingResult,
+                                   @RequestParam(value = "courseID", required = false) String courseID,
                                    Model model,
                                    RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("courses", courseService.findAll());
             model.addAttribute("teachers", teacherService.findAll());
+            model.addAttribute("error", "Completează toate câmpurile obligatorii!");
             return "teaching-assignment/form";
         }
 
@@ -144,14 +141,15 @@ public class TeachingAssignmentController {
     // ================= UPDATE =================
     @PostMapping("/update")
     public String updateAssignment(@Valid @ModelAttribute("assignment") TeachingAssignment assignment,
-                                   @RequestParam(value = "courseID", required = false) String courseID,
                                    BindingResult bindingResult,
+                                   @RequestParam(value = "courseID", required = false) String courseID,
                                    Model model,
                                    RedirectAttributes redirectAttributes) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("courses", courseService.findAll());
             model.addAttribute("teachers", teacherService.findAll());
+            model.addAttribute("error", "Completează toate câmpurile obligatorii!");
             return "teaching-assignment/form";
         }
 
